@@ -21,40 +21,50 @@
             break-inside: avoid;
             margin-bottom: 0.75rem;
         }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-gray-950 text-white min-h-screen">
+<body class="bg-gray-950 text-white min-h-screen pb-16">
 
     <!-- 1. Profile & Social Media Buttons Header -->
-    <header class="py-4 px-4 bg-gray-900 border-b border-gray-800 flex flex-wrap items-center justify-between gap-3">
+    <header class="py-4 px-4 bg-gray-900 border-b border-gray-800 flex flex-wrap items-center justify-between gap-3 sticky top-0 z-40">
         <div class="flex items-center gap-3">
-            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150" alt="Profile" class="w-11 h-11 rounded-full border-2 border-yellow-400 object-cover">
+            <!-- నీ ప్రొఫైల్ ఫోటో (ఇక్కడ నీ ఫోటో లింక్ పెట్టుకోవచ్చు) -->
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150" alt="RajRebel Profile" class="w-11 h-11 rounded-full border-2 border-yellow-400 object-cover">
             <div>
                 <h1 class="text-sm font-bold text-yellow-400">RajRebel Creations</h1>
                 <p class="text-[11px] text-gray-400">@RajRebel_Creations</p>
             </div>
         </div>
-        <!-- Social Media Buttons -->
-        <div class="flex items-center gap-2">
-            <a href="https://youtube.com" target="_blank" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition">
+        <!-- Social Media Buttons & Admin Panel Button -->
+        <div class="flex items-center gap-1.5 flex-wrap">
+            <a href="https://youtube.com/@RajRebel_Creations" target="_blank" class="bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
                 🔴 YouTube
             </a>
-            <a href="https://whatsapp.com" target="_blank" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition">
+            <a href="https://wa.me/" target="_blank" class="bg-green-600 hover:bg-green-700 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
                 💬 WhatsApp
             </a>
-            <a href="https://instagram.com" target="_blank" class="bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition">
-                📸 Instagram
+            <a href="https://tiktok.com/@Rajrebel_22" target="_blank" class="bg-black border border-gray-700 hover:bg-gray-800 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
+                🖤 TikTok
             </a>
+            <a href="https://instagram.com" target="_blank" class="bg-pink-600 hover:bg-pink-700 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
+                📸 Insta
+            </a>
+            <button onclick="toggleAdminModal()" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 text-[11px] font-bold px-3 py-1.5 rounded-lg transition shadow-md">
+                ⚙️ Admin
+            </button>
         </div>
     </header>
 
     <!-- 2. Banner Section -->
     <div class="w-full h-40 md:h-52 bg-gray-900 relative overflow-hidden border-b border-gray-800">
-        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200" alt="Banner" class="w-full h-full object-cover opacity-70">
+        <!-- నీ బ్యానర్ ఫోటో (ఇక్కడ నీ బ్యానర్ లింక్ పెట్టుకోవచ్చు) -->
+        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200" alt="RajRebel Banner" class="w-full h-full object-cover opacity-75">
         <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent flex items-end p-4">
             <div>
-                <h2 class="text-base md:text-lg font-bold text-white">Welcome to My AI Hub</h2>
-                <p class="text-xs text-gray-300">Best AI Prompts, Birthday Wishes & Mobile Tricks</p>
+                <h2 class="text-base md:text-lg font-bold text-white">Welcome to RajRebel Creations Hub</h2>
+                <p class="text-xs text-gray-300">AI Photo Prompts, Video Prompts & Creator Tutorials</p>
             </div>
         </div>
     </div>
@@ -62,84 +72,28 @@
     <!-- 3. Search Bar -->
     <div class="max-w-4xl mx-auto p-4">
         <div class="relative">
-            <input type="text" id="searchInput" onkeyup="filterPrompts()" placeholder="Search prompts, birthday wishes, couple looks, tricks..." class="w-full bg-gray-900 border border-gray-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-yellow-400">
+            <input type="text" id="searchInput" onkeyup="renderPosts()" placeholder="Search photo prompts, video prompts, god photos, birthday wishes..." class="w-full bg-gray-900 border border-gray-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-yellow-400">
             <span class="absolute right-4 top-3.5 text-gray-400">🔍</span>
         </div>
     </div>
 
-    <!-- 4. Categories Filter Buttons -->
-    <div class="max-w-7xl mx-auto px-4 overflow-x-auto whitespace-nowrap pb-2 flex gap-2 scrollbar-none">
-        <button onclick="filterCategory('all')" class="cat-btn bg-yellow-500 text-gray-950 text-xs font-bold px-4 py-2 rounded-full transition">All</button>
-        <button onclick="filterCategory('birthday')" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">🎂 Birthday Wishes</button>
-        <button onclick="filterCategory('couple')" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">💑 Couple Prompts</button>
-        <button onclick="filterCategory('girls')" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">✨ Girl Prompts</button>
-        <button onclick="filterCategory('boys')" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">😎 Boy Prompts</button>
-        <button onclick="filterCategory('photos')" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">🖼️ AI Photo Prompts</button>
-        <button onclick="filterCategory('videos')" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">🎥 AI Video Prompts</button>
-        <button onclick="filterCategory('tricks')" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">📱 Mobile Tricks</button>
+    <!-- 4. Categories Filter Buttons (ఫోటో & వీడియో ప్రాంప్ట్స్ స్టార్టింగ్‌లో పక్కపక్కనే) -->
+    <div class="max-w-7xl mx-auto px-4 overflow-x-auto whitespace-nowrap pb-2 flex gap-2 no-scrollbar">
+        <button onclick="filterCategory('all', this)" class="cat-btn bg-yellow-500 text-gray-950 text-xs font-bold px-4 py-2 rounded-full transition">All</button>
+        <button onclick="filterCategory('AI Photo Prompts', this)" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">🖼️ AI Photo Prompts</button>
+        <button onclick="filterCategory('AI Video Prompts', this)" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">🎥 AI Video Prompts</button>
+        <button onclick="filterCategory('God Photo Prompts', this)" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">🛕 God Photo Prompts</button>
+        <button onclick="filterCategory('God Video Prompts', this)" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">🔱 God Video Prompts</button>
+        <button onclick="filterCategory('Birthday Wishes', this)" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">🎂 Birthday Wishes</button>
+        <button onclick="filterCategory('Couple Prompts', this)" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">💑 Couple Prompts</button>
+        <button onclick="filterCategory('Attitude Boys', this)" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">😎 Attitude Boys</button>
+        <button onclick="filterCategory('Beautiful Girls', this)" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">✨ Beautiful Girls</button>
+        <button onclick="filterCategory('Mobile Tricks', this)" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">📱 Mobile Tricks</button>
     </div>
 
     <!-- 5. Content Gallery Grid -->
     <main class="max-w-7xl mx-auto p-4">
-        <div class="masonry-grid" id="galleryGrid">
-            
-            <!-- Card 1: Birthday -->
-            <div class="masonry-item card-item relative group cursor-pointer overflow-hidden rounded-xl bg-gray-900 border border-gray-800" data-category="birthday" data-title="Birthday Poster Wish" onclick="openModal('https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=600', 'A grand 3D birthday celebration poster with glowing neon text Happy Birthday, colorful balloons, cinematic lighting, 8k resolution.')">
-                <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=600" alt="Birthday" class="w-full object-cover rounded-xl transition duration-300 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
-                    <span class="text-xs text-yellow-400 font-semibold">🎂 Birthday Wishes</span>
-                </div>
-            </div>
-
-            <!-- Card 2: Couple -->
-            <div class="masonry-item card-item relative group cursor-pointer overflow-hidden rounded-xl bg-gray-900 border border-gray-800" data-category="couple" data-title="Couple Prompt Black Jacket" onclick="openModal('https://images.unsplash.com/photo-1621184455862-c163dfb30e0f?q=80&w=600', 'Realistic portrait of a stylish young couple wearing matching black jackets and yellow t-shirts, outdoor modern background, 8k.')">
-                <img src="https://images.unsplash.com/photo-1621184455862-c163dfb30e0f?q=80&w=600" alt="Couple" class="w-full object-cover rounded-xl transition duration-300 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
-                    <span class="text-xs text-yellow-400 font-semibold">💑 Couple Prompts</span>
-                </div>
-            </div>
-
-            <!-- Card 3: Girls -->
-            <div class="masonry-item card-item relative group cursor-pointer overflow-hidden rounded-xl bg-gray-900 border border-gray-800" data-category="girls" data-title="Girl Prompt Beautiful Portrait" onclick="openModal('https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600', 'Stunning cinematic portrait of an Indian girl with traditional earrings, soft natural lighting, beautiful bokeh background, 8k.')">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600" alt="Girl" class="w-full object-cover rounded-xl transition duration-300 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
-                    <span class="text-xs text-yellow-400 font-semibold">✨ Girl Prompts</span>
-                </div>
-            </div>
-
-            <!-- Card 4: Boys -->
-            <div class="masonry-item card-item relative group cursor-pointer overflow-hidden rounded-xl bg-gray-900 border border-gray-800" data-category="boys" data-title="Boy Prompt Stylish Attitude" onclick="openModal('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600', 'Handsome young man with stylish haircut and black outfit, moody cinematic dark background, highly detailed prompt.')">
-                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600" alt="Boy" class="w-full object-cover rounded-xl transition duration-300 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
-                    <span class="text-xs text-yellow-400 font-semibold">😎 Boy Prompts</span>
-                </div>
-            </div>
-
-            <!-- Card 5: AI Photos -->
-            <div class="masonry-item card-item relative group cursor-pointer overflow-hidden rounded-xl bg-gray-900 border border-gray-800" data-category="photos" data-title="AI Photo Cyberpunk Portrait" onclick="openModal('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600', 'A futuristic cyberpunk portrait of a warrior with neon glowing details, highly detailed, 8k resolution, cinematic lighting.')">
-                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600" alt="AI Photo" class="w-full object-cover rounded-xl transition duration-300 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
-                    <span class="text-xs text-yellow-400 font-semibold">🖼️ AI Photo Prompts</span>
-                </div>
-            </div>
-
-            <!-- Card 6: AI Videos -->
-            <div class="masonry-item card-item relative group cursor-pointer overflow-hidden rounded-xl bg-gray-900 border border-gray-800" data-category="videos" data-title="AI Video Animation Prompt" onclick="openModal('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=600', 'Dynamic camera movement flying through a glowing neon futuristic city tunnel, 4k 60fps video prompt for Runway/Luma/Sora.')">
-                <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=600" alt="AI Video" class="w-full object-cover rounded-xl transition duration-300 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
-                    <span class="text-xs text-yellow-400 font-semibold">🎥 AI Video Prompts</span>
-                </div>
-            </div>
-
-            <!-- Card 7: Mobile Tricks -->
-            <div class="masonry-item card-item relative group cursor-pointer overflow-hidden rounded-xl bg-gray-900 border border-gray-800" data-category="tricks" data-title="Mobile Secret Trick Settings" onclick="openModal('https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=600', 'Secret Android and iPhone hidden developer settings guide to speed up mobile performance and save battery life instantly.')">
-                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=600" alt="Mobile Trick" class="w-full object-cover rounded-xl transition duration-300 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
-                    <span class="text-xs text-yellow-400 font-semibold">📱 Mobile Tricks</span>
-                </div>
-            </div>
-
-        </div>
+        <div class="masonry-grid" id="galleryGrid"></div>
     </main>
 
     <!-- Modal Popup for Copying Prompt -->
@@ -149,7 +103,15 @@
             
             <img id="modalImg" src="" alt="Preview" class="w-full h-56 object-cover rounded-xl mb-4">
             
-            <h3 class="text-sm font-semibold text-gray-400 mb-1">Prompt / Description:</h3>
+            <h3 id="modalTitle" class="text-base font-bold text-yellow-400 mb-1"></h3>
+            <span id="modalCat" class="inline-block bg-gray-800 text-gray-300 text-[10px] font-semibold px-2.5 py-1 rounded-full mb-3"></span>
+            
+            <div id="modalDescBox" class="mb-3">
+                <h4 class="text-xs font-semibold text-gray-400 mb-1">Description / Process:</h4>
+                <p id="modalDescText" class="text-xs text-gray-300 bg-gray-950 p-3 rounded-xl border border-gray-800"></p>
+            </div>
+
+            <h4 class="text-xs font-semibold text-gray-400 mb-1">AI Prompt:</h4>
             <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 text-sm text-gray-200 mb-4 select-all" id="modalPromptText"></div>
             
             <button onclick="copyPrompt()" id="copyBtn" class="w-full bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold py-3 rounded-xl transition duration-200 flex items-center justify-center gap-2">
@@ -158,13 +120,172 @@
         </div>
     </div>
 
-    <!-- JavaScript for Category Filter, Search & Copy -->
+    <!-- Admin Panel Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-xl w-full p-5 relative max-h-[95vh] overflow-y-auto">
+            <button onclick="toggleAdminModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white text-xl font-bold bg-gray-800 w-8 h-8 rounded-full flex items-center justify-center">&times;</button>
+            
+            <h2 id="formTitle" class="text-lg font-bold text-yellow-400 mb-4">⚙️ Admin Panel - Upload New Post</h2>
+            
+            <form id="postForm" onsubmit="handlePostSubmit(event)" class="space-y-3">
+                <input type="hidden" id="editPostId">
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">Post Title</label>
+                    <input type="text" id="postTitleInput" required placeholder="Enter title..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-sm text-white focus:border-yellow-400 focus:outline-none">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">Category</label>
+                    <select id="postCatInput" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-sm text-white focus:border-yellow-400 focus:outline-none">
+                        <option value="AI Photo Prompts">🖼️ AI Photo Prompts</option>
+                        <option value="AI Video Prompts">🎥 AI Video Prompts</option>
+                        <option value="God Photo Prompts">🛕 God Photo Prompts</option>
+                        <option value="God Video Prompts">🔱 God Video Prompts</option>
+                        <option value="Birthday Wishes">🎂 Birthday Wishes</option>
+                        <option value="Couple Prompts">💑 Couple Prompts</option>
+                        <option value="Attitude Boys">😎 Attitude Boys</option>
+                        <option value="Beautiful Girls">✨ Beautiful Girls</option>
+                        <option value="Mobile Tricks">📱 Mobile Tricks</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">Image URL</label>
+                    <input type="url" id="postImgInput" required placeholder="https://image-url.com/photo.jpg" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-sm text-white focus:border-yellow-400 focus:outline-none">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">Description / Tutorial (Optional)</label>
+                    <textarea id="postDescInput" rows="2" placeholder="Write description..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-sm text-white focus:border-yellow-400 focus:outline-none"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">AI Prompt (To Copy)</label>
+                    <textarea id="postPromptInput" rows="3" required placeholder="Paste your AI prompt here..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-sm text-white focus:border-yellow-400 focus:outline-none"></textarea>
+                </div>
+                <div class="flex gap-2 pt-2">
+                    <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-bold py-2.5 rounded-xl transition">Publish Post</button>
+                    <button type="button" onclick="resetForm()" class="bg-gray-800 text-gray-300 px-4 py-2.5 rounded-xl font-semibold transition">Reset</button>
+                </div>
+            </form>
+
+            <hr class="border-gray-800 my-5">
+            <h3 class="text-sm font-bold text-white mb-3">Manage Existing Posts</h3>
+            <div id="adminPostsList" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
     <script>
         let currentPrompt = "";
+        let selectedCategory = 'all';
 
-        function openModal(imgSrc, promptText) {
+        const defaultPosts = [
+            {
+                id: 'p1',
+                title: 'Cyberpunk Portrait Prompt',
+                category: 'AI Photo Prompts',
+                image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600',
+                description: 'Futuristic neon portrait with high-end cinematic details.',
+                prompt: 'A futuristic cyberpunk portrait of a warrior with neon glowing details, highly detailed, 8k resolution, cinematic lighting.'
+            },
+            {
+                id: 'p2',
+                title: 'Neon Tunnel Video Prompt',
+                category: 'AI Video Prompts',
+                image: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=600',
+                description: 'Smooth camera flying through a futuristic tech tunnel.',
+                prompt: 'Dynamic camera movement flying through a glowing neon futuristic city tunnel, 4k 60fps video prompt for Runway/Luma/Sora.'
+            },
+            {
+                id: 'p3',
+                title: 'Lord Shiva Divine Prompt',
+                category: 'God Photo Prompts',
+                image: 'https://images.unsplash.com/photo-1609137144813-7e94c9221fc5?q=80&w=600',
+                description: 'Divine cinematic portrait of Lord Shiva with Trishul.',
+                prompt: 'Cinematic 3D divine portrait of Lord Shiva in meditation with glowing third eye, holy vibes, dramatic lighting, 8k.'
+            },
+            {
+                id: 'p4',
+                title: 'Birthday Celebration 3D Poster',
+                category: 'Birthday Wishes',
+                image: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=600',
+                description: '3D glowing name birthday greeting poster prompt.',
+                prompt: 'A grand 3D birthday celebration poster with glowing neon text Happy Birthday, colorful balloons, cinematic lighting, 8k resolution.'
+            }
+        ];
+
+        function getStoredPosts() {
+            let posts = localStorage.getItem('raj_rebel_posts');
+            if (!posts) {
+                localStorage.setItem('raj_rebel_posts', JSON.stringify(defaultPosts));
+                return defaultPosts;
+            }
+            return JSON.parse(posts);
+        }
+
+        function saveStoredPosts(posts) {
+            localStorage.setItem('raj_rebel_posts', JSON.stringify(posts));
+            renderPosts();
+            renderAdminList();
+        }
+
+        function renderPosts() {
+            const grid = document.getElementById('galleryGrid');
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const posts = getStoredPosts();
+
+            grid.innerHTML = '';
+
+            const filtered = posts.filter(post => {
+                const matchesCat = (selectedCategory === 'all' || post.category === selectedCategory);
+                const matchesSearch = post.title.toLowerCase().includes(searchInput) || post.prompt.toLowerCase().includes(searchInput) || post.category.toLowerCase().includes(searchInput);
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<p class="col-span-full text-center text-gray-500 py-10 text-xs">No posts found in this category.</p>';
+                return;
+            }
+
+            filtered.forEach(post => {
+                const item = document.createElement('div');
+                item.className = "masonry-item card-item relative group cursor-pointer overflow-hidden rounded-xl bg-gray-900 border border-gray-800";
+                item.onclick = () => openModal(post.image, post.title, post.category, post.description, post.prompt);
+                
+                item.innerHTML = `
+                    <img src="${post.image}" alt="${post.title}" class="w-full object-cover rounded-xl transition duration-300 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-3">
+                        <span class="text-xs text-yellow-400 font-semibold truncate">${post.title}</span>
+                        <span class="text-[10px] text-gray-300">${post.category}</span>
+                    </div>
+                `;
+                grid.appendChild(item);
+            });
+            renderAdminList();
+        }
+
+        function filterCategory(cat, btn) {
+            selectedCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(b => {
+                b.classList.remove('bg-yellow-500', 'text-gray-950', 'font-bold');
+                b.classList.add('bg-gray-900', 'text-gray-300', 'border', 'border-gray-800');
+            });
+            btn.classList.remove('bg-gray-900', 'text-gray-300', 'border', 'border-gray-800');
+            btn.classList.add('bg-yellow-500', 'text-gray-950', 'font-bold');
+            renderPosts();
+        }
+
+        function openModal(imgSrc, title, category, description, promptText) {
             currentPrompt = promptText;
             document.getElementById('modalImg').src = imgSrc;
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalCat').innerText = category;
+            
+            const descBox = document.getElementById('modalDescBox');
+            if(description && description.trim() !== '') {
+                document.getElementById('modalDescText').innerText = description;
+                descBox.classList.remove('hidden');
+            } else {
+                descBox.classList.add('hidden');
+            }
+
             document.getElementById('modalPromptText').innerText = promptText;
             document.getElementById('promptModal').classList.remove('hidden');
         }
@@ -187,37 +308,96 @@
             });
         }
 
-        function filterCategory(category) {
-            const buttons = document.querySelectorAll('.cat-btn');
-            buttons.forEach(btn => {
-                btn.classList.remove('bg-yellow-500', 'text-gray-950', 'font-bold');
-                btn.classList.add('bg-gray-900', 'text-gray-300', 'font-semibold', 'border', 'border-gray-800');
-            });
-            event.target.classList.remove('bg-gray-900', 'text-gray-300', 'border', 'border-gray-800');
-            event.target.classList.add('bg-yellow-500', 'text-gray-950', 'font-bold');
+        function toggleAdminModal() {
+            const modal = document.getElementById('adminModal');
+            modal.classList.toggle('hidden');
+            renderAdminList();
+        }
 
-            const items = document.querySelectorAll('.card-item');
-            items.forEach(item => {
-                if (category === 'all' || item.dataset.category === category) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
+        function handlePostSubmit(e) {
+            e.preventDefault();
+            const posts = getStoredPosts();
+            const id = document.getElementById('editPostId').value || 'post-' + Date.now();
+
+            const postObj = {
+                id: id,
+                title: document.getElementById('postTitleInput').value,
+                category: document.getElementById('postCatInput').value,
+                image: document.getElementById('postImgInput').value,
+                description: document.getElementById('postDescInput').value,
+                prompt: document.getElementById('postPromptInput').value
+            };
+
+            const existingIndex = posts.findIndex(p => p.id === id);
+            if(existingIndex > -1) {
+                posts[existingIndex] = postObj;
+            } else {
+                posts.unshift(postObj);
+            }
+
+            saveStoredPosts(posts);
+            resetForm();
+            alert('Post Published Successfully! 🎉');
+            toggleAdminModal();
+        }
+
+        function renderAdminList() {
+            const list = document.getElementById('adminPostsList');
+            const posts = getStoredPosts();
+            list.innerHTML = '';
+
+            posts.forEach(post => {
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center bg-gray-950 p-3 rounded-2xl border border-gray-800 text-xs";
+                item.innerHTML = `
+                  <div class="flex items-center gap-3 overflow-hidden">
+                    <img src="${post.image}" class="w-10 h-10 object-cover rounded-xl flex-shrink-0">
+                    <div class="truncate">
+                      <p class="font-bold text-white truncate">${post.title}</p>
+                      <p class="text-gray-400 text-[10px]">${post.category}</p>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button onclick="editPost('${post.id}')" class="px-3 py-1.5 bg-blue-600/20 text-blue-400 font-semibold rounded-xl hover:bg-blue-600/30 transition">Edit</button>
+                    <button onclick="deletePost('${post.id}')" class="px-3 py-1.5 bg-red-600/20 text-red-400 font-semibold rounded-xl hover:bg-red-600/30 transition">Delete</button>
+                  </div>
+                `;
+                list.appendChild(item);
             });
         }
 
-        function filterPrompts() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let items = document.querySelectorAll('.card-item');
-            items.forEach(item => {
-                let title = item.dataset.title.toLowerCase();
-                if (title.includes(input)) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+        function editPost(id) {
+            const posts = getStoredPosts();
+            const post = posts.find(p => p.id === id);
+            if(post) {
+                document.getElementById('editPostId').value = post.id;
+                document.getElementById('postTitleInput').value = post.title;
+                document.getElementById('postCatInput').value = post.category;
+                document.getElementById('postImgInput').value = post.image;
+                document.getElementById('postDescInput').value = post.description || '';
+                document.getElementById('postPromptInput').value = post.prompt;
+                document.getElementById('formTitle').innerText = "Edit Prompt / Post";
+                toggleAdminModal();
+            }
         }
+
+        function deletePost(id) {
+            if(confirm('Are you sure you want to delete this post?')) {
+                let posts = getStoredPosts();
+                posts = posts.filter(p => p.id !== id);
+                saveStoredPosts(posts);
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('postForm').reset();
+            document.getElementById('editPostId').value = '';
+            document.getElementById('formTitle').innerText = "⚙️ Admin Panel - Upload New Post";
+        }
+
+        window.onload = function() {
+            renderPosts();
+        };
     </script>
 </body>
 </html>
