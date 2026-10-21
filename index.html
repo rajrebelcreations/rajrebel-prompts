@@ -7,19 +7,23 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* మొబైల్ వ్యూలో గ్రిడ్ పర్ఫెక్ట్ గా కనిపించేలా సవరించబడింది */
         .masonry-grid {
             column-count: 2;
-            column-gap: 0.75rem;
+            column-gap: 0.5rem;
         }
-        @media (min-width: 768px) {
-            .masonry-grid { column-count: 3; }
+        @media (min-width: 640px) {
+            .masonry-grid { column-count: 3; column-gap: 0.75rem; }
         }
         @media (min-width: 1024px) {
-            .masonry-grid { column-count: 4; }
+            .masonry-grid { column-count: 4; column-gap: 0.75rem; }
         }
         .masonry-item {
             break-inside: avoid;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        @media (min-width: 640px) {
+            .masonry-item { margin-bottom: 0.75rem; }
         }
         .masonry-item img {
             width: 100%;
@@ -33,55 +37,55 @@
 <body class="bg-gray-950 text-white min-h-screen pb-16">
 
     <!-- 1. Profile & Social Media Buttons Header -->
-    <header class="py-4 px-4 bg-gray-900 border-b border-gray-800 flex flex-wrap items-center justify-between gap-3 sticky top-0 z-40">
+    <header class="py-3 px-3 sm:py-4 sm:px-4 bg-gray-900 border-b border-gray-800 flex flex-wrap items-center justify-between gap-3 sticky top-0 z-40">
         <div class="flex items-center gap-3">
-            <img src="https://raw.githubusercontent.com/rajrebelcreations/assets/main/profile.jpg" alt="Profile" class="w-11 h-11 rounded-full border-2 border-yellow-400 object-cover">
+            <img src="https://raw.githubusercontent.com/rajrebelcreations/assets/main/profile.jpg" alt="Profile" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-yellow-400 object-cover">
             <div>
-                <h1 class="text-sm font-bold text-yellow-400">RajRebel Creations</h1>
-                <p class="text-[11px] text-gray-400">@RajRebel_Creations</p>
+                <h1 class="text-xs sm:text-sm font-bold text-yellow-400">RajRebel Creations</h1>
+                <p class="text-[10px] sm:text-[11px] text-gray-400">@RajRebel_Creations</p>
             </div>
         </div>
         <!-- Social Media Buttons & Admin Panel Button -->
         <div class="flex items-center gap-1.5 flex-wrap">
-            <a href="https://youtube.com/@RajRebel_Creations" target="_blank" class="bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
+            <a href="https://youtube.com/@RajRebel_Creations" target="_blank" class="bg-red-600 hover:bg-red-700 text-white text-[10px] sm:text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
                 🔴 YouTube
             </a>
-            <a href="https://wa.me/" target="_blank" class="bg-green-600 hover:bg-green-700 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
+            <a href="https://wa.me/" target="_blank" class="bg-green-600 hover:bg-green-700 text-white text-[10px] sm:text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
                 💬 WhatsApp
             </a>
-            <a href="https://tiktok.com/@Rajrebel_22" target="_blank" class="bg-black border border-gray-700 hover:bg-gray-800 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
+            <a href="https://tiktok.com/@Rajrebel_22" target="_blank" class="bg-black border border-gray-700 hover:bg-gray-800 text-white text-[10px] sm:text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
                 🖤 TikTok
             </a>
-            <a href="https://instagram.com" target="_blank" class="bg-pink-600 hover:bg-pink-700 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
+            <a href="https://instagram.com" target="_blank" class="bg-pink-600 hover:bg-pink-700 text-white text-[10px] sm:text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
                 📸 Insta
             </a>
-            <button onclick="toggleAdminModal()" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 text-[11px] font-bold px-3 py-1.5 rounded-lg transition shadow-md">
+            <button onclick="toggleAdminModal()" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 text-[10px] sm:text-[11px] font-bold px-3 py-1.5 rounded-lg transition shadow-md">
                 ⚙️ Admin Panel
             </button>
         </div>
     </header>
 
     <!-- 2. Banner Section -->
-    <div class="w-full h-40 md:h-52 bg-gray-900 relative overflow-hidden border-b border-gray-800">
+    <div class="w-full h-36 sm:h-48 md:h-52 bg-gray-900 relative overflow-hidden border-b border-gray-800">
         <img src="https://raw.githubusercontent.com/rajrebelcreations/assets/main/banner.jpg" alt="Banner" class="w-full h-full object-cover opacity-75">
         <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent flex items-end p-4">
             <div>
-                <h2 class="text-base md:text-lg font-bold text-white">Welcome to RajRebel Creations Hub</h2>
-                <p class="text-xs text-gray-300">AI Photo Prompts, Video Prompts & Creator Tutorials</p>
+                <h2 class="text-sm sm:text-base md:text-lg font-bold text-white">Welcome to RajRebel Creations Hub</h2>
+                <p class="text-[11px] sm:text-xs text-gray-300">AI Photo Prompts, Video Prompts & Creator Tutorials</p>
             </div>
         </div>
     </div>
 
     <!-- 3. Search Bar -->
-    <div class="max-w-4xl mx-auto p-4">
+    <div class="max-w-4xl mx-auto p-3 sm:p-4">
         <div class="relative">
-            <input type="text" id="searchInput" onkeyup="renderPosts()" placeholder="Search prompts, categories..." class="w-full bg-gray-900 border border-gray-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-yellow-400">
-            <span class="absolute right-4 top-3.5 text-gray-400">🔍</span>
+            <input type="text" id="searchInput" onkeyup="renderPosts()" placeholder="Search prompts, categories..." class="w-full bg-gray-900 border border-gray-800 rounded-xl py-2.5 sm:py-3 px-4 text-xs sm:text-sm text-white focus:outline-none focus:border-yellow-400">
+            <span class="absolute right-4 top-3 sm:top-3.5 text-gray-400">🔍</span>
         </div>
     </div>
 
     <!-- 4. Categories Filter Buttons -->
-    <div class="max-w-7xl mx-auto px-4 overflow-x-auto whitespace-nowrap pb-2 flex gap-2 no-scrollbar">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 overflow-x-auto whitespace-nowrap pb-2 flex gap-2 no-scrollbar">
         <button onclick="filterCategory('all', this)" class="cat-btn bg-yellow-500 text-gray-950 text-xs font-bold px-4 py-2 rounded-full transition">All</button>
         <button onclick="filterCategory('AI Photo Prompts', this)" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">🖼️ AI Photo Prompts</button>
         <button onclick="filterCategory('AI Video Prompts', this)" class="cat-btn bg-gray-900 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-gray-800 transition">🎥 AI Video Prompts</button>
@@ -95,7 +99,7 @@
     </div>
 
     <!-- 5. Content Gallery Grid -->
-    <main class="max-w-7xl mx-auto p-4">
+    <main class="max-w-7xl mx-auto p-3 sm:p-4">
         <div class="masonry-grid" id="galleryGrid"></div>
     </main>
 
@@ -263,9 +267,9 @@
                 
                 item.innerHTML = `
                     <img src="${post.image}" alt="${post.title}" class="rounded-xl transition duration-300 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-3 rounded-xl">
-                        <span class="text-xs text-yellow-400 font-semibold truncate">${post.title}</span>
-                        <span class="text-[10px] text-gray-300">${post.category}</span>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-2.5 sm:p-3 rounded-xl">
+                        <span class="text-[11px] sm:text-xs text-yellow-400 font-semibold truncate">${post.title}</span>
+                        <span class="text-[9px] sm:text-[10px] text-gray-300">${post.category}</span>
                     </div>
                 `;
                 grid.appendChild(item);
@@ -384,7 +388,6 @@
             saveStoredPosts(posts);
             resetForm();
             alert('Post Published Successfully!');
-            toggleAdminModal();
         }
 
         function editPost(id) {
