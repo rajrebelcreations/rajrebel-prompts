@@ -128,12 +128,11 @@
         </div>
     </div>
 
-    <!-- Admin Panel Modal (Password Protected & Profile/Banner Settings) -->
+    <!-- Admin Panel Modal (Password Protected) -->
     <div id="adminModal" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-xl w-full p-5 relative max-h-[95vh] overflow-y-auto">
             <button onclick="toggleAdminModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white text-xl font-bold bg-gray-800 w-8 h-8 rounded-full flex items-center justify-center">&times;</button>
             
-            <!-- Site Branding Settings -->
             <h2 class="text-lg font-bold text-yellow-400 mb-3">⚙️ Admin Settings (Profile & Banner)</h2>
             <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 mb-5 space-y-3">
                 <div>
@@ -203,7 +202,7 @@
     <script>
         let currentPrompt = "";
         let selectedCategory = 'all';
-        const ADMIN_PASSWORD = "rajrebel2026"; // 🔴 ఇక్కడ పాస్‌వర్డ్ మార్చుకోవచ్చు
+        const ADMIN_PASSWORD = "rajrebel2026";
 
         const defaultPosts = [
             {
@@ -288,7 +287,6 @@
         }
 
         function renderPosts() {
-            // Load saved profile & banner if exists
             const savedProfile = localStorage.getItem('raj_profile_img');
             if(savedProfile) document.getElementById('headerProfileImg').src = savedProfile;
             
