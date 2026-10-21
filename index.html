@@ -62,10 +62,9 @@
 
   <!-- HERO SECTION WITH BANNER -->
   <section class="max-w-6xl mx-auto px-4 py-6 animate-fade-in">
-    <div class="glass-card rounded-3xl overflow-hidden shadow-2xl relative border border-gray-800/80">
-      <!-- Banner Image -->
+    <div class="glass-card rounded-3xl overflow-hidden shadow-2xl relative border border-gray-800/80">  <!-- Banner Image -->
       <div class="w-full h-48 sm:h-64 md:h-80 overflow-hidden relative">
-        <img id="heroBanner" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=80" alt="RajRebel Banner" class="w-full h-full object-cover brightness-90 hover:scale-105 transition duration-700">
+        <img id="heroBanner" src="file_00000000de44820cafcf33ac46c92a80.png" alt="RajRebel Banner" class="w-full h-full object-cover brightness-90 hover:scale-105 transition duration-700">
         <div class="absolute inset-0 bg-gradient-to-t from-[#07090e] via-[#07090e]/40 to-transparent"></div>
       </div>
 
@@ -73,7 +72,7 @@
       <div class="p-5 sm:p-8 -mt-16 sm:-mt-20 relative z-10 flex flex-col sm:flex-row items-center sm:items-end gap-5 text-center sm:text-left">
         <!-- Profile Pic DP -->
         <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-yellow-500 shadow-2xl flex-shrink-0 bg-gray-950 ring-4 ring-black/50">
-          <img id="heroImage" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="RajRebel DP" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/150?text=RajRebel'">
+          <img id="heroImage" src="file_00000000919c81fab001e649c432dd54.png" alt="RajRebel DP" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/150?text=RajRebel'">
         </div>
 
         <div class="flex-1 space-y-2.5">
@@ -108,8 +107,7 @@
   </section>
 
   <!-- SEARCH & FILTER SECTION -->
-  <section class="max-w-6xl mx-auto px-4 py-3 space-y-3 w-full animate-fade-in">
-    <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
+  <section class="max-w-6xl mx-auto px-4 py-3 space-y-3 w-full animate-fade-in"> <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
       <div class="relative w-full sm:w-80">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400 text-xs"></i>
         <input type="text" id="searchInput" onkeyup="filterPosts()" placeholder="Search prompts or tutorials..." class="w-full bg-gray-900/90 border border-gray-700/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-yellow-500 shadow-inner">
@@ -145,8 +143,7 @@
         </div>
         <div class="space-y-1">
           <h2 id="modalTitle" class="text-lg sm:text-2xl font-black text-white tracking-tight"></h2>
-          <p id="modalDesc" class="text-gray-300 text-xs sm:text-sm leading-relaxed"></p>
-        </div>
+          <p id="modalDesc" class="text-gray-300 text-xs sm:text-sm leading-relaxed"></p>  </div>
         <div id="processSection" class="space-y-2">
           <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-list-check"></i> How to Create / Process</h3>
           <div id="modalProcess" class="bg-gray-950/70 rounded-2xl p-3.5 text-xs sm:text-sm text-gray-300 whitespace-pre-line border border-gray-800/80 leading-relaxed shadow-inner"></div>
@@ -186,8 +183,7 @@
         <!-- DASHBOARD VIEW -->
         <div id="adminDashboardView" class="hidden space-y-5">
           <div class="flex flex-wrap justify-between items-center gap-3 pb-3 border-b border-gray-800/80">
-            <span class="text-[11px] text-green-400 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20 font-semibold"><i class="fa-solid fa-circle text-[6px] mr-1"></i> Admin Session Active</span>
-            <div class="flex gap-2">
+            <span class="text-[11px] text-green-400 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20 font-semibold"><i class="fa-solid fa-circle text-[6px] mr-1"></i> Admin Session Active</span>  <div class="flex gap-2">
               <button onclick="resetForm()" class="px-3.5 py-1.5 bg-yellow-500 hover:bg-yellow-400 text-black rounded-xl text-xs font-bold shadow transition"><i class="fa-solid fa-plus mr-1"></i> New Post</button>
               <button onclick="handleAdminLogout()" class="px-3.5 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-right-from-bracket mr-1"></i> Logout</button>
             </div>
@@ -211,7 +207,7 @@
             </div>
 
             <div class="space-y-1.5">
-              <input type="url" id="postImgInput" placeholder="Image URL or Selected Image Data" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500">
+              <input type="text" id="postImgInput" placeholder="Image URL or Selected Image Data" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500">
               <div class="flex flex-col sm:flex-row sm:items-center gap-2">
                 <span class="text-[11px] text-gray-400">Upload from Phone Gallery:</span>
                 <input type="file" id="galleryUploadInput" accept="image/*" onchange="uploadFromGallery(this)" class="text-xs text-gray-400 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-yellow-500 file:text-black hover:file:bg-yellow-400 cursor-pointer">
@@ -226,9 +222,7 @@
               <button type="button" onclick="resetForm()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-xs font-semibold transition">Cancel</button>
               <button type="submit" id="submitBtn" class="px-5 py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold rounded-xl text-xs shadow transition">Publish Post</button>
             </div>
-          </form>
-
-          <div class="space-y-2">
+          </form>  <div class="space-y-2">
             <h4 class="text-xs sm:text-sm font-bold text-white">Manage Existing Posts</h4>
             <div id="adminPostsList" class="space-y-2"></div>
           </div>
@@ -289,17 +283,17 @@
       });
 
       if (filtered.length === 0) {
-        grid.innerHTML = `<div class="col-span-full text-center py-16 text-gray-500 text-sm">No prompts found matching your query.</div>`;
+        grid.innerHTML = <div class="col-span-full text-center py-16 text-gray-500 text-sm">No prompts found matching your query.</div>;
         return;
       }
 
       filtered.forEach((post, index) => {
         const card = document.createElement('div');
         card.className = "glass-card rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col justify-between cursor-pointer animate-fade-in";
-        card.style.animationDelay = `${index * 0.05}s`;
+        card.style.animationDelay = ${index * 0.05}s;
         card.onclick = () => openDetailModal(post);
         
-        card.innerHTML = `
+        card.innerHTML = 
           <div>
             <div class="relative w-full bg-gray-950 flex items-center justify-center overflow-hidden p-3">
               <img src="${post.image}" alt="${post.title}" class="w-full max-h-80 object-contain rounded-2xl group-hover:scale-105 transition duration-500">
@@ -314,12 +308,10 @@
             <span class="group-hover:underline">View Full Prompt</span>
             <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition duration-300"></i>
           </div>
-        `;
+        ;
         grid.appendChild(card);
       });
-    }
-
-    function setCategory(cat) {
+    } function setCategory(cat) {
       currentCategory = cat;
       document.querySelectorAll('.cat-btn').forEach(btn => {
         if(btn.innerText === cat) {
@@ -429,10 +421,9 @@
       const list = document.getElementById('adminPostsList');
       list.innerHTML = '';
 
-      posts.forEach(post => {
-        const item = document.createElement('div');
+      posts.forEach(post => { const item = document.createElement('div');
         item.className = "flex justify-between items-center bg-gray-950 p-3 rounded-2xl border border-gray-800 text-xs shadow-inner";
-        item.innerHTML = `
+        item.innerHTML = 
           <div class="flex items-center gap-3 overflow-hidden">
             <img src="${post.image}" class="w-10 h-10 object-cover rounded-xl flex-shrink-0">
             <div class="truncate">
@@ -444,7 +435,7 @@
             <button onclick="editPost('${post.id}')" class="px-3 py-1.5 bg-blue-600/20 text-blue-400 font-semibold rounded-xl hover:bg-blue-600/30 transition">Edit</button>
             <button onclick="deletePost('${post.id}')" class="px-3 py-1.5 bg-red-600/20 text-red-400 font-semibold rounded-xl hover:bg-red-600/30 transition">Delete</button>
           </div>
-        `;
+        ;
         list.appendChild(item);
       });
     }
