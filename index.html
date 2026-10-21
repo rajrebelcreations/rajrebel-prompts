@@ -49,6 +49,7 @@
             margin: 0 auto 10px auto;
             overflow: hidden;
             box-shadow: 0 0 12px rgba(241, 196, 15, 0.3);
+            background: #0d1117;
         }
 
         .avatar-box img {
@@ -319,7 +320,7 @@
     <!-- 1. Profile Section -->
     <div class="profile-card">
         <div class="avatar-box">
-            <img src="profile.jpg" alt="RajRebel Profile" onerror="this.src='https://raw.githubusercontent.com/rajrebelcreations/assets/main/profile.jpg'">
+            <img id="mainProfilePic" src="profile.jpg" alt="RajRebel Profile" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/bottts/svg?seed=RajRebel';">
         </div>
         <h1 class="brand-name">RajRebel Creations</h1>
         <p class="creator-title">Official Creator Hub</p>
@@ -335,14 +336,37 @@
 
     <!-- 3. 16:9 Main Banner Poster Section -->
     <div class="banner-container">
-        <!-- నీ కొత్త HD 16:9 బ్యానర్ ఇక్కడ సెట్ చేయబడింది -->
-        <img src="banner.jpg" alt="RajRebel AI Banner" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800'">
+        <img id="mainBannerImg" src="banner.jpg" alt="RajRebel AI Banner" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800';">
     </div>
 
-    <!-- 4. Admin Post Upload (Gallery Options) -->
+    <!-- 4. Admin Settings & Upload Panel -->
     <div class="admin-section">
+        <div class="admin-title">⚙️ Admin Quick Settings</div>
+
+        <!-- Change Profile Photo -->
+        <label style="color:#f1c40f; font-size:11px; display:block; margin-bottom:4px; font-weight:bold;">📸 Change Profile Photo:</label>
+        <input type="file" id="profileUpload" accept="image/*" class="admin-input" onchange="updateProfilePhoto()">
+
+        <!-- Change Banner Photo -->
+        <label style="color:#f1c40f; font-size:11px; display:block; margin-bottom:4px; font-weight:bold;">🖼️ Change Banner Poster (16:9):</label>
+        <input type="file" id="bannerUpload" accept="image/*" class="admin-input" onchange="updateBannerPhoto()">
+
+        <hr style="border:0.5px solid #30363d; margin:12px 0;">
+
         <div class="admin-title">➕ Add New Prompt Post</div>
-        <label style="color:#8b949e; font-size:11px; display:block; margin-bottom:4px;">1. Select Poster Photo from Gallery:</label>
+        <label style="color:#8b949e; font-size:11px; display:block; margin-bottom:4px;">1. Select Category:</label>
+        
+        <!-- Category Selection Dropdown -->
+        <select id="postCategory" class="admin-input" style="color:#fff;">
+            <option value="AI Photo Prompts">AI Photo Prompts</option>
+            <option value="AI Video Prompts">AI Video Prompts</option>
+            <option value="Google Flow Prompts">Google Flow Prompts</option>
+            <option value="Gemini AI Prompts">Gemini AI Prompts</option>
+            <option value="ChatGPT Prompts">ChatGPT Prompts</option>
+            <option value="Mobile Tricks & Websites">Mobile Tricks & Websites</option>
+        </select>
+
+        <label style="color:#8b949e; font-size:11px; display:block; margin-bottom:4px;">2. Select Poster Photo from Gallery:</label>
         <input type="file" id="imageUpload" accept="image/*" class="admin-input">
         
         <input type="text" id="postTitle" placeholder="Prompt Title (e.g. Realistic Cinematic Photo)" class="admin-input">
@@ -402,6 +426,30 @@
 <script>
     let activePromptText = "";
 
+    function updateProfilePhoto() {
+        const fileInput = document.getElementById('profileUpload');
+        if (fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('mainProfilePic').src = e.target.result;
+                alert("ప్రొఫైల్ ఫోటో అప్‌డేట్ అయింది! 📸");
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+
+    function updateBannerPhoto() {
+        const fileInput = document.getElementById('bannerUpload');
+        if (fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('mainBannerImg').src = e.target.result;
+                alert("బ్యానర్ పోస్టర్ అప్‌డేట్ అయింది! 🖼️");
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+
     function openPromptModal(title, processText, promptText) {
         document.getElementById('modalTitle').innerText = title;
         document.getElementById('modalProcess').innerText = processText;
@@ -419,15 +467,16 @@
         alert("Prompt Copied to Clipboard! 📋");
     }
 
-    // Direct Gallery Image Upload & Post Creation Logic
+    // Gallery Upload & Selected Category Post Creation
     function createNewPost() {
+        const category = document.getElementById('postCategory').value;
         const title = document.getElementById('postTitle').value;
         const process = document.getElementById('postProcess').value;
         const prompt = document.getElementById('postPrompt').value;
         const fileInput = document.getElementById('imageUpload');
 
         if (!title || !prompt || !fileInput.files[0]) {
-            alert("ప్లీజ్ గ్యాలరీ ఫోటో, టైటిల్ మరియు ప్రాంప్ట్ అన్ని వివరాలు పూరించండి!");
+            alert("ప్లీజ్ కేటగిరీ, గ్యాలరీ ఫోటో, టైటిల్ మరియు ప్రాంప్ట్ వివరాలన్నీ ఎంచుకోండి!");
             return;
         }
 
@@ -437,7 +486,7 @@
 
             const newCardHtml = `
                 <div class="prompt-card">
-                    <span class="card-badge">AI Prompt</span>
+                    <span class="card-badge">${category}</span>
                     <img src="${imgUrl}" class="card-img">
                     <h3 class="card-title">${title}</h3>
                     <button class="btn-view" onclick="openPromptModal('${title}', '${process}', '${prompt}')">View Prompt &rarr;</button>
@@ -445,7 +494,7 @@
             `;
 
             document.getElementById('promptsFeed').insertAdjacentHTML('afterbegin', newCardHtml);
-            alert("పోస్ట్ గ్యాలరీ ఫోటోతో సక్సెస్‌ఫుల్‌గా అప్‌లోడ్ అయింది! 🎉");
+            alert("పోస్ట్ ఎంచుకున్న కేటగిరీతో సక్సెస్‌ఫుల్‌గా పబ్లిష్ అయింది! 🎉");
 
             // Reset Form
             document.getElementById('postTitle').value = '';
