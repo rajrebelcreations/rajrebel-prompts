@@ -84,7 +84,7 @@
             Explore trending AI Photo Prompts, Gemini AI, Google Flow, Video Editing Prompts & Mobile Tutorials. Copy prompts with one click!
           </p>
 
-          <!-- SOCIAL MEDIA LINKS (WhatsApp link secured with rel="noopener noreferrer") -->
+          <!-- SOCIAL MEDIA LINKS -->
           <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 pt-2">
             <a href="https://www.instagram.com/rajrebel_creations/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-pink-600/20 transition">
               <i class="fa-brands fa-instagram text-sm"></i> Instagram
@@ -248,7 +248,7 @@
     </div>
   </footer>
 
-  <!-- APPLICATION SCRIPT (Persistent Login & WhatsApp Fixed) -->
+  <!-- APPLICATION SCRIPT -->
   <script>
     let samplePosts = [
       {
@@ -412,7 +412,7 @@
 
       if(email === 'radhajogendhra2206@gmail.com' && password === 'rajrebel_2206') {
         isAdminLoggedIn = true;
-        localStorage.setItem('raj_admin_logged', 'true'); // Persistent Login Saved
+        localStorage.setItem('raj_admin_logged', 'true');
         showAdminDashboard();
       } else {
         alert('Invalid Admin Credentials!');
@@ -421,7 +421,7 @@
 
     function handleAdminLogout() {
       isAdminLoggedIn = false;
-      localStorage.removeItem('raj_admin_logged'); // Clear Persistent Login
+      localStorage.removeItem('raj_admin_logged');
       showAdminLogin();
     }
 
@@ -506,7 +506,6 @@
       document.getElementById('formTitle').innerText = "Create New Prompt / Tutorial Post";
     }
 
-    // Check Persistent Login on page load
     window.onload = function() {
       renderPosts();
       if(localStorage.getItem('raj_admin_logged') === 'true') {
