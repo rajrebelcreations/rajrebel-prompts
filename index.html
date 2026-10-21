@@ -35,8 +35,7 @@
     <!-- 1. Profile & Social Media Buttons Header -->
     <header class="py-4 px-4 bg-gray-900 border-b border-gray-800 flex flex-wrap items-center justify-between gap-3 sticky top-0 z-40">
         <div class="flex items-center gap-3">
-            <!-- నీ అసలు ప్రొఫైల్ ఫోటో లింక్ -->
-            <img src="https://raw.githubusercontent.com/rajrebelcreations/assets/main/profile.jpg" alt="Profile" class="w-11 h-11 rounded-full border-2 border-yellow-400 object-cover">
+            <img id="headerProfileImg" src="https://raw.githubusercontent.com/rajrebelcreations/assets/main/profile.jpg" alt="Profile" class="w-11 h-11 rounded-full border-2 border-yellow-400 object-cover" onerror="this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150'">
             <div>
                 <h1 class="text-sm font-bold text-yellow-400">RajRebel Creations</h1>
                 <p class="text-[11px] text-gray-400">@RajRebel_Creations</p>
@@ -56,7 +55,7 @@
             <a href="https://instagram.com" target="_blank" class="bg-pink-600 hover:bg-pink-700 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition">
                 📸 Insta
             </a>
-            <button onclick="toggleAdminModal()" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 text-[11px] font-bold px-3 py-1.5 rounded-lg transition shadow-md">
+            <button onclick="checkAdminAccess()" class="bg-yellow-500 hover:bg-yellow-400 text-gray-950 text-[11px] font-bold px-3 py-1.5 rounded-lg transition shadow-md">
                 ⚙️ Admin Panel
             </button>
         </div>
@@ -64,8 +63,7 @@
 
     <!-- 2. Banner Section -->
     <div class="w-full h-40 md:h-52 bg-gray-900 relative overflow-hidden border-b border-gray-800">
-        <!-- నీ అసలు బ్యానర్ ఫోటో లింక్ -->
-        <img src="https://raw.githubusercontent.com/rajrebelcreations/assets/main/banner.jpg" alt="Banner" class="w-full h-full object-cover opacity-75">
+        <img id="headerBannerImg" src="https://raw.githubusercontent.com/rajrebelcreations/assets/main/banner.jpg" alt="Banner" class="w-full h-full object-cover opacity-75" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200'">
         <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent flex items-end p-4">
             <div>
                 <h2 class="text-base md:text-lg font-bold text-white">Welcome to RajRebel Creations Hub</h2>
@@ -130,11 +128,24 @@
         </div>
     </div>
 
-    <!-- Admin Panel Modal -->
+    <!-- Admin Panel Modal (Password Protected & Profile/Banner Settings) -->
     <div id="adminModal" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-xl w-full p-5 relative max-h-[95vh] overflow-y-auto">
             <button onclick="toggleAdminModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white text-xl font-bold bg-gray-800 w-8 h-8 rounded-full flex items-center justify-center">&times;</button>
             
+            <!-- Site Branding Settings -->
+            <h2 class="text-lg font-bold text-yellow-400 mb-3">⚙️ Admin Settings (Profile & Banner)</h2>
+            <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 mb-5 space-y-3">
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">Update Profile Photo</label>
+                    <input type="file" accept="image/*" onchange="updateProfileImage(event)" class="w-full text-xs text-gray-300 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-yellow-500 file:text-gray-950 hover:file:bg-yellow-400">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">Update Banner Photo</label>
+                    <input type="file" accept="image/*" onchange="updateBannerImage(event)" class="w-full text-xs text-gray-300 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-yellow-500 file:text-gray-950 hover:file:bg-yellow-400">
+                </div>
+            </div>
+
             <h2 id="formTitle" class="text-lg font-bold text-yellow-400 mb-4">Create New Prompt / Tutorial Post</h2>
             
             <form id="postForm" onsubmit="handlePostSubmit(event)" class="space-y-3">
@@ -192,6 +203,7 @@
     <script>
         let currentPrompt = "";
         let selectedCategory = 'all';
+        const ADMIN_PASSWORD = "rajrebel2026"; // 🔴 ఇక్కడ పాస్‌వర్డ్ మార్చుకోవచ్చు
 
         const defaultPosts = [
             {
@@ -240,7 +252,49 @@
             }
         }
 
+        function updateProfileImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('raj_profile_img', e.target.result);
+                    document.getElementById('headerProfileImg').src = e.target.result;
+                    alert('Profile Photo Updated Successfully! 🎉');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateBannerImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('raj_banner_img', e.target.result);
+                    document.getElementById('headerBannerImg').src = e.target.result;
+                    alert('Banner Photo Updated Successfully! 🎉');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function checkAdminAccess() {
+            let pass = prompt("Enter Admin Password:");
+            if (pass === ADMIN_PASSWORD) {
+                toggleAdminModal();
+            } else if (pass !== null) {
+                alert("Incorrect Password! ❌");
+            }
+        }
+
         function renderPosts() {
+            // Load saved profile & banner if exists
+            const savedProfile = localStorage.getItem('raj_profile_img');
+            if(savedProfile) document.getElementById('headerProfileImg').src = savedProfile;
+            
+            const savedBanner = localStorage.getItem('raj_banner_img');
+            if(savedBanner) document.getElementById('headerBannerImg').src = savedBanner;
+
             const grid = document.getElementById('galleryGrid');
             const searchInput = document.getElementById('searchInput').value.toLowerCase();
             const posts = getStoredPosts();
