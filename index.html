@@ -4,33 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RajRebel Prompts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0f172a; color: #f8fafc; padding: 20px; }
-        header { text-align: center; padding: 20px 0; border-bottom: 2px solid #334155; margin-bottom: 30px; }
-        .dp-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #38bdf8; object-fit: cover; }
-        h1 { margin-top: 10px; color: #38bdf8; }
-        .admin-btn { position: absolute; top: 20px; right: 20px; background: #0284c7; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+        
+        header { text-align: center; padding: 20px 0; border-bottom: 2px solid #334155; margin-bottom: 25px; position: relative; }
+        
+        /* ప్రొఫైల్ పిక్చర్ డిజైన్ */
+        .dp-container { display: flex; justify-content: center; align-items: center; margin-bottom: 12px; }
+        .dp-img { width: 110px; height: 110px; border-radius: 50%; border: 3px solid #38bdf8; object-fit: cover; background-color: #1e293b; }
+        
+        h1 { color: #38bdf8; font-size: 26px; font-weight: bold; margin-bottom: 15px; }
+        
+        /* సోషల్ మీడియా బటన్లు */
+        .social-links { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .social-btn { color: #38bdf8; font-size: 20px; text-decoration: none; width: 40px; height: 40px; border-radius: 50%; background: #1e293b; display: flex; align-items: center; justify-content: center; border: 1px solid #334155; transition: 0.3s; }
+        .social-btn:hover { background: #38bdf8; color: #0f172a; }
+        
+        .admin-btn { position: absolute; top: 15px; right: 10px; background: #0284c7; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        
         .container { max-width: 800px; margin: 0 auto; }
-        .post-card { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 25px; border: 1px solid #334155; }
-        .post-img { width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
-        .prompt-box { background: #0f172a; padding: 12px; border-radius: 6px; border: 1px dashed #38bdf8; font-family: monospace; color: #7dd3fc; margin-top: 10px; position: relative; }
+        
+        /* సెర్చ్ బార్ డిజైన్ */
+        .search-box { margin-bottom: 25px; position: relative; }
+        .search-box input { width: 100%; padding: 12px 15px 12px 40px; border-radius: 25px; border: 1px solid #334155; background: #1e293b; color: white; outline: none; font-size: 15px; }
+        .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        
+        /* అడ్మిన్ ప్యానెల్ */
         .admin-panel { display: none; background: #1e293b; padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 2px solid #38bdf8; }
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; color: #94a3b8; }
-        input, textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: white; }
-        .pub-btn { background: #22c55e; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; }
+        label { display: block; margin-bottom: 5px; color: #94a3b8; font-weight: 500; }
+        input[type="text"], textarea, input[type="file"] { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
+        .pub-btn { background: #22c55e; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px; }
+        
+        /* పోస్ట్ కార్డుల డిజైన్ */
+        .post-card { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 25px; border: 1px solid #334155; }
+        .post-img { width: 100%; max-height: 450px; object-fit: cover; border-radius: 8px; margin-top: 12px; margin-bottom: 15px; }
+        .prompt-box { background: #0f172a; padding: 12px; border-radius: 6px; border: 1px dashed #38bdf8; font-family: monospace; color: #7dd3fc; margin-top: 10px; word-break: break-all; }
     </style>
 </head>
 <body>
-    <button class="admin-btn" onclick="toggleAdmin()">Admin</button>
+
     <header>
-        <img src="rajrebel_dp.jpg" alt="RajRebel" class="dp-img">
+        <button class="admin-btn" onclick="toggleAdmin()">Admin</button>
+        <div class="dp-container">
+            <img src="rajrebel_dp.jpg" alt="RajRebel" class="dp-img" onerror="this.src='https://via.placeholder.com/110?text=RajRebel'">
+        </div>
         <h1>RajRebel Prompts</h1>
+        
+        <!-- సోషల్ మీడియా లింక్ బటన్లు -->
+        <div class="social-links">
+            <a href="https://youtube.com/@RajRebel_Creations" target="_blank" class="social-btn"><i class="fab fa-youtube"></i></a>
+            <a href="https://instagram.com/Rajrebel_22" target="_blank" class="social-btn"><i class="fab fa-instagram"></i></a>
+            <a href="https://facebook.com" target="_blank" class="social-btn"><i class="fab fa-facebook"></i></a>
+            <a href="https://telegram.org" target="_blank" class="social-btn"><i class="fab fa-telegram"></i></a>
+        </div>
     </header>
 
     <div class="container">
-        <!-- Admin Panel -->
+        <!-- సెర్చ్ బార్ -->
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" onkeyup="filterPosts()" placeholder="Prompts సెర్చ్ చేయండి...">
+        </div>
+
+        <!-- అడ్మిన్ ప్యానెల్ -->
         <div id="adminPanel" class="admin-panel">
             <h2 style="margin-bottom:15px; color:#38bdf8;">Add New Prompt Post</h2>
             <div class="form-group">
@@ -48,7 +87,7 @@
             <button class="pub-btn" id="pubBtn" onclick="uploadAndPublish()">Publish Post</button>
         </div>
 
-        <!-- Posts List -->
+        <!-- పోస్ట్‌ల లిస్ట్ -->
         <div id="postsList"></div>
     </div>
 
@@ -58,6 +97,22 @@
             panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
         }
 
+        /* సెర్చ్ ఫిల్టర్ లాజిక్ */
+        function filterPosts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.getElementsByClassName('post-card');
+            for (let card of cards) {
+                const title = card.getElementsByTagName('h3')[0].innerText.toLowerCase();
+                const prompt = card.getElementsByClassName('prompt-box')[0].innerText.toLowerCase();
+                if (title.includes(query) || prompt.includes(query)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            }
+        }
+
+        /* ఫోన్ గ్యాలరీ అప్‌లోడ్ లాజిక్ */
         async function uploadAndPublish() {
             const title = document.getElementById('postTitle').value;
             const prompt = document.getElementById('postPrompt').value;
@@ -108,12 +163,13 @@
             }
         }
 
+        /* పోస్ట్‌లు లోడ్ చేయడం */
         function loadPosts() {
             const posts = JSON.parse(localStorage.getItem('raj_prompts') || '[]');
             const list = document.getElementById('postsList');
             list.innerHTML = posts.map(p => `
                 <div class="post-card">
-                    <h3>${p.title}</h3>
+                    <h3 style="color:#38bdf8;">${p.title}</h3>
                     <img src="${p.imageUrl}" class="post-img">
                     <div class="prompt-box">
                         ${p.prompt}
