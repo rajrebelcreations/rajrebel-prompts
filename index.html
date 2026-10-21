@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0d1117">
+  <meta name="theme-color" content="#07090e">
   <title>RajRebel Creations | AI Prompts & Content Hub</title>
   <meta name="description" content="Explore AI Photo Prompts, Video Prompts, Editing Tutorials & Tools by RajRebel Creations.">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -15,7 +15,6 @@
     .glass-card:hover { border-color: rgba(234, 179, 8, 0.3); box-shadow: 0 12px 40px 0 rgba(234, 179, 8, 0.1); }
     .gradient-text { background: linear-gradient(135deg, #60a5fa, #ec4899, #eab308); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     
-    /* Smooth Animations */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -123,37 +122,25 @@
     <div id="postsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </main>
 
-  <!-- POST DETAIL MODAL (Animated & Optimized) -->
+  <!-- POST DETAIL MODAL -->
   <div id="detailModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
     <div class="glass-card w-full max-w-xl rounded-3xl max-h-[92vh] flex flex-col overflow-hidden border border-gray-700/80 shadow-2xl my-auto animate-scale-up">
-      
-      <!-- Modal Header -->
       <div class="p-4 border-b border-gray-800/80 flex justify-between items-center bg-gray-950/60 flex-shrink-0">
         <span id="modalCategory" class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-yellow-400 bg-yellow-500/10 px-3 py-1 rounded-lg border border-yellow-500/20 shadow-sm">Category</span>
         <button onclick="closeDetailModal()" class="text-gray-400 hover:text-white text-xl p-1.5 rounded-full hover:bg-gray-800 transition"><i class="fa-solid fa-xmark"></i></button>
       </div>
-
-      <!-- Modal Body (Scrollable) -->
       <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar space-y-4">
-        
-        <!-- Image Container -->
         <div class="w-full bg-gray-950 rounded-2xl overflow-hidden border border-gray-800/80 flex justify-center shadow-inner">
           <img id="modalImage" src="" alt="Post Image" class="max-h-[55vh] w-auto max-w-full object-contain">
         </div>
-
-        <!-- Title & Description -->
         <div class="space-y-1">
           <h2 id="modalTitle" class="text-lg sm:text-2xl font-black text-white tracking-tight"></h2>
           <p id="modalDesc" class="text-gray-300 text-xs sm:text-sm leading-relaxed"></p>
         </div>
-
-        <!-- Process Steps -->
         <div id="processSection" class="space-y-2">
           <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-list-check"></i> How to Create / Process</h3>
           <div id="modalProcess" class="bg-gray-950/70 rounded-2xl p-3.5 text-xs sm:text-sm text-gray-300 whitespace-pre-line border border-gray-800/80 leading-relaxed shadow-inner"></div>
         </div>
-
-        <!-- Full Prompt Section with Prominent Copy Button -->
         <div class="space-y-2.5 pt-1">
           <div class="flex justify-between items-center">
             <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-code"></i> Full Prompt</h3>
@@ -163,7 +150,6 @@
           </div>
           <textarea id="modalPrompt" readonly class="w-full h-32 sm:h-36 bg-gray-950 text-gray-200 border border-gray-800/80 rounded-2xl p-3.5 text-xs sm:text-sm font-mono resize-none focus:outline-none shadow-inner"></textarea>
         </div>
-
       </div>
     </div>
   </div>
@@ -175,12 +161,11 @@
         <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-user-shield text-yellow-400"></i> Admin Management Portal</h3>
         <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white text-xl p-1.5 rounded-full hover:bg-gray-800 transition"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      
       <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar">
         <!-- LOGIN VIEW -->
         <div id="adminLoginView" class="max-w-md mx-auto space-y-4 py-6">
           <h4 class="text-center text-lg font-bold text-white">Sign in to Access Admin Controls</h4>
-          <p class="text-center text-xs text-gray-400">Default fallback login: <b>admin@rajrebel.com</b> / <b>admin123</b></p>
+          <p class="text-center text-xs text-gray-400">Login Email: <b>rajrebel@gmail.com</b> | Password: <b>rajrebel123</b></p>
           <div class="space-y-3 pt-2">
             <input type="email" id="loginEmail" placeholder="Admin Email" class="w-full bg-gray-950 border border-gray-800 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-yellow-500 shadow-inner">
             <input type="password" id="loginPassword" placeholder="Password" class="w-full bg-gray-950 border border-gray-800 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-yellow-500 shadow-inner">
@@ -198,7 +183,6 @@
             </div>
           </div>
 
-          <!-- Create/Edit Post Form -->
           <form id="postForm" onsubmit="handlePostSubmit(event)" class="bg-gray-950/60 p-4 sm:p-5 rounded-2xl border border-gray-800/80 space-y-3.5 shadow-inner">
             <h4 id="formTitle" class="text-xs sm:text-sm font-extrabold text-yellow-400">Create New Prompt / Tutorial Post</h4>
             <input type="hidden" id="editPostId" value="">
@@ -216,7 +200,6 @@
               </select>
             </div>
 
-            <!-- Image Input & Gallery Direct Base64 Upload -->
             <div class="space-y-1.5">
               <input type="text" id="postImgInput" placeholder="Image URL or Selected Image Data" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500">
               <div class="flex flex-col sm:flex-row sm:items-center gap-2">
@@ -235,7 +218,6 @@
             </div>
           </form>
 
-          <!-- Admin Post List -->
           <div class="space-y-2">
             <h4 class="text-xs sm:text-sm font-bold text-white">Manage Existing Posts</h4>
             <div id="adminPostsList" class="space-y-2"></div>
@@ -417,7 +399,8 @@
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
 
-      if(email === 'admin@rajrebel.com' && password === 'admin123') {
+      // LINE 355: ఇక్కడ మీ లాగిన్ ఈమెయిల్ మరియు పాస్‌వర్డ్ ఉంటుంది
+      if(email === 'radhajogendhra2206@gmail.com' && password === 'rajrebel_2206') {
         isAdminLoggedIn = true;
         showAdminDashboard();
       } else {
