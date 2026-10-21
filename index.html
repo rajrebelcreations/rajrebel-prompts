@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#07090e">
   <title>RajRebel Creations | AI Prompts & Content Hub</title>
-  <meta name="description" content="Official Hub for RajRebel Creations - Explore trending AI Photo Prompts, Gemini AI, Google Flow, Video Editing Prompts & Mobile Tutorials.">
+  <meta name="description" content="Official Hub for RajRebel Creations - Explore trending AI Photo Prompts, Gemini AI, Google Flow, Video Editing Prompts & Mobile Tutorials. Copy prompts with one click!">
   <meta name="keywords" content="RajRebel Creations, RajRebel Prompts, AI Prompts Telugu, Gemini AI Telugu, Mobile Editing Tutorials, Google Flow, RajRebel">
   <meta name="author" content="RajRebel Creations">
-  
   <meta property="og:title" content="RajRebel Creations | AI Prompts & Content Hub">
   <meta property="og:description" content="Explore AI Photo Prompts, Video Prompts, Editing Tutorials & Tools by RajRebel Creations.">
   <meta property="og:type" content="website">
@@ -18,28 +17,58 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    body { background-color: #07090e; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; overflow-x: hidden; }
-    .glass-card { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
-    .glass-card:hover { border-color: rgba(234, 179, 8, 0.3); box-shadow: 0 12px 40px 0 rgba(234, 179, 8, 0.1); }
-    .gradient-text { background: linear-gradient(135deg, #60a5fa, #ec4899, #eab308); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    
+    body {
+      background-color: #07090e;
+      color: #f3f4f6;
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .glass-card {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(234, 179, 8, 0.3);
+      box-shadow: 0 12px 40px 0 rgba(234, 179, 8, 0.1);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #60a5fa, #ec4899, #eab308);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .animate-fade-in { animation: fadeInUp 0.5s ease-out forwards; }
-    
+
+    .animate-fade-in {
+      animation: fadeInUp 0.5s ease-out forwards;
+    }
+
     @keyframes scaleUp {
       from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
     }
-    .animate-scale-up { animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    .animate-scale-up {
+      animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
 
     .custom-scrollbar::-webkit-scrollbar { width: 4px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #0b0f17; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 4px;
+    }
   </style>
 </head>
+
 <body class="min-h-screen flex flex-col justify-between selection:bg-yellow-500 selection:text-black">
 
   <!-- HEADER / NAVBAR -->
@@ -51,7 +80,7 @@
         </div>
         <span class="text-lg font-extrabold tracking-wider gradient-text">RajRebel Creations</span>
       </a>
-      
+
       <div class="flex items-center gap-3">
         <button id="adminBtn" onclick="openAdminModal()" class="px-3.5 py-1.5 text-xs font-semibold bg-gray-900/80 hover:bg-gray-800 text-gray-300 rounded-xl border border-gray-700/60 shadow transition flex items-center gap-1.5">
           <i class="fa-solid fa-lock text-yellow-400 text-[10px]"></i> Admin
@@ -60,54 +89,57 @@
     </div>
   </header>
 
-  <!-- HERO SECTION WITH BANNER -->
+  <!-- HERO SECTION -->
   <section class="max-w-6xl mx-auto px-4 py-6 animate-fade-in">
     <div class="glass-card rounded-3xl overflow-hidden shadow-2xl relative border border-gray-800/80">
-      <!-- Banner Image -->
       <div class="w-full h-48 sm:h-64 md:h-80 overflow-hidden relative">
         <img id="heroBanner" src="file_00000000de44820cafcf33ac46c92a80.png" alt="RajRebel Banner" class="w-full h-full object-cover brightness-90 hover:scale-105 transition duration-700">
         <div class="absolute inset-0 bg-gradient-to-t from-[#07090e] via-[#07090e]/40 to-transparent"></div>
       </div>
 
-      <!-- Content Box -->
       <div class="p-5 sm:p-8 -mt-16 sm:-mt-20 relative z-10 flex flex-col sm:flex-row items-center sm:items-end gap-5 text-center sm:text-left">
-        <!-- Profile Pic DP -->
         <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-yellow-500 shadow-2xl flex-shrink-0 bg-gray-950 ring-4 ring-black/50">
           <img id="heroImage" src="file_00000000919c81fab001e649c432dd54.png" alt="RajRebel DP" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/150?text=RajRebel'">
         </div>
 
         <div class="flex-1 space-y-2.5">
           <span class="inline-block text-[10px] sm:text-xs uppercase tracking-widest text-yellow-400 font-bold bg-yellow-500/10 px-3.5 py-1 rounded-full border border-yellow-500/30 shadow-sm">Official Creator Hub</span>
-          <h1 class="text-xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">Welcome to <span class="gradient-text">RajRebel Creations</span></h1>
+
+          <h1 class="text-xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+            Welcome to <span class="gradient-text">RajRebel Creations</span>
+          </h1>
+
           <p class="text-gray-300 text-xs sm:text-sm max-w-2xl leading-relaxed">
             Explore trending AI Photo Prompts, Gemini AI, Google Flow, Video Editing Prompts & Mobile Tutorials. Copy prompts with one click!
           </p>
 
-          <!-- SOCIAL MEDIA LINKS -->
           <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 pt-2">
             <a href="https://www.instagram.com/rajrebel_creations/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-pink-600/20 transition">
               <i class="fa-brands fa-instagram text-sm"></i> Instagram
             </a>
+
             <a href="https://youtube.com/@rajrebelcreations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-red-600/20 transition">
               <i class="fa-brands fa-youtube text-sm"></i> YouTube
             </a>
+
             <a href="https://whatsapp.com/channel/0029VaW8225ISTkUfQ96102L" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-green-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-green-600/20 transition">
               <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp Channel
             </a>
+
             <a href="https://www.tiktok.com/@rajrebel_creations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white font-semibold text-xs border border-gray-700/80 hover:scale-105 shadow-lg transition">
               <i class="fa-brands fa-tiktok text-sm"></i> TikTok
             </a>
+
             <a href="https://www.facebook.com/share/1E4gLSvPMM/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-blue-600/20 transition">
               <i class="fa-brands fa-facebook text-sm"></i> Facebook
             </a>
           </div>
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- SEARCH & FILTER SECTION -->
+  <!-- SEARCH & FILTER -->
   <section class="max-w-6xl mx-auto px-4 py-3 space-y-3 w-full animate-fade-in">
     <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
       <div class="relative w-full sm:w-80">
@@ -139,21 +171,29 @@
         <span id="modalCategory" class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-yellow-400 bg-yellow-500/10 px-3 py-1 rounded-lg border border-yellow-500/20 shadow-sm">Category</span>
         <button onclick="closeDetailModal()" class="text-gray-400 hover:text-white text-xl p-1.5 rounded-full hover:bg-gray-800 transition"><i class="fa-solid fa-xmark"></i></button>
       </div>
+
       <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar space-y-4">
         <div class="w-full bg-gray-950 rounded-2xl overflow-hidden border border-gray-800/80 flex justify-center shadow-inner">
           <img id="modalImage" src="" alt="Post Image" class="max-h-[55vh] w-auto max-w-full object-contain">
         </div>
+
         <div class="space-y-1">
           <h2 id="modalTitle" class="text-lg sm:text-2xl font-black text-white tracking-tight"></h2>
           <p id="modalDesc" class="text-gray-300 text-xs sm:text-sm leading-relaxed"></p>
         </div>
+
         <div id="processSection" class="space-y-2">
-          <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-list-check"></i> How to Create / Process</h3>
+          <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-list-check"></i> How to Create / Process
+          </h3>
           <div id="modalProcess" class="bg-gray-950/70 rounded-2xl p-3.5 text-xs sm:text-sm text-gray-300 whitespace-pre-line border border-gray-800/80 leading-relaxed shadow-inner"></div>
         </div>
+
         <div class="space-y-2.5 pt-1">
           <div class="flex justify-between items-center">
-            <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-code"></i> Full Prompt</h3>
+            <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-code"></i> Full Prompt
+            </h3>
             <button onclick="copyPromptText()" class="px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black text-xs sm:text-sm rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-yellow-500/25 active:scale-95">
               <i class="fa-regular fa-copy text-sm"></i> Copy Prompt
             </button>
@@ -171,8 +211,8 @@
         <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-user-shield text-yellow-400"></i> Admin Management Portal</h3>
         <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white text-xl p-1.5 rounded-full hover:bg-gray-800 transition"><i class="fa-solid fa-xmark"></i></button>
       </div>
+
       <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar">
-        <!-- LOGIN VIEW -->
         <div id="adminLoginView" class="max-w-md mx-auto space-y-4 py-6">
           <h4 class="text-center text-lg font-bold text-white">Sign in to Access Admin Controls</h4>
           <p class="text-center text-xs text-gray-400">Login to Manage Prompts</p>
@@ -183,7 +223,6 @@
           </div>
         </div>
 
-        <!-- DASHBOARD VIEW -->
         <div id="adminDashboardView" class="hidden space-y-5">
           <div class="flex flex-wrap justify-between items-center gap-3 pb-3 border-b border-gray-800/80">
             <span class="text-[11px] text-green-400 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20 font-semibold"><i class="fa-solid fa-circle text-[6px] mr-1"></i> Admin Session Active</span>
@@ -196,7 +235,7 @@
           <form id="postForm" onsubmit="handlePostSubmit(event)" class="bg-gray-950/60 p-4 sm:p-5 rounded-2xl border border-gray-800/80 space-y-3.5 shadow-inner">
             <h4 id="formTitle" class="text-xs sm:text-sm font-extrabold text-yellow-400">Create New Prompt / Tutorial Post</h4>
             <input type="hidden" id="editPostId" value="">
-            
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <input type="text" id="postTitleInput" placeholder="Post Title" required class="bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500">
               <select id="postCatInput" required class="bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500">
@@ -249,42 +288,65 @@
 
   <!-- APPLICATION SCRIPT -->
   <script>
-    let samplePosts = [
-      {
-        id: "post-1",
-        title: "Arya 2 Poster Prompt",
-        category: "AI Photo Prompts",
-        image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-        description: "Generate hyper-realistic cinematic portraits with natural lighting.",
-        process: "1. Copy prompt.\n2. Open Bing Image Creator.\n3. Generate.",
-        prompt: "A cinematic hyper-realistic portrait of a stylish young Indian man in modern street fashion."
-      }
-    ];
+    let samplePosts = [{
+      id: "post-1",
+      title: "Arya 2 Poster Prompt",
+      category: "AI Photo Prompts",
+      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+      description: "Generate hyper-realistic cinematic portraits with natural lighting.",
+      process: "1. Copy prompt.\n2. Open Bing Image Creator.\n3. Generate.",
+      prompt: "A cinematic hyper-realistic portrait of a stylish young Indian man in modern street fashion."
+    }];
 
     let currentCategory = 'All';
     let isAdminLoggedIn = false;
 
     function getStoredPosts() {
-      const data = localStorage.getItem('rajrebel_posts');
-      return data ? JSON.parse(data) : samplePosts;
+      try {
+        const data = localStorage.getItem('rajrebel_posts');
+        return data ? JSON.parse(data) : samplePosts;
+      } catch (error) {
+        console.error('Could not read saved posts:', error);
+        alert('Saved posts could not be read from this browser.');
+        return samplePosts;
+      }
     }
 
     function saveStoredPosts(posts) {
-      localStorage.setItem('rajrebel_posts', JSON.stringify(posts));
-      renderPosts();
-      renderAdminPosts();
+      try {
+        localStorage.setItem('rajrebel_posts', JSON.stringify(posts));
+        renderPosts();
+        renderAdminPosts();
+        return true;
+      } catch (error) {
+        console.error('Post save failed:', error);
+        const message = error && (
+          error.name === 'QuotaExceededError' ||
+          error.name === 'NS_ERROR_DOM_QUOTA_REACHED'
+        )
+          ? 'Browser storage is full. The post was not saved. Reduce the image size or use an image URL.'
+          : 'The post could not be saved: ' + (error.message || 'Unknown error');
+
+        alert(message);
+        return false;
+      }
     }
 
     function renderPosts() {
       const posts = getStoredPosts();
       const grid = document.getElementById('postsGrid');
-      const searchVal = document.getElementById('searchInput').value.toLowerCase();
+      const searchInput = document.getElementById('searchInput');
+      const searchVal = searchInput ? searchInput.value.toLowerCase() : '';
 
+      if (!grid) return;
       grid.innerHTML = '';
 
       const filtered = posts.filter(post => {
         const matchesCat = currentCategory === 'All' || post.category === currentCategory;
-        const matchesSearch = post.title.toLowerCase().includes(searchVal) || post.description.toLowerCase().includes(searchVal);
+        const matchesSearch =
+          (post.title || '').toLowerCase().includes(searchVal) ||
+          (post.description || '').toLowerCase().includes(searchVal);
+
         return matchesCat && matchesSearch;
       });
 
@@ -298,36 +360,55 @@
         card.className = "glass-card rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col justify-between cursor-pointer animate-fade-in";
         card.style.animationDelay = `${index * 0.05}s`;
         card.onclick = () => openDetailModal(post);
-        
-        card.innerHTML = `
-          <div>
-            <div class="relative w-full bg-gray-950 flex items-center justify-center overflow-hidden p-3">
-              <img src="${post.image}" alt="${post.title}" class="w-full max-h-80 object-contain rounded-2xl group-hover:scale-105 transition duration-500">
-              <span class="absolute top-5 left-5 text-[10px] font-black uppercase tracking-wider text-black bg-yellow-400 px-3 py-1 rounded-xl shadow-lg">${post.category}</span>
-            </div>
-            <div class="p-5 space-y-2">
-              <h3 class="font-extrabold text-white text-base sm:text-lg group-hover:text-yellow-400 transition tracking-tight line-clamp-1">${post.title}</h3>
-              <p class="text-xs text-gray-300 line-clamp-2 leading-relaxed">${post.description}</p>
-            </div>
-          </div>
-          <div class="px-5 pb-5 pt-2 flex justify-between items-center text-xs text-yellow-400 font-extrabold">
-            <span class="group-hover:underline">View Full Prompt</span>
-            <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition duration-300"></i>
-          </div>
-        `;
+
+        const imageWrap = document.createElement('div');
+        imageWrap.className = 'relative w-full bg-gray-950 flex items-center justify-center overflow-hidden p-3';
+
+        const image = document.createElement('img');
+        image.src = post.image || '';
+        image.alt = post.title || 'Post image';
+        image.className = 'w-full max-h-80 object-contain rounded-2xl group-hover:scale-105 transition duration-500';
+        image.onerror = () => { image.alt = 'Image unavailable'; };
+        imageWrap.appendChild(image);
+
+        const category = document.createElement('span');
+        category.className = 'absolute top-5 left-5 text-[10px] font-black uppercase tracking-wider text-black bg-yellow-400 px-3 py-1 rounded-xl shadow-lg';
+        category.textContent = post.category || '';
+        imageWrap.appendChild(category);
+
+        const content = document.createElement('div');
+        content.className = 'p-5 space-y-2';
+
+        const title = document.createElement('h3');
+        title.className = 'font-extrabold text-white text-base sm:text-lg group-hover:text-yellow-400 transition tracking-tight line-clamp-1';
+        title.textContent = post.title || '';
+
+        const desc = document.createElement('p');
+        desc.className = 'text-xs text-gray-300 line-clamp-2 leading-relaxed';
+        desc.textContent = post.description || '';
+
+        content.append(title, desc);
+
+        const bottom = document.createElement('div');
+        bottom.className = 'px-5 pb-5 pt-2 flex justify-between items-center text-xs text-yellow-400 font-extrabold';
+        bottom.innerHTML = '<span class="group-hover:underline">View Full Prompt</span><i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition duration-300"></i>';
+
+        card.append(imageWrap, content, bottom);
         grid.appendChild(card);
       });
     }
 
     function setCategory(cat) {
       currentCategory = cat;
+
       document.querySelectorAll('.cat-btn').forEach(btn => {
-        if(btn.innerText === cat) {
+        if (btn.innerText === cat) {
           btn.className = "cat-btn px-4 py-2 rounded-xl bg-yellow-500 text-black font-bold whitespace-nowrap shadow-lg shadow-yellow-500/20 transition";
         } else {
           btn.className = "cat-btn px-4 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition";
         }
       });
+
       renderPosts();
     }
 
@@ -336,32 +417,80 @@
     }
 
     function uploadFromGallery(input) {
-      const file = input.files[0];
+      const file = input.files && input.files[0];
       if (!file) return;
 
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file.');
+        input.value = '';
+        return;
+      }
+
       const imgInput = document.getElementById('postImgInput');
-      imgInput.value = "Processing image...";
+      imgInput.value = 'Processing image...';
 
       const reader = new FileReader();
-      reader.onload = function(e) {
-        imgInput.value = e.target.result;
-        alert('Photo loaded from gallery successfully!');
+
+      reader.onload = function(event) {
+        const img = new Image();
+
+        img.onload = function() {
+          const maxSize = 1200;
+          const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+          const canvas = document.createElement('canvas');
+
+          canvas.width = Math.max(1, Math.round(img.width * scale));
+          canvas.height = Math.max(1, Math.round(img.height * scale));
+
+          const ctx = canvas.getContext('2d');
+
+          if (!ctx) {
+            imgInput.value = '';
+            alert('Your browser could not process this image.');
+            return;
+          }
+
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          const compressed = canvas.toDataURL('image/jpeg', 0.65);
+          const approxBytes = Math.ceil((compressed.length * 3) / 4);
+
+          if (approxBytes > 900000) {
+            imgInput.value = '';
+            alert('This photo is still too large for reliable browser storage. Please choose a smaller image.');
+            input.value = '';
+            return;
+          }
+
+          imgInput.value = compressed;
+          alert('Photo prepared and compressed. Now tap Publish Post.');
+        };
+
+        img.onerror = function() {
+          imgInput.value = '';
+          alert('Could not process this photo. Please select another image.');
+        };
+
+        img.src = event.target.result;
       };
+
       reader.onerror = function() {
-        alert('Error reading photo file.');
         imgInput.value = '';
+        alert('Could not read the selected photo.');
       };
+
       reader.readAsDataURL(file);
     }
 
     function openDetailModal(post) {
-      document.getElementById('modalCategory').innerText = post.category;
-      document.getElementById('modalTitle').innerText = post.title;
-      document.getElementById('modalDesc').innerText = post.description;
-      document.getElementById('modalImage').src = post.image;
+      document.getElementById('modalCategory').innerText = post.category || '';
+      document.getElementById('modalTitle').innerText = post.title || '';
+      document.getElementById('modalDesc').innerText = post.description || '';
+      document.getElementById('modalImage').src = post.image || '';
       document.getElementById('modalProcess').innerText = post.process || "Follow standard prompt generation procedures.";
-      document.getElementById('modalPrompt').value = post.prompt;
-      
+      document.getElementById('modalPrompt').value = post.prompt || '';
       document.getElementById('detailModal').classList.remove('hidden');
     }
 
@@ -373,31 +502,35 @@
       const textarea = document.getElementById('modalPrompt');
       textarea.select();
       textarea.setSelectionRange(0, 99999);
-      navigator.clipboard.writeText(textarea.value).then(() => {
-        alert('Prompt copied to clipboard successfully!');
-      }).catch(() => {
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textarea.value).then(() => {
+          alert('Prompt copied to clipboard successfully!');
+        }).catch(() => {
+          document.execCommand('copy');
+          alert('Prompt copied to clipboard.');
+        });
+      } else {
         document.execCommand('copy');
-        alert('Prompt copied to clipboard successfully!');
-      });
+        alert('Prompt copied to clipboard.');
+      }
     }
 
     function openAdminModal() {
       const adminModal = document.getElementById('adminModal');
-      if (adminModal) {
-        adminModal.classList.remove('hidden');
-        if (isAdminLoggedIn) {
-          showAdminDashboard();
-        } else {
-          showAdminLogin();
-        }
+      if (!adminModal) return;
+
+      adminModal.classList.remove('hidden');
+
+      if (isAdminLoggedIn) {
+        showAdminDashboard();
+      } else {
+        showAdminLogin();
       }
     }
 
     function closeAdminModal() {
-      const adminModal = document.getElementById('adminModal');
-      if (adminModal) {
-        adminModal.classList.add('hidden');
-      }
+      document.getElementById('adminModal').classList.add('hidden');
     }
 
     function showAdminLogin() {
@@ -412,10 +545,10 @@
     }
 
     function handleAdminLogin() {
-      const email = document.getElementById('loginEmail').value;
+      const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
 
-      if(email === 'radhajogendhra2206@gmail.com' && password === 'rajrebel_2206') {
+      if (email === 'radhajogendhra2206@gmail.com' && password === 'rajrebel_2206') {
         isAdminLoggedIn = true;
         localStorage.setItem('raj_admin_logged', 'true');
         showAdminDashboard();
@@ -433,87 +566,134 @@
     function renderAdminPosts() {
       const posts = getStoredPosts();
       const list = document.getElementById('adminPostsList');
+
+      if (!list) return;
       list.innerHTML = '';
 
       posts.forEach(post => {
         const item = document.createElement('div');
         item.className = "flex justify-between items-center bg-gray-950 p-3 rounded-2xl border border-gray-800 text-xs shadow-inner";
-        item.innerHTML = `
-          <div class="flex items-center gap-3 overflow-hidden">
-            <img src="${post.image}" class="w-10 h-10 object-cover rounded-xl flex-shrink-0">
-            <div class="truncate">
-              <p class="font-bold text-white truncate">${post.title}</p>
-              <p class="text-gray-400 text-[10px]">${post.category}</p>
-            </div>
-          </div>
-          <div class="flex gap-2 flex-shrink-0">
-            <button onclick="editPost('${post.id}')" class="px-3 py-1.5 bg-blue-600/20 text-blue-400 font-semibold rounded-xl hover:bg-blue-600/30 transition">Edit</button>
-            <button onclick="deletePost('${post.id}')" class="px-3 py-1.5 bg-red-600/20 text-red-400 font-semibold rounded-xl hover:bg-red-600/30 transition">Delete</button>
-          </div>
-        `;
+
+        const left = document.createElement('div');
+        left.className = 'flex items-center gap-3 overflow-hidden';
+
+        const thumb = document.createElement('img');
+        thumb.src = post.image || '';
+        thumb.alt = '';
+        thumb.className = 'w-10 h-10 object-cover rounded-xl flex-shrink-0';
+
+        const details = document.createElement('div');
+        details.className = 'truncate';
+
+        const title = document.createElement('p');
+        title.className = 'font-bold text-white truncate';
+        title.textContent = post.title || '';
+
+        const cat = document.createElement('p');
+        cat.className = 'text-gray-400 text-[10px]';
+        cat.textContent = post.category || '';
+
+        details.append(title, cat);
+        left.append(thumb, details);
+
+        const actions = document.createElement('div');
+        actions.className = 'flex gap-2 flex-shrink-0';
+
+        const edit = document.createElement('button');
+        edit.type = 'button';
+        edit.className = 'px-3 py-1.5 bg-blue-600/20 text-blue-400 font-semibold rounded-xl hover:bg-blue-600/30 transition';
+        edit.textContent = 'Edit';
+        edit.onclick = () => editPost(post.id);
+
+        const del = document.createElement('button');
+        del.type = 'button';
+        del.className = 'px-3 py-1.5 bg-red-600/20 text-red-400 font-semibold rounded-xl hover:bg-red-600/30 transition';
+        del.textContent = 'Delete';
+        del.onclick = () => deletePost(post.id);
+
+        actions.append(edit, del);
+        item.append(left, actions);
         list.appendChild(item);
       });
     }
 
     function handlePostSubmit(e) {
       e.preventDefault();
-      const posts = getStoredPosts();
-      const id = document.getElementById('editPostId').value || 'post-' + Date.now();
 
-      const postObj = {
-        id: id,
-        title: document.getElementById('postTitleInput').value,
-        category: document.getElementById('postCatInput').value,
-        image: document.getElementById('postImgInput').value,
-        description: document.getElementById('postDescInput').value,
-        process: document.getElementById('postProcessInput').value,
-        prompt: document.getElementById('postPromptInput').value
-      };
+      try {
+        const posts = getStoredPosts();
+        const id = document.getElementById('editPostId').value || 'post-' + Date.now();
+        const imageValue = document.getElementById('postImgInput').value.trim();
 
-      const existingIndex = posts.findIndex(p => p.id === id);
-      if(existingIndex > -1) {
-        posts[existingIndex] = postObj;
-      } else {
-        posts.unshift(postObj);
+        if (!imageValue || imageValue === 'Processing image...') {
+          alert('Please select a photo or enter a valid image URL and wait for processing to finish.');
+          return;
+        }
+
+        const postObj = {
+          id: id,
+          title: document.getElementById('postTitleInput').value.trim(),
+          category: document.getElementById('postCatInput').value,
+          image: imageValue,
+          description: document.getElementById('postDescInput').value.trim(),
+          process: document.getElementById('postProcessInput').value.trim(),
+          prompt: document.getElementById('postPromptInput').value.trim()
+        };
+
+        const existingIndex = posts.findIndex(p => p.id === id);
+
+        if (existingIndex > -1) {
+          posts[existingIndex] = postObj;
+        } else {
+          posts.unshift(postObj);
+        }
+
+        if (saveStoredPosts(posts)) {
+          resetForm();
+          document.getElementById('galleryUploadInput').value = '';
+          alert('Post saved in this browser successfully.');
+        }
+      } catch (error) {
+        console.error('Publish failed:', error);
+        alert('Publish failed: ' + (error.message || 'Unknown error'));
       }
-
-      saveStoredPosts(posts);
-      resetForm();
-      alert('Post Published Successfully!');
     }
 
     function editPost(id) {
       const posts = getStoredPosts();
       const post = posts.find(p => p.id === id);
-      if(post) {
-        document.getElementById('editPostId').value = post.id;
-        document.getElementById('postTitleInput').value = post.title;
-        document.getElementById('postCatInput').value = post.category;
-        document.getElementById('postImgInput').value = post.image;
-        document.getElementById('postDescInput').value = post.description;
-        document.getElementById('postProcessInput').value = post.process;
-        document.getElementById('postPromptInput').value = post.prompt;
-        document.getElementById('formTitle').innerText = "Edit Prompt / Tutorial Post";
-      }
+      if (!post) return;
+
+      document.getElementById('editPostId').value = post.id;
+      document.getElementById('postTitleInput').value = post.title || '';
+      document.getElementById('postCatInput').value = post.category || 'AI Photo Prompts';
+      document.getElementById('postImgInput').value = post.image || '';
+      document.getElementById('postDescInput').value = post.description || '';
+      document.getElementById('postProcessInput').value = post.process || '';
+      document.getElementById('postPromptInput').value = post.prompt || '';
+      document.getElementById('formTitle').innerText = 'Edit Prompt / Tutorial Post';
     }
 
     function deletePost(id) {
-      if(confirm('Are you sure you want to delete this post?')) {
-        let posts = getStoredPosts();
-        posts = posts.filter(p => p.id !== id);
-        saveStoredPosts(posts);
+      if (!confirm('Are you sure you want to delete this post?')) return;
+
+      const posts = getStoredPosts().filter(p => p.id !== id);
+
+      if (saveStoredPosts(posts)) {
+        alert('Post deleted from this browser.');
       }
     }
 
     function resetForm() {
       document.getElementById('postForm').reset();
       document.getElementById('editPostId').value = '';
-      document.getElementById('formTitle').innerText = "Create New Prompt / Tutorial Post";
+      document.getElementById('formTitle').innerText = 'Create New Prompt / Tutorial Post';
     }
 
     window.onload = function() {
       renderPosts();
-      if(localStorage.getItem('raj_admin_logged') === 'true') {
+
+      if (localStorage.getItem('raj_admin_logged') === 'true') {
         isAdminLoggedIn = true;
       }
     };
