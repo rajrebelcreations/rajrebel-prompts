@@ -84,21 +84,21 @@
             Explore trending AI Photo Prompts, Gemini AI, Google Flow, Video Editing Prompts & Mobile Tutorials. Copy prompts with one click!
           </p>
 
-          <!-- SOCIAL MEDIA LINKS -->
+          <!-- SOCIAL MEDIA LINKS (WhatsApp link secured with rel="noopener noreferrer") -->
           <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 pt-2">
-            <a href="https://www.instagram.com/rajrebel_creations/" target="_blank" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-pink-600/20 transition">
+            <a href="https://www.instagram.com/rajrebel_creations/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-pink-600/20 transition">
               <i class="fa-brands fa-instagram text-sm"></i> Instagram
             </a>
-            <a href="https://youtube.com/@rajrebelcreations" target="_blank" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-red-600/20 transition">
+            <a href="https://youtube.com/@rajrebelcreations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-red-600/20 transition">
               <i class="fa-brands fa-youtube text-sm"></i> YouTube
             </a>
-            <a href="https://whatsapp.com/channel/0029VaW8225ISTkUfQ96102L" target="_blank" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-green-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-green-600/20 transition">
+            <a href="https://whatsapp.com/channel/0029VaW8225ISTkUfQ96102L" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-green-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-green-600/20 transition">
               <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp Channel
             </a>
-            <a href="https://www.tiktok.com/@rajrebel_creations" target="_blank" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white font-semibold text-xs border border-gray-700/80 hover:scale-105 shadow-lg transition">
+            <a href="https://www.tiktok.com/@rajrebel_creations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white font-semibold text-xs border border-gray-700/80 hover:scale-105 shadow-lg transition">
               <i class="fa-brands fa-tiktok text-sm"></i> TikTok
             </a>
-            <a href="https://www.facebook.com/share/1E4gLSvPMM/" target="_blank" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-blue-600/20 transition">
+            <a href="https://www.facebook.com/share/1E4gLSvPMM/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-blue-600/20 transition">
               <i class="fa-brands fa-facebook text-sm"></i> Facebook
             </a>
           </div>
@@ -248,7 +248,7 @@
     </div>
   </footer>
 
-  <!-- APPLICATION SCRIPT -->
+  <!-- APPLICATION SCRIPT (Persistent Login & WhatsApp Fixed) -->
   <script>
     let samplePosts = [
       {
@@ -412,6 +412,7 @@
 
       if(email === 'radhajogendhra2206@gmail.com' && password === 'rajrebel_2206') {
         isAdminLoggedIn = true;
+        localStorage.setItem('raj_admin_logged', 'true'); // Persistent Login Saved
         showAdminDashboard();
       } else {
         alert('Invalid Admin Credentials!');
@@ -420,6 +421,7 @@
 
     function handleAdminLogout() {
       isAdminLoggedIn = false;
+      localStorage.removeItem('raj_admin_logged'); // Clear Persistent Login
       showAdminLogin();
     }
 
@@ -504,8 +506,12 @@
       document.getElementById('formTitle').innerText = "Create New Prompt / Tutorial Post";
     }
 
+    // Check Persistent Login on page load
     window.onload = function() {
       renderPosts();
+      if(localStorage.getItem('raj_admin_logged') === 'true') {
+        isAdminLoggedIn = true;
+      }
     };
   </script>
 </body>
