@@ -82,6 +82,30 @@
         });
       }
     };
+
+    // Secure Firebase Auth Login
+    window.handleFirebaseLogin = function(email, password) {
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          isAdminLoggedIn = true;
+          showAdminDashboard();
+          alert('Admin Login Successful!');
+        })
+        .catch((error) => {
+          alert('Login Failed: ' + error.message);
+        });
+    };
+
+    // Secure Firebase Auth Logout
+    window.handleFirebaseLogout = function() {
+      signOut(auth).then(() => {
+        isAdminLoggedIn = false;
+        showAdminLogin();
+        alert('Logged out successfully!');
+      }).catch((error) => {
+        alert('Logout Error: ' + error.message);
+      });
+    };
   </script>
 
   <style>
@@ -566,31 +590,26 @@
       renderAdminPosts();
     }
 
-    // Secure Firebase Auth Login
+    // Connected to Firebase Auth Login
     function handleAdminLogin() {
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
 
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          isAdminLoggedIn = true;
-          showAdminDashboard();
-          alert('Admin Login Successful!');
-        })
-        .catch((error) => {
-          alert('Login Failed: ' + error.message);
-        });
+      if (!email || !password) {
+        alert('Please enter both email and password.');
+        return;
+      }
+
+      if (window.handleFirebaseLogin) {
+        window.handleFirebaseLogin(email, password);
+      }
     }
 
-    // Secure Firebase Auth Logout
+    // Connected to Firebase Auth Logout
     function handleAdminLogout() {
-      signOut(auth).then(() => {
-        isAdminLoggedIn = false;
-        showAdminLogin();
-        alert('Logged out successfully!');
-      }).catch((error) => {
-        alert('Logout Error: ' + error.message);
-      });
+      if (window.handleFirebaseLogout) {
+        window.handleFirebaseLogout();
+      }
     }
 
     function renderAdminPosts() {
