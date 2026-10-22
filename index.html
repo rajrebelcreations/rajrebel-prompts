@@ -281,17 +281,8 @@
           <div id="modalProcess" class="bg-gray-950/70 rounded-2xl p-3.5 text-xs sm:text-sm text-gray-300 whitespace-pre-line border border-gray-800/80 leading-relaxed shadow-inner"></div>
         </div>
 
-        <div class="space-y-2.5 pt-1">
-          <div class="flex justify-between items-center">
-            <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5">
-              <i class="fa-solid fa-code"></i> Full Prompt
-            </h3>
-            <button onclick="copyPromptText()" class="px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black text-xs sm:text-sm rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-yellow-500/25 active:scale-95">
-              <i class="fa-regular fa-copy text-sm"></i> Copy Prompt
-            </button>
-          </div>
-          <textarea id="modalPrompt" readonly class="w-full h-32 sm:h-36 bg-gray-950 text-gray-200 border border-gray-800/80 rounded-2xl p-3.5 text-xs sm:text-sm font-mono resize-none focus:outline-none shadow-inner"></textarea>
-        </div>
+        <!-- DYNAMIC PROMPTS CONTAINER -->
+        <div id="modalPromptsContainer" class="space-y-3 pt-1"></div>
       </div>
     </div>
   </div>
@@ -351,9 +342,21 @@
 
             <textarea id="postDescInput" placeholder="Short Description" rows="2" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500"></textarea>
             <textarea id="postProcessInput" placeholder="Process Steps / Instructions (Step 1, Step 2...)" rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500"></textarea>
-            <textarea id="postPromptInput" placeholder="Full Copyable AI Prompt" rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs font-mono text-gray-200 focus:outline-none focus:border-yellow-500"></textarea>
 
-            <div class="flex justify-end gap-2 pt-1">
+            <!-- MULTIPLE OPTIONAL PROMPTS BUILDER SECTION -->
+            <div class="space-y-2 pt-1 border-t border-gray-800/80">
+              <div class="flex justify-between items-center">
+                <label class="text-xs font-extrabold text-yellow-400 uppercase tracking-wider">AI Prompts (Add as many as needed)</label>
+                <button type="button" onclick="addPromptBox()" class="px-3 py-1 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 border border-yellow-500/30 rounded-xl text-xs font-bold transition flex items-center gap-1">
+                  <i class="fa-solid fa-plus text-[10px]"></i> Add Another Prompt
+                </button>
+              </div>
+              <div id="adminPromptsContainer" class="space-y-3">
+                <!-- Prompt inputs will be injected dynamically here -->
+              </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2 border-t border-gray-800/80">
               <button type="button" onclick="resetForm()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-xs font-semibold transition">Cancel</button>
               <button type="submit" id="submitBtn" class="px-5 py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold rounded-xl text-xs shadow transition">Publish Post</button>
             </div>
@@ -467,6 +470,42 @@
       renderPosts();
     }
 
+    // Admin dynamic prompt boxes builder
+    function addPromptBox(value = '') {
+      const container = document.getElementById('adminPromptsContainer');
+      const count = container.children.length + 1;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = "flex gap-2 items-start admin-prompt-row";
+
+      const textarea = document.createElement('textarea');
+      textarea.className = "w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs font-mono text-gray-200 focus:outline-none focus:border-yellow-500 admin-prompt-textarea";
+      textarea.rows = 2;
+      textarea.placeholder = `Prompt ${count} (Optional)`;
+      textarea.value = value;
+
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'px-2.5 py-2.5 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-xl text-xs transition flex-shrink-0';
+      delBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
+      delBtn.onclick = () => {
+        wrapper.remove();
+        updatePromptLabels();
+      };
+
+      wrapper.append(textarea, delBtn);
+      container.appendChild(wrapper);
+      updatePromptLabels();
+    }
+
+    function updatePromptLabels() {
+      const rows = document.querySelectorAll('#adminPromptsContainer .admin-prompt-row');
+      rows.forEach((row, idx) => {
+        const ta = row.querySelector('textarea');
+        ta.placeholder = `Prompt ${idx + 1} ${idx === 0 ? '(Required)' : '(Optional)'}`;
+      });
+    }
+
     function uploadFromGallery(input) {
       const file = input.files && input.files[0];
       if (!file) return;
@@ -536,16 +575,55 @@
       document.getElementById('modalDesc').innerText = post.description || '';
       document.getElementById('modalImage').src = post.image || '';
       document.getElementById('modalProcess').innerText = post.process || "Follow standard prompt generation procedures.";
-      document.getElementById('modalPrompt').value = post.prompt || '';
+      
+      // Render dynamic prompt boxes and copy buttons for users
+      const container = document.getElementById('modalPromptsContainer');
+      container.innerHTML = '';
+
+      // Handle backward compatibility if post has old 'prompt' string or new 'prompts' array
+      let promptsList = [];
+      if (Array.isArray(post.prompts) && post.prompts.length > 0) {
+        promptsList = post.prompts;
+      } else if (post.prompt) {
+        promptsList = [post.prompt];
+      } else {
+        promptsList = [''];
+      }
+
+      promptsList.forEach((pText, idx) => {
+        const promptNum = idx + 1;
+        const div = document.createElement('div');
+        div.className = 'space-y-2.5 pt-1';
+
+        div.innerHTML = `
+          <div class="flex justify-between items-center">
+            <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-code"></i> Prompt ${promptNum}
+            </h3>
+            <button onclick="copySpecificPrompt('modalPrompt_${idx}')" class="px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black text-xs sm:text-sm rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-yellow-500/25 active:scale-95">
+              <i class="fa-regular fa-copy text-sm"></i> Copy Prompt ${promptNum}
+            </button>
+          </div>
+          <textarea id="modalPrompt_${idx}" readonly class="w-full h-28 sm:h-32 bg-gray-950 text-gray-200 border border-gray-800/80 rounded-2xl p-3.5 text-xs sm:text-sm font-mono resize-none focus:outline-none shadow-inner">${escapeHtml(pText)}</textarea>
+        `;
+        container.appendChild(div);
+      });
+
       document.getElementById('detailModal').classList.remove('hidden');
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
 
     function closeDetailModal() {
       document.getElementById('detailModal').classList.add('hidden');
     }
 
-    function copyPromptText() {
-      const textarea = document.getElementById('modalPrompt');
+    function copySpecificPrompt(elementId) {
+      const textarea = document.getElementById(elementId);
+      if (!textarea) return;
       textarea.select();
       textarea.setSelectionRange(0, 99999);
 
@@ -680,6 +758,19 @@
           return;
         }
 
+        // Collect all prompts from admin dynamic boxes
+        const promptTextareas = document.querySelectorAll('#adminPromptsContainer textarea');
+        const promptsArr = [];
+        promptTextareas.forEach(ta => {
+          const val = ta.value.trim();
+          if (val) promptsArr.push(val);
+        });
+
+        if (promptsArr.length === 0) {
+          alert('Please add at least one prompt.');
+          return;
+        }
+
         const postObj = {
           id: id,
           title: document.getElementById('postTitleInput').value.trim(),
@@ -687,7 +778,8 @@
           image: imageValue,
           description: document.getElementById('postDescInput').value.trim(),
           process: document.getElementById('postProcessInput').value.trim(),
-          prompt: document.getElementById('postPromptInput').value.trim()
+          prompts: promptsArr,
+          prompt: promptsArr[0] // Backward compatibility for single prompt
         };
 
         if (window.saveFirebasePost) {
@@ -710,7 +802,24 @@
       document.getElementById('postImgInput').value = post.image || '';
       document.getElementById('postDescInput').value = post.description || '';
       document.getElementById('postProcessInput').value = post.process || '';
-      document.getElementById('postPromptInput').value = post.prompt || '';
+      
+      // Load prompts into dynamic container
+      const container = document.getElementById('adminPromptsContainer');
+      container.innerHTML = '';
+
+      let listToLoad = [];
+      if (Array.isArray(post.prompts) && post.prompts.length > 0) {
+        listToLoad = post.prompts;
+      } else if (post.prompt) {
+        listToLoad = [post.prompt];
+      } else {
+        listToLoad = [''];
+      }
+
+      listToLoad.forEach(pVal => {
+        addPromptBox(pVal);
+      });
+
       document.getElementById('formTitle').innerText = 'Edit Prompt / Tutorial Post';
     }
 
@@ -718,7 +827,20 @@
       document.getElementById('postForm').reset();
       document.getElementById('editPostId').value = '';
       document.getElementById('formTitle').innerText = 'Create New Prompt / Tutorial Post';
+      
+      // Reset prompts container with 1 default empty box
+      const container = document.getElementById('adminPromptsContainer');
+      container.innerHTML = '';
+      addPromptBox();
     }
+
+    // Initialize one prompt box by default on page load if needed
+    window.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('adminPromptsContainer');
+      if (container && container.children.length === 0) {
+        addPromptBox();
+      }
+    });
   </script>
 </body>
 </html>
