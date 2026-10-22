@@ -281,7 +281,7 @@
           <div id="modalProcess" class="bg-gray-950/70 rounded-2xl p-3.5 text-xs sm:text-sm text-gray-300 whitespace-pre-line border border-gray-800/80 leading-relaxed shadow-inner"></div>
         </div>
 
-        <!-- DYNAMIC PROMPTS CONTAINER -->
+        <!-- DYNAMIC PROMPTS CONTAINER (Smart: No numbers if only 1 prompt!) -->
         <div id="modalPromptsContainer" class="space-y-3 pt-1"></div>
       </div>
     </div>
@@ -346,7 +346,7 @@
             <!-- MULTIPLE OPTIONAL PROMPTS BUILDER SECTION -->
             <div class="space-y-2 pt-1 border-t border-gray-800/80">
               <div class="flex justify-between items-center">
-                <label class="text-xs font-extrabold text-yellow-400 uppercase tracking-wider">AI Prompts (Add as many as needed)</label>
+                <label class="text-xs font-extrabold text-yellow-400 uppercase tracking-wider">AI Prompts (Add extra only if needed)</label>
                 <button type="button" onclick="addPromptBox()" class="px-3 py-1 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 border border-yellow-500/30 rounded-xl text-xs font-bold transition flex items-center gap-1">
                   <i class="fa-solid fa-plus text-[10px]"></i> Add Another Prompt
                 </button>
@@ -481,7 +481,7 @@
       const textarea = document.createElement('textarea');
       textarea.className = "w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs font-mono text-gray-200 focus:outline-none focus:border-yellow-500 admin-prompt-textarea";
       textarea.rows = 2;
-      textarea.placeholder = `Prompt ${count} (Optional)`;
+      textarea.placeholder = count === 1 ? 'Main Prompt (Required)' : `Prompt ${count} (Optional)`;
       textarea.value = value;
 
       const delBtn = document.createElement('button');
@@ -502,7 +502,7 @@
       const rows = document.querySelectorAll('#adminPromptsContainer .admin-prompt-row');
       rows.forEach((row, idx) => {
         const ta = row.querySelector('textarea');
-        ta.placeholder = `Prompt ${idx + 1} ${idx === 0 ? '(Required)' : '(Optional)'}`;
+        ta.placeholder = idx === 0 ? 'Main Prompt (Required)' : `Prompt ${idx + 1} (Optional)`;
       });
     }
 
@@ -580,7 +580,6 @@
       const container = document.getElementById('modalPromptsContainer');
       container.innerHTML = '';
 
-      // Handle backward compatibility if post has old 'prompt' string or new 'prompts' array
       let promptsList = [];
       if (Array.isArray(post.prompts) && post.prompts.length > 0) {
         promptsList = post.prompts;
@@ -590,18 +589,24 @@
         promptsList = [''];
       }
 
+      const totalPrompts = promptsList.length;
+
       promptsList.forEach((pText, idx) => {
         const promptNum = idx + 1;
         const div = document.createElement('div');
         div.className = 'space-y-2.5 pt-1';
 
+        // SMART CHECK: If only 1 prompt exists, show clean "Copy Prompt" without numbers. If multiple, show "Prompt 1", "Prompt 2"...
+        const titleText = totalPrompts > 1 ? `Prompt ${promptNum}` : `Full AI Prompt`;
+        const btnText = totalPrompts > 1 ? `Copy Prompt ${promptNum}` : `Copy Prompt`;
+
         div.innerHTML = `
           <div class="flex justify-between items-center">
             <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5">
-              <i class="fa-solid fa-code"></i> Prompt ${promptNum}
+              <i class="fa-solid fa-code"></i> ${titleText}
             </h3>
             <button onclick="copySpecificPrompt('modalPrompt_${idx}')" class="px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black text-xs sm:text-sm rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-yellow-500/25 active:scale-95">
-              <i class="fa-regular fa-copy text-sm"></i> Copy Prompt ${promptNum}
+              <i class="fa-regular fa-copy text-sm"></i> ${btnText}
             </button>
           </div>
           <textarea id="modalPrompt_${idx}" readonly class="w-full h-28 sm:h-32 bg-gray-950 text-gray-200 border border-gray-800/80 rounded-2xl p-3.5 text-xs sm:text-sm font-mono resize-none focus:outline-none shadow-inner">${escapeHtml(pText)}</textarea>
@@ -758,7 +763,6 @@
           return;
         }
 
-        // Collect all prompts from admin dynamic boxes
         const promptTextareas = document.querySelectorAll('#adminPromptsContainer textarea');
         const promptsArr = [];
         promptTextareas.forEach(ta => {
@@ -779,7 +783,7 @@
           description: document.getElementById('postDescInput').value.trim(),
           process: document.getElementById('postProcessInput').value.trim(),
           prompts: promptsArr,
-          prompt: promptsArr[0] // Backward compatibility for single prompt
+          prompt: promptsArr[0]
         };
 
         if (window.saveFirebasePost) {
@@ -803,7 +807,6 @@
       document.getElementById('postDescInput').value = post.description || '';
       document.getElementById('postProcessInput').value = post.process || '';
       
-      // Load prompts into dynamic container
       const container = document.getElementById('adminPromptsContainer');
       container.innerHTML = '';
 
@@ -828,13 +831,11 @@
       document.getElementById('editPostId').value = '';
       document.getElementById('formTitle').innerText = 'Create New Prompt / Tutorial Post';
       
-      // Reset prompts container with 1 default empty box
       const container = document.getElementById('adminPromptsContainer');
       container.innerHTML = '';
       addPromptBox();
     }
 
-    // Initialize one prompt box by default on page load if needed
     window.addEventListener('DOMContentLoaded', () => {
       const container = document.getElementById('adminPromptsContainer');
       if (container && container.children.length === 0) {
