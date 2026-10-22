@@ -16,6 +16,72 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+  <!-- Firebase Live Cloud Database Integration -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBkgdcYfcaCyvw6WJ2qLDAzOfSukO4vOIc",
+      authDomain: "rajrebel-prompts.firebaseapp.com",
+      databaseURL: "https://rajrebel-prompts-default-rtdb.firebaseio.com",
+      projectId: "rajrebel-prompts",
+      storageBucket: "rajrebel-prompts.firebasestorage.app",
+      messagingSenderId: "552582522547",
+      appId: "1:552582522547:web:a8e4ab6951b8224b4e32c6",
+      measurementId: "G-CMZJM76L8V"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    let samplePosts = [{
+      id: "post-1",
+      title: "Arya 2 Poster Prompt",
+      category: "AI Photo Prompts",
+      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+      description: "Generate hyper-realistic cinematic portraits with natural lighting.",
+      process: "1. Copy prompt.\n2. Open Bing Image Creator.\n3. Generate.",
+      prompt: "A cinematic hyper-realistic portrait of a stylish young Indian man in modern street fashion."
+    }];
+
+    window.getStoredPosts = function() {
+      return window.firebasePosts || samplePosts;
+    };
+
+    const postsRef = ref(db, 'posts');
+    onValue(postsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        window.firebasePosts = Object.values(data);
+      } else {
+        window.firebasePosts = samplePosts;
+        set(postsRef, samplePosts);
+      }
+      if (typeof renderPosts === 'function') renderPosts();
+      if (typeof renderAdminPosts === 'function') renderAdminPosts();
+    });
+
+    window.saveFirebasePost = function(postObj, id) {
+      const postRef = ref(db, 'posts/' + id);
+      set(postRef, postObj).then(() => {
+        alert('Post Published to Live Successfully!');
+        resetForm();
+      }).catch((error) => {
+        alert('Error saving post: ' + error.message);
+      });
+    };
+
+    window.deleteFirebasePost = function(id) {
+      if (confirm('Are you sure you want to delete this post?')) {
+        const postRef = ref(db, 'posts/' + id);
+        remove(postRef).then(() => {
+          alert('Post Deleted from Live Successfully!');
+        });
+      }
+    };
+  </script>
+
   <style>
     body {
       background-color: #07090e;
@@ -288,52 +354,11 @@
 
   <!-- APPLICATION SCRIPT -->
   <script>
-    let samplePosts = [{
-      id: "post-1",
-      title: "Arya 2 Poster Prompt",
-      category: "AI Photo Prompts",
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-      description: "Generate hyper-realistic cinematic portraits with natural lighting.",
-      process: "1. Copy prompt.\n2. Open Bing Image Creator.\n3. Generate.",
-      prompt: "A cinematic hyper-realistic portrait of a stylish young Indian man in modern street fashion."
-    }];
-
     let currentCategory = 'All';
     let isAdminLoggedIn = false;
 
-    function getStoredPosts() {
-      try {
-        const data = localStorage.getItem('rajrebel_posts');
-        return data ? JSON.parse(data) : samplePosts;
-      } catch (error) {
-        console.error('Could not read saved posts:', error);
-        alert('Saved posts could not be read from this browser.');
-        return samplePosts;
-      }
-    }
-
-    function saveStoredPosts(posts) {
-      try {
-        localStorage.setItem('rajrebel_posts', JSON.stringify(posts));
-        renderPosts();
-        renderAdminPosts();
-        return true;
-      } catch (error) {
-        console.error('Post save failed:', error);
-        const message = error && (
-          error.name === 'QuotaExceededError' ||
-          error.name === 'NS_ERROR_DOM_QUOTA_REACHED'
-        )
-          ? 'Browser storage is full. The post was not saved. Reduce the image size or use an image URL.'
-          : 'The post could not be saved: ' + (error.message || 'Unknown error');
-
-        alert(message);
-        return false;
-      }
-    }
-
     function renderPosts() {
-      const posts = getStoredPosts();
+      const posts = window.getStoredPosts ? window.getStoredPosts() : [];
       const grid = document.getElementById('postsGrid');
       const searchInput = document.getElementById('searchInput');
       const searchVal = searchInput ? searchInput.value.toLowerCase() : '';
@@ -459,7 +484,7 @@
 
           if (approxBytes > 900000) {
             imgInput.value = '';
-            alert('This photo is still too large for reliable browser storage. Please choose a smaller image.');
+            alert('This photo is too large. Please choose a smaller image.');
             input.value = '';
             return;
           }
@@ -470,15 +495,10 @@
 
         img.onerror = function() {
           imgInput.value = '';
-          alert('Could not process this photo. Please select another image.');
+          alert('Could not process this photo.');
         };
 
         img.src = event.target.result;
-      };
-
-      reader.onerror = function() {
-        imgInput.value = '';
-        alert('Could not read the selected photo.');
       };
 
       reader.readAsDataURL(file);
@@ -564,7 +584,7 @@
     }
 
     function renderAdminPosts() {
-      const posts = getStoredPosts();
+      const posts = window.getStoredPosts ? window.getStoredPosts() : [];
       const list = document.getElementById('adminPostsList');
 
       if (!list) return;
@@ -609,7 +629,9 @@
         del.type = 'button';
         del.className = 'px-3 py-1.5 bg-red-600/20 text-red-400 font-semibold rounded-xl hover:bg-red-600/30 transition';
         del.textContent = 'Delete';
-        del.onclick = () => deletePost(post.id);
+        del.onclick = () => {
+          if (window.deleteFirebasePost) window.deleteFirebasePost(post.id);
+        };
 
         actions.append(edit, del);
         item.append(left, actions);
@@ -621,7 +643,6 @@
       e.preventDefault();
 
       try {
-        const posts = getStoredPosts();
         const id = document.getElementById('editPostId').value || 'post-' + Date.now();
         const imageValue = document.getElementById('postImgInput').value.trim();
 
@@ -640,18 +661,8 @@
           prompt: document.getElementById('postPromptInput').value.trim()
         };
 
-        const existingIndex = posts.findIndex(p => p.id === id);
-
-        if (existingIndex > -1) {
-          posts[existingIndex] = postObj;
-        } else {
-          posts.unshift(postObj);
-        }
-
-        if (saveStoredPosts(posts)) {
-          resetForm();
-          document.getElementById('galleryUploadInput').value = '';
-          alert('Post saved in this browser successfully.');
+        if (window.saveFirebasePost) {
+          window.saveFirebasePost(postObj, id);
         }
       } catch (error) {
         console.error('Publish failed:', error);
@@ -660,7 +671,7 @@
     }
 
     function editPost(id) {
-      const posts = getStoredPosts();
+      const posts = window.getStoredPosts ? window.getStoredPosts() : [];
       const post = posts.find(p => p.id === id);
       if (!post) return;
 
@@ -674,16 +685,6 @@
       document.getElementById('formTitle').innerText = 'Edit Prompt / Tutorial Post';
     }
 
-    function deletePost(id) {
-      if (!confirm('Are you sure you want to delete this post?')) return;
-
-      const posts = getStoredPosts().filter(p => p.id !== id);
-
-      if (saveStoredPosts(posts)) {
-        alert('Post deleted from this browser.');
-      }
-    }
-
     function resetForm() {
       document.getElementById('postForm').reset();
       document.getElementById('editPostId').value = '';
@@ -691,8 +692,6 @@
     }
 
     window.onload = function() {
-      renderPosts();
-
       if (localStorage.getItem('raj_admin_logged') === 'true') {
         isAdminLoggedIn = true;
       }
