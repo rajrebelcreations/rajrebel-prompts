@@ -16,10 +16,11 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Firebase Live Cloud Database Integration -->
+  <!-- Firebase Live Cloud Database & Secure Authentication Integration -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBkgdcYfcaCyvw6WJ2qLDAzOfSukO4vOIc",
@@ -34,6 +35,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    const auth = getAuth(app);
 
     let samplePosts = [{
       id: "post-1",
@@ -281,7 +283,7 @@
       <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar">
         <div id="adminLoginView" class="max-w-md mx-auto space-y-4 py-6">
           <h4 class="text-center text-lg font-bold text-white">Sign in to Access Admin Controls</h4>
-          <p class="text-center text-xs text-gray-400">Login to Manage Prompts</p>
+          <p class="text-center text-xs text-gray-400">Secure Firebase Login</p>
           <div class="space-y-3 pt-2">
             <input type="email" id="loginEmail" placeholder="Admin Email" class="w-full bg-gray-950 border border-gray-800 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-yellow-500 shadow-inner">
             <input type="password" id="loginPassword" placeholder="Password" class="w-full bg-gray-950 border border-gray-800 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-yellow-500 shadow-inner">
@@ -291,7 +293,7 @@
 
         <div id="adminDashboardView" class="hidden space-y-5">
           <div class="flex flex-wrap justify-between items-center gap-3 pb-3 border-b border-gray-800/80">
-            <span class="text-[11px] text-green-400 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20 font-semibold"><i class="fa-solid fa-circle text-[6px] mr-1"></i> Admin Session Active</span>
+            <span class="text-[11px] text-green-400 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20 font-semibold"><i class="fa-solid fa-circle text-[6px] mr-1"></i> Secure Admin Session Active</span>
             <div class="flex gap-2">
               <button onclick="resetForm()" class="px-3.5 py-1.5 bg-yellow-500 hover:bg-yellow-400 text-black rounded-xl text-xs font-bold shadow transition"><i class="fa-solid fa-plus mr-1"></i> New Post</button>
               <button onclick="handleAdminLogout()" class="px-3.5 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-right-from-bracket mr-1"></i> Logout</button>
@@ -564,23 +566,31 @@
       renderAdminPosts();
     }
 
+    // Secure Firebase Auth Login
     function handleAdminLogin() {
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
 
-      if (email === 'radhajogendhra2206@gmail.com' && password === 'rajrebel_2206') {
-        isAdminLoggedIn = true;
-        localStorage.setItem('raj_admin_logged', 'true');
-        showAdminDashboard();
-      } else {
-        alert('Invalid Admin Credentials!');
-      }
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          isAdminLoggedIn = true;
+          showAdminDashboard();
+          alert('Admin Login Successful!');
+        })
+        .catch((error) => {
+          alert('Login Failed: ' + error.message);
+        });
     }
 
+    // Secure Firebase Auth Logout
     function handleAdminLogout() {
-      isAdminLoggedIn = false;
-      localStorage.removeItem('raj_admin_logged');
-      showAdminLogin();
+      signOut(auth).then(() => {
+        isAdminLoggedIn = false;
+        showAdminLogin();
+        alert('Logged out successfully!');
+      }).catch((error) => {
+        alert('Logout Error: ' + error.message);
+      });
     }
 
     function renderAdminPosts() {
@@ -690,12 +700,6 @@
       document.getElementById('editPostId').value = '';
       document.getElementById('formTitle').innerText = 'Create New Prompt / Tutorial Post';
     }
-
-    window.onload = function() {
-      if (localStorage.getItem('raj_admin_logged') === 'true') {
-        isAdminLoggedIn = true;
-      }
-    };
   </script>
 </body>
 </html>
