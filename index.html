@@ -12,11 +12,15 @@
   
   <link rel="canonical" href="https://rajrebelcreations.com/">
 
+  <!-- Open Graph Meta Tags for Rich Social Media Link Preview with Banner Photo -->
   <meta property="og:title" content="RajRebel Creations | AI Prompts & Content Hub">
-  <meta property="og:description" content="Explore AI Photo Prompts, Video Prompts, Editing Tutorials & Tools by RajRebel Creations.">
+  <meta property="og:description" content="Explore AI Photo Prompts, Video Prompts, Editing Tutorials & Tools by RajRebel Creations. Copy prompts with one click!">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rajrebelcreations.com/">
   <meta property="og:site_name" content="RajRebel Creations">
+  <meta property="og:image" content="https://raw.githubusercontent.com/rajrebel/rajrebelcreations.com/main/file_00000000de44820cafcf33ac46c92a80.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:image" content="https://raw.githubusercontent.com/rajrebel/rajrebelcreations.com/main/file_00000000de44820cafcf33ac46c92a80.png">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -59,7 +63,8 @@
     onValue(postsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        window.firebasePosts = Object.values(data);
+        // Reverse array so newest uploaded posts appear at the very top!
+        window.firebasePosts = Object.values(data).reverse();
       } else {
         window.firebasePosts = samplePosts;
         set(postsRef, samplePosts);
@@ -136,6 +141,7 @@
       -webkit-text-fill-color: transparent;
     }
 
+    /* FORCED 2-COLUMN GRID EVEN ON MOBILE (Side-by-side posts) */
     .mobile-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -195,7 +201,7 @@
     </div>
   </header>
 
-  <!-- HERO SECTION / CLEAN BANNER (No Profile Circle) -->
+  <!-- HERO SECTION / CLEAN BANNER -->
   <section class="max-w-6xl mx-auto px-3 sm:px-4 py-5 animate-fade-in">
     <div class="glass-card rounded-3xl overflow-hidden shadow-2xl relative border border-gray-800/80">
       <div class="w-full h-44 sm:h-64 md:h-80 overflow-hidden relative">
@@ -214,24 +220,17 @@
           Explore trending AI Photo Prompts, Video Prompts, ChatGPT Prompts, Gemini AI, Google Flow & Mobile Tutorials. Copy prompts with one click!
         </p>
 
-        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
-          <a href="https://www.instagram.com/rajrebel_creations/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-pink-600/20 transition">
+        <!-- Professional Social Links -->
+        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 pt-1">
+          <a href="https://www.instagram.com/rajrebel_creations/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-pink-600/20 transition">
             <i class="fa-brands fa-instagram text-sm"></i> Instagram
           </a>
 
-          <a href="https://youtube.com/@rajrebelcreations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-red-600/20 transition">
+          <a href="https://youtube.com/@rajrebelcreations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-red-600/20 transition">
             <i class="fa-brands fa-youtube text-sm"></i> YouTube
           </a>
 
-          <a href="https://whatsapp.com/channel/0029VaW8225ISTkUfQ96102L" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-green-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-green-600/20 transition">
-            <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
-          </a>
-
-          <a href="https://www.tiktok.com/@rajrebel_creations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white font-semibold text-xs border border-gray-700/80 hover:scale-105 shadow-lg transition">
-            <i class="fa-brands fa-tiktok text-sm"></i> TikTok
-          </a>
-
-          <a href="https://www.facebook.com/share/1E4gLSvPMM/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-blue-600/20 transition">
+          <a href="https://www.facebook.com/share/1E4gLSvPMM/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-blue-600/20 transition">
             <i class="fa-brands fa-facebook text-sm"></i> Facebook
           </a>
         </div>
