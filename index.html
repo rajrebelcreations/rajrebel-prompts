@@ -10,7 +10,6 @@
   <meta name="author" content="RajRebel Creations">
   <meta name="robots" content="index, follow">
   
-  <!-- Canonical URL for SEO -->
   <link rel="canonical" href="https://rajrebelcreations.com/">
 
   <meta property="og:title" content="RajRebel Creations | AI Prompts & Content Hub">
@@ -22,7 +21,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Firebase Live Cloud Database & Secure Authentication Integration -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -89,7 +87,6 @@
       }
     };
 
-    // Secure Firebase Auth Login
     window.handleFirebaseLogin = function(email, password) {
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
@@ -102,7 +99,6 @@
         });
     };
 
-    // Secure Firebase Auth Logout
     window.handleFirebaseLogout = function() {
       signOut(auth).then(() => {
         isAdminLoggedIn = false;
@@ -140,24 +136,16 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* Masonry Grid Layout for Original Aspect Ratios (No Cropping) */
-    .masonry-grid {
-      column-count: 1;
-      column-gap: 16px;
+    .mobile-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
     }
-    @media (min-width: 640px) {
-      .masonry-grid {
-        column-count: 2;
+    @media (min-width: 768px) {
+      .mobile-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
       }
-    }
-    @media (min-width: 1024px) {
-      .masonry-grid {
-        column-count: 3;
-      }
-    }
-    .masonry-item {
-      break-inside: avoid;
-      margin-bottom: 16px;
     }
 
     @keyframes fadeInUp {
@@ -192,73 +180,67 @@
   <!-- HEADER / NAVBAR -->
   <header class="sticky top-0 z-40 glass-card border-b border-gray-800/80">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3 group">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 via-pink-600 to-yellow-500 p-[2px] shadow-lg group-hover:scale-105 transition duration-300">
-          <div class="w-full h-full bg-gray-950 rounded-full flex items-center justify-center font-extrabold text-yellow-400 text-xs">RRC</div>
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 via-pink-600 to-yellow-500 p-[2px] shadow-lg group-hover:scale-105 transition duration-300">
+          <div class="w-full h-full bg-gray-950 rounded-full flex items-center justify-center font-extrabold text-yellow-400 text-[10px]">RRC</div>
         </div>
-        <span class="text-lg font-extrabold tracking-wider gradient-text">RajRebel Creations</span>
+        <span class="text-base sm:text-lg font-extrabold tracking-wider gradient-text">RajRebel Creations</span>
       </a>
 
       <div class="flex items-center gap-3">
-        <button id="adminBtn" onclick="openAdminModal()" class="px-3.5 py-1.5 text-xs font-semibold bg-gray-900/80 hover:bg-gray-800 text-gray-300 rounded-xl border border-gray-700/60 shadow transition flex items-center gap-1.5">
+        <button id="adminBtn" onclick="openAdminModal()" class="px-3 py-1.5 text-xs font-semibold bg-gray-900/80 hover:bg-gray-800 text-gray-300 rounded-xl border border-gray-700/60 shadow transition flex items-center gap-1.5">
           <i class="fa-solid fa-lock text-yellow-400 text-[10px]"></i> Admin
         </button>
       </div>
     </div>
   </header>
 
-  <!-- HERO SECTION / ABOUT ME -->
-  <section class="max-w-6xl mx-auto px-4 py-6 animate-fade-in">
+  <!-- HERO SECTION / CLEAN BANNER (No Profile Circle) -->
+  <section class="max-w-6xl mx-auto px-3 sm:px-4 py-5 animate-fade-in">
     <div class="glass-card rounded-3xl overflow-hidden shadow-2xl relative border border-gray-800/80">
-      <div class="w-full h-48 sm:h-64 md:h-80 overflow-hidden relative">
-        <img id="heroBanner" src="file_00000000de44820cafcf33ac46c92a80.png" alt="RajRebel Banner" class="w-full h-full object-cover brightness-90 hover:scale-105 transition duration-700">
-        <div class="absolute inset-0 bg-gradient-to-t from-[#07090e] via-[#07090e]/40 to-transparent"></div>
+      <div class="w-full h-44 sm:h-64 md:h-80 overflow-hidden relative">
+        <img id="heroBanner" src="file_00000000de44820cafcf33ac46c92a80.png" alt="RajRebel Banner" class="w-full h-full object-cover brightness-95 hover:scale-105 transition duration-700">
+        <div class="absolute inset-0 bg-gradient-to-t from-[#07090e] via-[#07090e]/50 to-transparent"></div>
       </div>
 
-      <div class="p-5 sm:p-8 -mt-16 sm:-mt-20 relative z-10 flex flex-col sm:flex-row items-center sm:items-end gap-5 text-center sm:text-left">
-        <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-yellow-500 shadow-2xl flex-shrink-0 bg-gray-950 ring-4 ring-black/50">
-          <img id="heroImage" src="file_00000000919c81fab001e649c432dd54.png" alt="RajRebel DP" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/150?text=RajRebel'">
-        </div>
+      <div class="p-4 sm:p-7 -mt-16 sm:-mt-24 relative z-10 flex flex-col items-center sm:items-start text-center sm:text-left space-y-3">
+        <span class="inline-block text-[10px] sm:text-xs uppercase tracking-widest text-yellow-400 font-bold bg-yellow-500/10 px-3.5 py-1 rounded-full border border-yellow-500/30 shadow-sm">Official Creator Hub</span>
 
-        <div class="flex-1 space-y-2.5">
-          <span class="inline-block text-[10px] sm:text-xs uppercase tracking-widest text-yellow-400 font-bold bg-yellow-500/10 px-3.5 py-1 rounded-full border border-yellow-500/30 shadow-sm">Official Creator Hub</span>
+        <h1 class="text-xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+          Welcome to <span class="gradient-text">RajRebel Creations</span>
+        </h1>
 
-          <h1 class="text-xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
-            Welcome to <span class="gradient-text">RajRebel Creations</span>
-          </h1>
+        <p class="text-gray-300 text-xs sm:text-sm max-w-2xl leading-relaxed">
+          Explore trending AI Photo Prompts, Video Prompts, ChatGPT Prompts, Gemini AI, Google Flow & Mobile Tutorials. Copy prompts with one click!
+        </p>
 
-          <p class="text-gray-300 text-xs sm:text-sm max-w-2xl leading-relaxed">
-            Explore trending AI Photo Prompts, Video Prompts, ChatGPT Prompts, Gemini AI, Google Flow & Mobile Tutorials. Copy prompts with one click!
-          </p>
+        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+          <a href="https://www.instagram.com/rajrebel_creations/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-pink-600/20 transition">
+            <i class="fa-brands fa-instagram text-sm"></i> Instagram
+          </a>
 
-          <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 pt-2">
-            <a href="https://www.instagram.com/rajrebel_creations/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-pink-600/20 transition">
-              <i class="fa-brands fa-instagram text-sm"></i> Instagram
-            </a>
+          <a href="https://youtube.com/@rajrebelcreations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-red-600/20 transition">
+            <i class="fa-brands fa-youtube text-sm"></i> YouTube
+          </a>
 
-            <a href="https://youtube.com/@rajrebelcreations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-red-600/20 transition">
-              <i class="fa-brands fa-youtube text-sm"></i> YouTube
-            </a>
+          <a href="https://whatsapp.com/channel/0029VaW8225ISTkUfQ96102L" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-green-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-green-600/20 transition">
+            <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
+          </a>
 
-            <a href="https://whatsapp.com/channel/0029VaW8225ISTkUfQ96102L" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-green-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-green-600/20 transition">
-              <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp Channel
-            </a>
+          <a href="https://www.tiktok.com/@rajrebel_creations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white font-semibold text-xs border border-gray-700/80 hover:scale-105 shadow-lg transition">
+            <i class="fa-brands fa-tiktok text-sm"></i> TikTok
+          </a>
 
-            <a href="https://www.tiktok.com/@rajrebel_creations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white font-semibold text-xs border border-gray-700/80 hover:scale-105 shadow-lg transition">
-              <i class="fa-brands fa-tiktok text-sm"></i> TikTok
-            </a>
-
-            <a href="https://www.facebook.com/share/1E4gLSvPMM/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-blue-600/20 transition">
-              <i class="fa-brands fa-facebook text-sm"></i> Facebook
-            </a>
-          </div>
+          <a href="https://www.facebook.com/share/1E4gLSvPMM/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-blue-600/20 transition">
+            <i class="fa-brands fa-facebook text-sm"></i> Facebook
+          </a>
         </div>
       </div>
     </div>
   </section>
 
   <!-- SEARCH & FILTER -->
-  <section class="max-w-6xl mx-auto px-4 py-3 space-y-3 w-full animate-fade-in">
+  <section class="max-w-6xl mx-auto px-3 sm:px-4 py-2 space-y-3 w-full animate-fade-in">
     <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
       <div class="relative w-full sm:w-80">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400 text-xs"></i>
@@ -266,37 +248,37 @@
       </div>
 
       <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 custom-scrollbar text-xs">
-        <button onclick="setCategory('All')" class="cat-btn px-4 py-2 rounded-xl bg-yellow-500 text-black font-bold whitespace-nowrap shadow-lg shadow-yellow-500/20 transition">All</button>
-        <button onclick="setCategory('AI Photo Prompts')" class="cat-btn px-4 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">AI Photo Prompts</button>
-        <button onclick="setCategory('AI Couple Prompts')" class="cat-btn px-4 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">AI Couple Prompts</button>
-        <button onclick="setCategory('AI Video Prompts')" class="cat-btn px-4 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">AI Video Prompts</button>
-        <button onclick="setCategory('Google Flow')" class="cat-btn px-4 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Google Flow</button>
-        <button onclick="setCategory('Gemini AI')" class="cat-btn px-4 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Gemini AI</button>
-        <button onclick="setCategory('Mobile Editing')" class="cat-btn px-4 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Mobile Editing</button>
+        <button onclick="setCategory('All')" class="cat-btn px-3.5 py-2 rounded-xl bg-yellow-500 text-black font-bold whitespace-nowrap shadow-lg shadow-yellow-500/20 transition">All</button>
+        <button onclick="setCategory('AI Photo Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">AI Photo Prompts</button>
+        <button onclick="setCategory('AI Couple Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">AI Couple Prompts</button>
+        <button onclick="setCategory('AI Video Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">AI Video Prompts</button>
+        <button onclick="setCategory('Google Flow')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Google Flow</button>
+        <button onclick="setCategory('Gemini AI')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Gemini AI</button>
+        <button onclick="setCategory('Mobile Editing')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Mobile Editing</button>
       </div>
     </div>
   </section>
 
-  <!-- POSTS MASONRY GRID (Original Aspect Ratio Preserved) -->
-  <main class="max-w-6xl mx-auto px-4 py-4 flex-1 w-full">
-    <div id="postsGrid" class="masonry-grid"></div>
+  <!-- POSTS 2-COLUMN MOBILE GRID -->
+  <main class="max-w-6xl mx-auto px-3 sm:px-4 py-3 flex-1 w-full">
+    <div id="postsGrid" class="mobile-grid"></div>
   </main>
 
   <!-- POST DETAIL MODAL -->
   <div id="detailModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
     <div class="glass-card w-full max-w-xl rounded-3xl max-h-[92vh] flex flex-col overflow-hidden border border-gray-700/80 shadow-2xl my-auto animate-scale-up">
       <div class="p-4 border-b border-gray-800/80 flex justify-between items-center bg-gray-950/60 flex-shrink-0">
-        <span id="modalCategory" class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-yellow-400 bg-yellow-500/10 px-3 py-1 rounded-lg border border-yellow-500/20 shadow-sm">Category</span>
+        <span id="modalCategory" class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-yellow-400 bg-yellow-500/10 px-3 py-1 rounded-lg border border-yellow-500/20 shadow-sm">Category</span>
         <button onclick="closeDetailModal()" class="text-gray-400 hover:text-white text-xl p-1.5 rounded-full hover:bg-gray-800 transition"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar space-y-4">
         <div class="w-full bg-gray-950 rounded-2xl overflow-hidden border border-gray-800/80 flex justify-center shadow-inner">
-          <img id="modalImage" src="" alt="Post Image" class="max-h-[55vh] w-auto max-w-full object-contain">
+          <img id="modalImage" src="" alt="Post Image" class="max-h-[50vh] w-auto max-w-full object-contain">
         </div>
 
         <div class="space-y-1">
-          <h2 id="modalTitle" class="text-lg sm:text-2xl font-black text-white tracking-tight"></h2>
+          <h2 id="modalTitle" class="text-base sm:text-2xl font-black text-white tracking-tight"></h2>
           <p id="modalDesc" class="text-gray-300 text-xs sm:text-sm leading-relaxed"></p>
         </div>
 
@@ -304,10 +286,9 @@
           <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5">
             <i class="fa-solid fa-list-check"></i> How to Create / Process
           </h3>
-          <div id="modalProcess" class="bg-gray-950/70 rounded-2xl p-3.5 text-xs sm:text-sm text-gray-300 whitespace-pre-line border border-gray-800/80 leading-relaxed shadow-inner"></div>
+          <div id="modalProcess" class="bg-gray-950/70 rounded-2xl p-3 text-xs sm:text-sm text-gray-300 whitespace-pre-line border border-gray-800/80 leading-relaxed shadow-inner"></div>
         </div>
 
-        <!-- DYNAMIC PROMPTS CONTAINER (Smart: No numbers if only 1 prompt!) -->
         <div id="modalPromptsContainer" class="space-y-3 pt-1"></div>
       </div>
     </div>
@@ -361,7 +342,7 @@
             <div class="space-y-1.5">
               <input type="text" id="postImgInput" placeholder="Image URL or Selected Image Data" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500">
               <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-                <span class="text-[11px] text-gray-400">Upload from Phone Gallery (Any Size - 9:16 / 16:9):</span>
+                <span class="text-[11px] text-gray-400">Upload from Phone Gallery (Any Size):</span>
                 <input type="file" id="galleryUploadInput" accept="image/*" onchange="uploadFromGallery(this)" class="text-xs text-gray-400 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-yellow-500 file:text-black hover:file:bg-yellow-400 cursor-pointer">
               </div>
             </div>
@@ -369,7 +350,6 @@
             <textarea id="postDescInput" placeholder="Short Description" rows="2" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500"></textarea>
             <textarea id="postProcessInput" placeholder="Process Steps / Instructions (Step 1, Step 2...)" rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500"></textarea>
 
-            <!-- MULTIPLE OPTIONAL PROMPTS BUILDER SECTION -->
             <div class="space-y-2 pt-1 border-t border-gray-800/80">
               <div class="flex justify-between items-center">
                 <label class="text-xs font-extrabold text-yellow-400 uppercase tracking-wider">AI Prompts (Add extra only if needed)</label>
@@ -377,9 +357,7 @@
                   <i class="fa-solid fa-plus text-[10px]"></i> Add Another Prompt
                 </button>
               </div>
-              <div id="adminPromptsContainer" class="space-y-3">
-                <!-- Prompt inputs will be injected dynamically here -->
-              </div>
+              <div id="adminPromptsContainer" class="space-y-3"></div>
             </div>
 
             <div class="flex justify-end gap-2 pt-2 border-t border-gray-800/80">
@@ -401,9 +379,6 @@
   <footer class="border-t border-gray-800/80 py-8 mt-12 bg-gray-950/90">
     <div class="max-w-6xl mx-auto px-4 text-center space-y-3">
       <div class="flex items-center justify-center gap-3">
-        <div class="w-8 h-8 rounded-full overflow-hidden border border-yellow-500 flex-shrink-0 bg-gray-900">
-          <img src="file_00000000919c81fab001e649c432dd54.png" alt="Raj" class="w-full h-full object-cover">
-        </div>
         <span class="text-xs font-bold text-gray-300">RajRebel Creations - Crafted by Raj</span>
       </div>
       <p class="text-xs text-gray-500 font-medium">© 2026 RajRebel Creations. All rights reserved.</p>
@@ -417,6 +392,25 @@
   <script>
     let currentCategory = 'All';
     let isAdminLoggedIn = false;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const postId = urlParams.get('post');
+      if (postId && window.getStoredPosts) {
+        setTimeout(() => {
+          const posts = window.getStoredPosts();
+          const targetPost = posts.find(p => p.id === postId);
+          if (targetPost) {
+            openDetailModal(targetPost);
+          }
+        }, 600);
+      }
+
+      const container = document.getElementById('adminPromptsContainer');
+      if (container && container.children.length === 0) {
+        addPromptBox();
+      }
+    });
 
     function renderPosts() {
       const posts = window.getStoredPosts ? window.getStoredPosts() : [];
@@ -442,50 +436,79 @@
       }
 
       filtered.forEach((post, index) => {
-        const item = document.createElement('div');
-        item.className = "masonry-item animate-fade-in";
-        item.style.animationDelay = `${index * 0.05}s`;
-
         const card = document.createElement('div');
-        card.className = "glass-card rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col justify-between cursor-pointer";
-        card.onclick = () => openDetailModal(post);
+        card.className = "glass-card rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col justify-between animate-fade-in";
+        card.style.animationDelay = `${index * 0.05}s`;
 
         const imageWrap = document.createElement('div');
-        imageWrap.className = 'relative w-full bg-gray-950 flex items-center justify-center overflow-hidden';
+        imageWrap.className = 'relative w-full bg-gray-950 flex items-center justify-center overflow-hidden cursor-pointer';
+        imageWrap.onclick = () => openDetailModal(post);
 
         const image = document.createElement('img');
         image.src = post.image || '';
         image.alt = post.title || 'Post image';
-        image.className = 'w-full h-auto object-block group-hover:scale-105 transition duration-500';
+        image.className = 'w-full h-auto object-contain group-hover:scale-105 transition duration-500';
         image.onerror = () => { image.alt = 'Image unavailable'; };
         imageWrap.appendChild(image);
 
         const category = document.createElement('span');
-        category.className = 'absolute top-3 left-3 text-[10px] font-black uppercase tracking-wider text-black bg-yellow-400 px-3 py-1 rounded-xl shadow-lg';
+        category.className = 'absolute top-2.5 left-2.5 text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-black bg-yellow-400 px-2.5 py-0.5 rounded-lg shadow-lg';
         category.textContent = post.category || '';
         imageWrap.appendChild(category);
 
         const content = document.createElement('div');
-        content.className = 'p-4 space-y-1.5';
+        content.className = 'p-3 sm:p-4 space-y-1 cursor-pointer';
+        content.onclick = () => openDetailModal(post);
 
         const title = document.createElement('h3');
-        title.className = 'font-extrabold text-white text-sm sm:text-base group-hover:text-yellow-400 transition tracking-tight line-clamp-1';
+        title.className = 'font-extrabold text-white text-xs sm:text-base group-hover:text-yellow-400 transition tracking-tight line-clamp-1';
         title.textContent = post.title || '';
 
         const desc = document.createElement('p');
-        desc.className = 'text-xs text-gray-300 line-clamp-2 leading-relaxed';
+        desc.className = 'text-[11px] sm:text-xs text-gray-300 line-clamp-2 leading-relaxed';
         desc.textContent = post.description || '';
 
         content.append(title, desc);
 
         const bottom = document.createElement('div');
-        bottom.className = 'px-4 pb-4 pt-1 flex justify-between items-center text-xs text-yellow-400 font-extrabold';
-        bottom.innerHTML = '<span class="group-hover:underline">View Full Prompt</span><i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition duration-300"></i>';
+        bottom.className = 'px-3 pb-3 sm:px-4 sm:pb-4 pt-1 flex items-center justify-between gap-2 border-t border-gray-800/50';
+        
+        const viewBtn = document.createElement('button');
+        viewBtn.className = 'text-[11px] sm:text-xs text-yellow-400 font-extrabold flex items-center gap-1 hover:underline';
+        viewBtn.innerHTML = '<span>View Prompt</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>';
+        viewBtn.onclick = () => openDetailModal(post);
+
+        const shareBtn = document.createElement('button');
+        shareBtn.className = 'px-2.5 py-1.5 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-xl text-[11px] font-bold transition flex items-center gap-1 shadow-sm';
+        shareBtn.innerHTML = '<i class="fa-solid fa-share-nodes text-[10px]"></i> <span>Share</span>';
+        shareBtn.onclick = (e) => {
+          e.stopPropagation();
+          sharePostLink(post.id, post.title);
+        };
+
+        bottom.append(viewBtn, shareBtn);
 
         card.append(imageWrap, content, bottom);
-        item.appendChild(card);
-        grid.appendChild(item);
+        grid.appendChild(card);
       });
+    }
+
+    function sharePostLink(postId, postTitle) {
+      const shareUrl = window.location.origin + window.location.pathname + '?post=' + postId;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: postTitle,
+          text: 'Get this AI prompt & tutorial from RajRebel Creations:',
+          url: shareUrl,
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          alert('Direct Post Link copied to clipboard! You can now paste it in your Auto-DM.');
+        }).catch(() => {
+          prompt('Copy this link for Auto-DM:', shareUrl);
+        });
+      }
     }
 
     function setCategory(cat) {
@@ -493,9 +516,9 @@
 
       document.querySelectorAll('.cat-btn').forEach(btn => {
         if (btn.innerText === cat) {
-          btn.className = "cat-btn px-4 py-2 rounded-xl bg-yellow-500 text-black font-bold whitespace-nowrap shadow-lg shadow-yellow-500/20 transition";
+          btn.className = "cat-btn px-3.5 py-2 rounded-xl bg-yellow-500 text-black font-bold whitespace-nowrap shadow-lg shadow-yellow-500/20 transition";
         } else {
-          btn.className = "cat-btn px-4 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition";
+          btn.className = "cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition";
         }
       });
 
@@ -506,7 +529,6 @@
       renderPosts();
     }
 
-    // Admin dynamic prompt boxes builder
     function addPromptBox(value = '') {
       const container = document.getElementById('adminPromptsContainer');
       const count = container.children.length + 1;
@@ -612,7 +634,6 @@
       document.getElementById('modalImage').src = post.image || '';
       document.getElementById('modalProcess').innerText = post.process || "Follow standard prompt generation procedures.";
       
-      // Render dynamic prompt boxes and copy buttons for users
       const container = document.getElementById('modalPromptsContainer');
       container.innerHTML = '';
 
@@ -630,7 +651,7 @@
       promptsList.forEach((pText, idx) => {
         const promptNum = idx + 1;
         const div = document.createElement('div');
-        div.className = 'space-y-2.5 pt-1';
+        div.className = 'space-y-2 pt-1';
 
         const titleText = totalPrompts > 1 ? `Prompt ${promptNum}` : `Full AI Prompt`;
         const btnText = totalPrompts > 1 ? `Copy Prompt ${promptNum}` : `Copy Prompt`;
@@ -640,11 +661,11 @@
             <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5">
               <i class="fa-solid fa-code"></i> ${titleText}
             </h3>
-            <button onclick="copySpecificPrompt('modalPrompt_${idx}')" class="px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black text-xs sm:text-sm rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-yellow-500/25 active:scale-95">
-              <i class="fa-regular fa-copy text-sm"></i> ${btnText}
+            <button onclick="copySpecificPrompt('modalPrompt_${idx}')" class="px-3.5 py-1.5 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black text-xs rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-yellow-500/25 active:scale-95">
+              <i class="fa-regular fa-copy"></i> ${btnText}
             </button>
           </div>
-          <textarea id="modalPrompt_${idx}" readonly class="w-full h-28 sm:h-32 bg-gray-950 text-gray-200 border border-gray-800/80 rounded-2xl p-3.5 text-xs sm:text-sm font-mono resize-none focus:outline-none shadow-inner">${escapeHtml(pText)}</textarea>
+          <textarea id="modalPrompt_${idx}" readonly class="w-full h-24 sm:h-32 bg-gray-950 text-gray-200 border border-gray-800/80 rounded-2xl p-3 text-xs sm:text-sm font-mono resize-none focus:outline-none shadow-inner">${escapeHtml(pText)}</textarea>
         `;
         container.appendChild(div);
       });
@@ -708,7 +729,6 @@
       renderAdminPosts();
     }
 
-    // Connected to Firebase Auth Login
     function handleAdminLogin() {
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
@@ -723,7 +743,6 @@
       }
     }
 
-    // Connected to Firebase Auth Logout
     function handleAdminLogout() {
       if (window.handleFirebaseLogout) {
         window.handleFirebaseLogout();
@@ -870,13 +889,6 @@
       container.innerHTML = '';
       addPromptBox();
     }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const container = document.getElementById('adminPromptsContainer');
-      if (container && container.children.length === 0) {
-        addPromptBox();
-      }
-    });
   </script>
 </body>
 </html>
