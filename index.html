@@ -4,23 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#07090e">
-  <title>RajRebel Creations | AI Prompts, Video Prompts & ChatGPT Prompts Hub</title>
-  <meta name="description" content="Official Hub for RajRebel Creations (RajRebel). Explore trending AI Photo Prompts, Video Prompts, ChatGPT Prompts, Gemini AI, Google Flow & Mobile Tutorials. Copy prompts with one click!">
-  <meta name="keywords" content="RajRebel, RajRebel Creations, RajRebel Prompts, AI Prompts, Video Prompts, AI Video Prompts, Gemini AI Prompts, ChatGPT Prompts, AI Photo Prompts Telugu, Mobile Editing Tutorials">
+  <title id="metaTitle">RajRebel Creations | AI Prompts & Content Hub</title>
+  <meta id="metaDesc" name="description" content="Official Hub for RajRebel Creations (RajRebel). Explore trending AI Photo Prompts, Video Prompts, ChatGPT Prompts, Gemini AI, Google Flow & Mobile Tutorials. Copy prompts with one click!">
+  <meta name="keywords" content="RajRebel, RajRebel Creations, RajRebel Prompts, AI Prompts, Video Prompts, AI Video Prompts, Gemini AI Prompts, ChatGPT Prompts, AI Photo Prompts Telugu">
   <meta name="author" content="RajRebel Creations">
   <meta name="robots" content="index, follow">
   
-  <link rel="canonical" href="https://rajrebelcreations.com/">
+  <link id="canonicalLink" rel="canonical" href="https://rajrebelcreations.com/">
 
-  <!-- Open Graph Meta Tags for Rich Social Media Link Preview with Banner Photo -->
-  <meta property="og:title" content="RajRebel Creations | AI Prompts & Content Hub">
-  <meta property="og:description" content="Explore AI Photo Prompts, Video Prompts, Editing Tutorials & Tools by RajRebel Creations. Copy prompts with one click!">
+  <!-- Dynamic Open Graph Meta Tags for Post & Banner Preview -->
+  <meta property="og:title" id="ogTitle" content="RajRebel Creations | AI Prompts & Content Hub">
+  <meta property="og:description" id="ogDesc" content="Explore AI Photo Prompts, Video Prompts, Editing Tutorials & Tools by RajRebel Creations. Copy prompts with one click!">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://rajrebelcreations.com/">
+  <meta property="og:url" id="ogUrl" content="https://rajrebelcreations.com/">
   <meta property="og:site_name" content="RajRebel Creations">
-  <meta property="og:image" content="https://raw.githubusercontent.com/rajrebel/rajrebelcreations.com/main/file_00000000de44820cafcf33ac46c92a80.png">
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:image" content="https://raw.githubusercontent.com/rajrebel/rajrebelcreations.com/main/file_00000000de44820cafcf33ac46c92a80.png">
+  <meta property="og:image" id="ogImage" content="https://raw.githubusercontent.com/rajrebel/rajrebelcreations.com/main/file_00000000de44820cafcf33ac46c92a80.png">
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" id="twTitle" content="RajRebel Creations | AI Prompts & Content Hub">
+  <meta name="twitter:description" id="twDesc" content="Explore AI Photo Prompts, Video Prompts, Editing Tutorials & Tools by RajRebel Creations.">
+  <meta name="twitter:image" id="twImage" content="https://raw.githubusercontent.com/rajrebel/rajrebelcreations.com/main/file_00000000de44820cafcf33ac46c92a80.png">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -63,15 +66,42 @@
     onValue(postsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        // Reverse array so newest uploaded posts appear at the very top!
+        // Newest uploaded posts appear at the very top
         window.firebasePosts = Object.values(data).reverse();
       } else {
         window.firebasePosts = samplePosts;
         set(postsRef, samplePosts);
       }
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const postId = urlParams.get('post');
+      if (postId && window.firebasePosts) {
+        const targetPost = window.firebasePosts.find(p => p.id === postId);
+        if (targetPost) {
+          updateMetaTagsForPost(targetPost);
+        }
+      }
+
       if (typeof renderPosts === 'function') renderPosts();
       if (typeof renderAdminPosts === 'function') renderAdminPosts();
     });
+
+    function updateMetaTagsForPost(post) {
+      if (post.title) {
+        document.getElementById('metaTitle').innerText = post.title + " | RajRebel Creations";
+        document.getElementById('ogTitle').setAttribute('content', post.title + " | RajRebel Creations");
+        document.getElementById('twTitle').setAttribute('content', post.title + " | RajRebel Creations");
+      }
+      if (post.description) {
+        document.getElementById('metaDesc').setAttribute('content', post.description);
+        document.getElementById('ogDesc').setAttribute('content', post.description);
+        document.getElementById('twDesc').setAttribute('content', post.description);
+      }
+      if (post.image && post.image.startsWith('http')) {
+        document.getElementById('ogImage').setAttribute('content', post.image);
+        document.getElementById('twImage').setAttribute('content', post.image);
+      }
+    }
 
     window.saveFirebasePost = function(postObj, id) {
       const postRef = ref(db, 'posts/' + id);
@@ -141,7 +171,7 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* FORCED 2-COLUMN GRID EVEN ON MOBILE (Side-by-side posts) */
+    /* FORCED 2-COLUMN GRID EVEN ON MOBILE */
     .mobile-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -220,17 +250,17 @@
           Explore trending AI Photo Prompts, Video Prompts, ChatGPT Prompts, Gemini AI, Google Flow & Mobile Tutorials. Copy prompts with one click!
         </p>
 
-        <!-- Professional Social Links -->
-        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 pt-1">
-          <a href="https://www.instagram.com/rajrebel_creations/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-pink-600/20 transition">
+        <!-- All 3 Social Links in ONE Single Compact Row -->
+        <div class="flex flex-row flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+          <a href="https://www.instagram.com/rajrebel_creations/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-pink-600/20 transition">
             <i class="fa-brands fa-instagram text-sm"></i> Instagram
           </a>
 
-          <a href="https://youtube.com/@rajrebelcreations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-red-600/20 transition">
+          <a href="https://youtube.com/@rajrebelcreations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-red-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-red-600/20 transition">
             <i class="fa-brands fa-youtube text-sm"></i> YouTube
           </a>
 
-          <a href="https://www.facebook.com/share/1E4gLSvPMM/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-blue-600/20 transition">
+          <a href="https://www.facebook.com/share/1E4gLSvPMM/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-blue-600/20 transition">
             <i class="fa-brands fa-facebook text-sm"></i> Facebook
           </a>
         </div>
@@ -238,7 +268,7 @@
     </div>
   </section>
 
-  <!-- SEARCH & FILTER -->
+  <!-- SEARCH & FILTER (Gods & Wishes Categories Added) -->
   <section class="max-w-6xl mx-auto px-3 sm:px-4 py-2 space-y-3 w-full animate-fade-in">
     <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
       <div class="relative w-full sm:w-80">
@@ -251,9 +281,12 @@
         <button onclick="setCategory('AI Photo Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">AI Photo Prompts</button>
         <button onclick="setCategory('AI Couple Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">AI Couple Prompts</button>
         <button onclick="setCategory('AI Video Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">AI Video Prompts</button>
+        <button onclick="setCategory('Gods Photo Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Gods Photo Prompts</button>
+        <button onclick="setCategory('Gods Video Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Gods Video Prompts</button>
+        <button onclick="setCategory('Wishes Photo Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Wishes Photo Prompts</button>
+        <button onclick="setCategory('Wishes Video Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Wishes Video Prompts</button>
         <button onclick="setCategory('Google Flow')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Google Flow</button>
         <button onclick="setCategory('Gemini AI')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Gemini AI</button>
-        <button onclick="setCategory('Mobile Editing')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Mobile Editing</button>
       </div>
     </div>
   </section>
@@ -331,9 +364,12 @@
                 <option value="AI Photo Prompts">AI Photo Prompts</option>
                 <option value="AI Couple Prompts">AI Couple Prompts</option>
                 <option value="AI Video Prompts">AI Video Prompts</option>
+                <option value="Gods Photo Prompts">Gods Photo Prompts</option>
+                <option value="Gods Video Prompts">Gods Video Prompts</option>
+                <option value="Wishes Photo Prompts">Wishes Photo Prompts</option>
+                <option value="Wishes Video Prompts">Wishes Video Prompts</option>
                 <option value="Google Flow">Google Flow</option>
                 <option value="Gemini AI">Gemini AI</option>
-                <option value="Mobile Editing">Mobile Editing</option>
                 <option value="Tips & Tricks">Tips & Tricks</option>
               </select>
             </div>
@@ -393,18 +429,6 @@
     let isAdminLoggedIn = false;
 
     window.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const postId = urlParams.get('post');
-      if (postId && window.getStoredPosts) {
-        setTimeout(() => {
-          const posts = window.getStoredPosts();
-          const targetPost = posts.find(p => p.id === postId);
-          if (targetPost) {
-            openDetailModal(targetPost);
-          }
-        }, 600);
-      }
-
       const container = document.getElementById('adminPromptsContainer');
       if (container && container.children.length === 0) {
         addPromptBox();
@@ -503,9 +527,9 @@
         }).catch(() => {});
       } else {
         navigator.clipboard.writeText(shareUrl).then(() => {
-          alert('Direct Post Link copied to clipboard! You can now paste it in your Auto-DM.');
+          alert('Direct Post Link copied to clipboard! You can now paste it in your Auto-DM or WhatsApp.');
         }).catch(() => {
-          prompt('Copy this link for Auto-DM:', shareUrl);
+          prompt('Copy this link:', shareUrl);
         });
       }
     }
