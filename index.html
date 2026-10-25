@@ -9,10 +9,7 @@
   <meta name="keywords" content="RajRebel, RajRebel Creations, RajRebel Prompts, AI Prompts, Video Prompts, AI Video Prompts, Gemini AI Prompts, ChatGPT Prompts, AI Photo Prompts Telugu">
   <meta name="author" content="RajRebel Creations">
   <meta name="robots" content="index, follow">
-  
   <link rel="canonical" href="https://rajrebelcreations.com/">
-
-  <!-- WhatsApp & Social Media Large Image Thumbnail Preview Meta Tags -->
   <meta property="og:title" content="RajRebel Creations | AI Prompts & Content Hub">
   <meta property="og:description" content="Explore AI Photo Prompts, Video Prompts, Editing Tutorials & Tools by RajRebel Creations. Copy prompts with one click!">
   <meta property="og:type" content="website">
@@ -23,29 +20,28 @@
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="RajRebel Creations | AI Prompts & Content Hub">
   <meta name="twitter:description" content="Explore AI Photo Prompts, Video Prompts, Editing Tutorials & Tools by RajRebel Creations.">
   <meta name="twitter:image" content="https://raw.githubusercontent.com/rajrebelcreations/rajrebel-prompts/main/1000261330.png">
-
-  <!-- Mobile PWA & Add to Home Screen Support -->
   <link rel="manifest" href="/manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/rajrebelcreations/rajrebel-prompts/main/1000261330.png">
-
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import {
+      getDatabase, ref, set, onValue, remove, get,
+      query, orderByKey, limitToLast, endAt
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyBkgdcYfcaCyvw6WJ2qLDAzOfSukO4vOIc",
+      apiKey: "AIzaSyBkgdcYfcaCyvw6WJ2LDAzOfSukO4vOIc",
       authDomain: "rajrebel-prompts.firebaseapp.com",
       databaseURL: "https://rajrebel-prompts-default-rtdb.firebaseio.com",
       projectId: "rajrebel-prompts",
@@ -59,47 +55,216 @@
     const db = getDatabase(app);
     const auth = getAuth(app);
 
-    // INSTANT LOCALSTORAGE CACHE FOR LIGHTNING-FAST LOAD
     let cachedPosts = [];
     try {
       const saved = localStorage.getItem('rajrebel_cached_posts');
-      if (saved) { cachedPosts = JSON.parse(saved); }
-    } catch (e) {}
+      if (saved) cachedPosts = JSON.parse(saved);
+      if (!Array.isArray(cachedPosts)) cachedPosts = [];
+    } catch (e) {
+      cachedPosts = [];
+    }
 
     window.firebasePosts = cachedPosts;
-
     window.getStoredPosts = function() {
-      return window.firebasePosts || cachedPosts;
+      return Array.isArray(window.firebasePosts) ? window.firebasePosts : [];
     };
 
-    // Render immediately from cache if available
+    // Display cached content as soon as the page is ready.
     window.addEventListener('DOMContentLoaded', () => {
-      if (typeof renderPosts === 'function' && window.firebasePosts.length > 0) {
-        renderPosts();
-      }
+      if (window.firebasePosts.length && typeof renderPosts === 'function') renderPosts();
       checkForSharedPost();
     });
 
-    const postsRef = ref(db, 'posts');
-    onValue(postsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        window.firebasePosts = Object.values(data).reverse();
-        try {
-          localStorage.setItem('rajrebel_cached_posts', JSON.stringify(window.firebasePosts));
-        } catch (e) {}
-      } else {
-        window.firebasePosts = [];
+    // Public feed: initially download only the newest 12 posts.
+    // Older posts are requested in batches when the visitor scrolls down.
+    const PAGE_SIZE = 12;
+    let publicPosts = new Map();
+    let oldestLoadedKey = null;
+    let loadingOlderPosts = false;
+    let hasMorePosts = true;
+    let allPostsLoadedForAdmin = false;
+    let allPostsCache = cachedPosts.slice();
+    let sharedPostFetchInProgress = false;
+    let sharedPostOpenedId = null;
+    let cacheWriteTimer = null;
+
+    function sortNewestFirst(posts) {
+      return posts.sort((a, b) => {
+        const aNum = Number(String(a.id || '').replace(/^post-/, ''));
+        const bNum = Number(String(b.id || '').replace(/^post-/, ''));
+        if (Number.isFinite(aNum) && Number.isFinite(bNum) && aNum !== bNum) return bNum - aNum;
+        return String(b.id || '').localeCompare(String(a.id || ''));
+      });
+    }
+
+    function syncPublicPosts() {
+      const merged = new Map(publicPosts);
+      // Keep cached posts available instantly while Firebase is loading.
+      for (const p of cachedPosts) {
+        if (p && p.id && !merged.has(p.id)) merged.set(p.id, p);
       }
+      window.firebasePosts = sortNewestFirst(Array.from(merged.values()));
+      scheduleCacheWrite();
       if (typeof renderPosts === 'function') renderPosts();
-      if (typeof renderAdminPosts === 'function') renderAdminPosts();
-      
       checkForSharedPost();
-    });
+    }
+
+    function scheduleCacheWrite() {
+      if (cacheWriteTimer) clearTimeout(cacheWriteTimer);
+      cacheWriteTimer = setTimeout(() => {
+        try {
+          // Save only what is currently known, including cached posts.
+          localStorage.setItem('rajrebel_cached_posts', JSON.stringify(window.firebasePosts || []));
+        } catch (e) {
+          // Browser storage can reject very large Base64 caches; the site still works.
+        }
+      }, 1200);
+    }
+
+    async function loadNewestPosts() {
+      try {
+        const newestQuery = query(ref(db, 'posts'), orderByKey(), limitToLast(PAGE_SIZE));
+        const snapshot = await get(newestQuery);
+        publicPosts.clear();
+        const data = snapshot.val() || {};
+        Object.entries(data).forEach(([key, value]) => {
+          if (value) publicPosts.set(key, { ...value, id: value.id || key });
+        });
+        const keys = Object.keys(data).sort();
+        oldestLoadedKey = keys.length ? keys[0] : null;
+        hasMorePosts = keys.length === PAGE_SIZE;
+        syncPublicPosts();
+      } catch (error) {
+        console.error('Could not load latest posts:', error);
+        // Keep cache visible if network is unavailable.
+        if (typeof renderPosts === 'function') renderPosts();
+      }
+    }
+
+    window.loadOlderPosts = async function() {
+      if (loadingOlderPosts || !hasMorePosts || !oldestLoadedKey) return;
+      loadingOlderPosts = true;
+      try {
+        // endAt includes the last key, so request one extra and remove the duplicate.
+        const olderQuery = query(
+          ref(db, 'posts'),
+          orderByKey(),
+          endAt(oldestLoadedKey),
+          limitToLast(PAGE_SIZE + 1)
+        );
+        const snapshot = await get(olderQuery);
+        const data = snapshot.val() || {};
+        const entries = Object.entries(data).sort((a, b) => a[0].localeCompare(b[0]));
+        const olderEntries = entries.filter(([key]) => key < oldestLoadedKey);
+        olderEntries.forEach(([key, value]) => {
+          if (value) publicPosts.set(key, { ...value, id: value.id || key });
+        });
+        if (olderEntries.length) oldestLoadedKey = olderEntries[0][0];
+        hasMorePosts = olderEntries.length === PAGE_SIZE;
+        syncPublicPosts();
+      } catch (error) {
+        console.error('Could not load older posts:', error);
+      } finally {
+        loadingOlderPosts = false;
+      }
+    };
+
+    // A small scroll-ahead buffer loads the next batch before the visitor reaches the bottom.
+    window.addEventListener('scroll', () => {
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 900) {
+        window.loadOlderPosts();
+      }
+    }, { passive: true });
+
+    // A shared URL can point to a post outside the newest batch; fetch that exact post.
+    async function checkForSharedPost() {
+      const params = new URLSearchParams(window.location.search);
+      let postId = params.get('post');
+
+      // Keep compatibility with old links, but all new links use ?post=ID.
+      if (!postId && window.location.hash.includes('post=')) {
+        postId = new URLSearchParams(window.location.hash.slice(1)).get('post');
+      }
+      if (!postId) return;
+
+      const localTarget = (window.firebasePosts || []).find(p => String(p.id) === String(postId));
+      if (localTarget) {
+        if (sharedPostOpenedId !== postId && typeof openDetailModal === 'function') {
+          sharedPostOpenedId = postId;
+          setTimeout(() => openDetailModal(localTarget), 100);
+        }
+        return;
+      }
+
+      if (sharedPostFetchInProgress) return;
+      sharedPostFetchInProgress = true;
+      try {
+        const snap = await get(ref(db, 'posts/' + postId));
+        const post = snap.val();
+        if (post) {
+          const target = { ...post, id: post.id || postId };
+          publicPosts.set(postId, target);
+          window.firebasePosts = sortNewestFirst([
+            ...Array.from(publicPosts.values()),
+            ...(window.firebasePosts || []).filter(p => p.id !== postId)
+          ]);
+          if (typeof renderPosts === 'function') renderPosts();
+          if (sharedPostOpenedId !== postId && typeof openDetailModal === 'function') {
+            sharedPostOpenedId = postId;
+            setTimeout(() => openDetailModal(target), 100);
+          }
+        } else {
+          console.warn('Shared post not found:', postId);
+        }
+      } catch (error) {
+        console.error('Could not fetch shared post:', error);
+      } finally {
+        sharedPostFetchInProgress = false;
+      }
+    }
+    window.checkForSharedPost = checkForSharedPost;
+
+    // Admin dashboard still loads the complete list, only when requested.
+    window.loadAllPostsForAdmin = async function() {
+      try {
+        const snap = await get(ref(db, 'posts'));
+        const data = snap.val() || {};
+        allPostsCache = sortNewestFirst(Object.entries(data)
+          .filter(([, value]) => !!value)
+          .map(([key, value]) => ({ ...value, id: value.id || key })));
+        allPostsLoadedForAdmin = true;
+        window.adminFirebasePosts = allPostsCache;
+        if (typeof renderAdminPosts === 'function') renderAdminPosts();
+      } catch (error) {
+        console.error('Could not load admin posts:', error);
+        window.adminFirebasePosts = allPostsCache.length ? allPostsCache : (window.firebasePosts || []);
+        if (typeof renderAdminPosts === 'function') renderAdminPosts();
+      }
+    };
+
+    // Keep admin list current while dashboard is open by listening to the full path only for admins.
+    window.startAdminPostsListener = function() {
+      if (window.adminPostsUnsubscribe) return;
+      const adminRef = ref(db, 'posts');
+      const unsubscribe = onValue(adminRef, snapshot => {
+        const data = snapshot.val() || {};
+        allPostsCache = sortNewestFirst(Object.entries(data)
+          .filter(([, value]) => !!value)
+          .map(([key, value]) => ({ ...value, id: value.id || key })));
+        window.adminFirebasePosts = allPostsCache;
+        if (typeof renderAdminPosts === 'function') renderAdminPosts();
+      });
+      window.adminPostsUnsubscribe = unsubscribe;
+    };
 
     window.saveFirebasePost = function(postObj, id) {
       const postRef = ref(db, 'posts/' + id);
       set(postRef, postObj).then(() => {
+        publicPosts.set(id, { ...postObj, id });
+        window.firebasePosts = sortNewestFirst([...publicPosts.values()]);
+        scheduleCacheWrite();
+        if (typeof renderPosts === 'function') renderPosts();
+        if (typeof renderAdminPosts === 'function') renderAdminPosts();
         alert('Post Published to Live Successfully!');
         resetForm();
       }).catch((error) => {
@@ -109,10 +274,13 @@
 
     window.deleteFirebasePost = function(id) {
       if (confirm('Are you sure you want to delete this post?')) {
-        const postRef = ref(db, 'posts/' + id);
-        remove(postRef).then(() => {
+        remove(ref(db, 'posts/' + id)).then(() => {
+          publicPosts.delete(id);
+          window.firebasePosts = (window.firebasePosts || []).filter(p => p.id !== id);
+          scheduleCacheWrite();
+          if (typeof renderPosts === 'function') renderPosts();
           alert('Post Deleted from Live Successfully!');
-        });
+        }).catch(error => alert('Delete failed: ' + error.message));
       }
     };
 
@@ -132,119 +300,44 @@
       signOut(auth).then(() => {
         isAdminLoggedIn = false;
         showAdminLogin();
+        if (window.adminPostsUnsubscribe) {
+          window.adminPostsUnsubscribe();
+          window.adminPostsUnsubscribe = null;
+        }
         alert('Logged out successfully!');
       }).catch((error) => {
         alert('Logout Error: ' + error.message);
       });
     };
 
-    function checkForSharedPost() {
-      // Support both hash format (#post=ID) and old query format (?post=ID) for backward compatibility
-      let postId = null;
-      const hash = window.location.hash;
-      if (hash && hash.includes('post=')) {
-        postId = hash.split('post=')[1];
-      } else {
-        const urlParams = new URLSearchParams(window.location.search);
-        postId = urlParams.get('post');
-      }
-
-      if (postId && window.firebasePosts && window.firebasePosts.length > 0) {
-        const targetPost = window.firebasePosts.find(p => p.id === postId);
-        if (targetPost && typeof openDetailModal === 'function') {
-          setTimeout(() => {
-            openDetailModal(targetPost);
-          }, 150);
-        }
-      }
-    }
+    loadNewestPosts();
   </script>
 
   <style>
-    body {
-      background-color: #07090e;
-      color: #f3f4f6;
-      font-family: system-ui, -apple-system, sans-serif;
-      overflow-x: hidden;
-    }
-
-    .glass-card {
-      background: rgba(17, 24, 39, 0.85);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    }
-
-    .glass-card:hover {
-      border-color: rgba(234, 179, 8, 0.3);
-      box-shadow: 0 12px 40px 0 rgba(234, 179, 8, 0.1);
-    }
-
-    .gradient-text {
-      background: linear-gradient(135deg, #60a5fa, #ec4899, #eab308);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    /* FORCED 2-COLUMN GRID EVEN ON MOBILE */
-    .mobile-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-    @media (min-width: 768px) {
-      .mobile-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 16px;
-      }
-    }
-
-    /* INSTANT POP-UP & SLIDE UP ANIMATION */
-    @keyframes popUp {
-      from { 
-        opacity: 0; 
-        transform: translateY(15px) scale(0.98); 
-      }
-      to { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
-      }
-    }
-
-    .animate-pop-up {
-      animation: popUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    @keyframes scaleUp {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .animate-scale-up {
-      animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
+    body { background-color: #07090e; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; overflow-x: hidden; }
+    .glass-card { background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
+    .glass-card:hover { border-color: rgba(234, 179, 8, 0.3); box-shadow: 0 12px 40px 0 rgba(234, 179, 8, 0.1); }
+    .gradient-text { background: linear-gradient(135deg, #60a5fa, #ec4899, #eab308); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .mobile-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    @media (min-width: 768px) { .mobile-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+    @keyframes popUp { from { opacity: 0; transform: translateY(15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .animate-pop-up { animation: popUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes scaleUp { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .animate-scale-up { animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     .custom-scrollbar::-webkit-scrollbar { width: 4px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #0b0f17; }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #374151;
-      border-radius: 4px;
-    }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
   </style>
 </head>
-
 <body class="min-h-screen flex flex-col justify-between selection:bg-yellow-500 selection:text-black">
-
-  <!-- HEADER / NAVBAR -->
   <header class="sticky top-0 z-40 glass-card border-b border-gray-800/80">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-2.5 group">
+      <a href="/" class="flex items-center gap-2.5 group">
         <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 via-pink-600 to-yellow-500 p-[2px] shadow-lg group-hover:scale-105 transition duration-300">
           <div class="w-full h-full bg-gray-950 rounded-full flex items-center justify-center font-extrabold text-yellow-400 text-[10px]">RRC</div>
         </div>
         <span class="text-base sm:text-lg font-extrabold tracking-wider gradient-text">RajRebel Creations</span>
       </a>
-
       <div class="flex items-center gap-3">
         <button id="adminBtn" onclick="openAdminModal()" class="px-3 py-1.5 text-xs font-semibold bg-gray-900/80 hover:bg-gray-800 text-gray-300 rounded-xl border border-gray-700/60 shadow transition flex items-center gap-1.5">
           <i class="fa-solid fa-lock text-yellow-400 text-[10px]"></i> Admin
@@ -253,51 +346,31 @@
     </div>
   </header>
 
-  <!-- HERO SECTION / CLEAN BANNER -->
   <section class="max-w-6xl mx-auto px-3 sm:px-4 py-5 animate-pop-up">
     <div class="glass-card rounded-3xl overflow-hidden shadow-2xl relative border border-gray-800/80">
       <div class="w-full h-44 sm:h-64 md:h-80 overflow-hidden relative">
-        <img id="heroBanner" src="./1000261330.png" alt="RajRebel Banner" class="w-full h-full object-cover brightness-95 hover:scale-105 transition duration-700">
+        <img id="heroBanner" src="./1000261330.png" alt="RajRebel Banner" fetchpriority="high" class="w-full h-full object-cover brightness-95 hover:scale-105 transition duration-700">
         <div class="absolute inset-0 bg-gradient-to-t from-[#07090e] via-[#07090e]/50 to-transparent"></div>
       </div>
-
       <div class="p-4 sm:p-7 -mt-16 sm:-mt-24 relative z-10 flex flex-col items-center sm:items-start text-center sm:text-left space-y-3">
         <span class="inline-block text-[10px] sm:text-xs uppercase tracking-widest text-yellow-400 font-bold bg-yellow-500/10 px-3.5 py-1 rounded-full border border-yellow-500/30 shadow-sm">Official Creator Hub</span>
-
-        <h1 class="text-xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
-          Welcome to <span class="gradient-text">RajRebel Creations</span>
-        </h1>
-
-        <p class="text-gray-300 text-xs sm:text-sm max-w-2xl leading-relaxed">
-          Explore trending AI Photo Prompts, Video Prompts, ChatGPT Prompts, Gemini AI, Google Flow & Mobile Tutorials. Copy prompts with one click!
-        </p>
-
-        <!-- All 3 Social Links in ONE Single Compact Row -->
+        <h1 class="text-xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">Welcome to <span class="gradient-text">RajRebel Creations</span></h1>
+        <p class="text-gray-300 text-xs sm:text-sm max-w-2xl leading-relaxed">Explore trending AI Photo Prompts, Video Prompts, ChatGPT Prompts, Gemini AI, Google Flow & Mobile Tutorials. Copy prompts with one click!</p>
         <div class="flex flex-row flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
-          <a href="https://www.instagram.com/rajrebel_creations/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-pink-600/20 transition">
-            <i class="fa-brands fa-instagram text-sm"></i> Instagram
-          </a>
-
-          <a href="https://youtube.com/@rajrebelcreations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-red-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-red-600/20 transition">
-            <i class="fa-brands fa-youtube text-sm"></i> YouTube
-          </a>
-
-          <a href="https://www.facebook.com/share/1E4gLSvPMM/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-blue-600/20 transition">
-            <i class="fa-brands fa-facebook text-sm"></i> Facebook
-          </a>
+          <a href="https://www.instagram.com/rajrebel_creations/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-pink-600/20 transition"><i class="fa-brands fa-instagram text-sm"></i> Instagram</a>
+          <a href="https://youtube.com/@rajrebelcreations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-red-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-red-600/20 transition"><i class="fa-brands fa-youtube text-sm"></i> YouTube</a>
+          <a href="https://www.facebook.com/share/1E4gLSvPMM/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-blue-600/20 transition"><i class="fa-brands fa-facebook text-sm"></i> Facebook</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SEARCH & FILTER -->
   <section class="max-w-6xl mx-auto px-3 sm:px-4 py-2 space-y-3 w-full animate-pop-up">
     <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
       <div class="relative w-full sm:w-80">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400 text-xs"></i>
         <input type="text" id="searchInput" onkeyup="filterPosts()" placeholder="Search prompts or tutorials..." class="w-full bg-gray-900/90 border border-gray-700/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-yellow-500 shadow-inner">
       </div>
-
       <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 custom-scrollbar text-xs">
         <button onclick="setCategory('All')" class="cat-btn px-3.5 py-2 rounded-xl bg-yellow-500 text-black font-bold whitespace-nowrap shadow-lg shadow-yellow-500/20 transition">All</button>
         <button onclick="setCategory('AI Photo Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">AI Photo Prompts</button>
@@ -313,55 +386,46 @@
     </div>
   </section>
 
-  <!-- POSTS 2-COLUMN MOBILE GRID -->
   <main class="max-w-6xl mx-auto px-3 sm:px-4 py-3 flex-1 w-full">
     <div id="postsGrid" class="mobile-grid">
       <div class="col-span-full text-center py-16 space-y-3">
         <i class="fa-solid fa-spinner fa-spin text-3xl text-yellow-400"></i>
-        <p class="text-xs sm:text-sm text-gray-300 font-medium">Loading Prompts Instantly...</p>
+        <p class="text-xs sm:text-sm text-gray-300 font-medium">Loading Prompts...</p>
         <p class="text-[11px] text-yellow-400 font-semibold tracking-wider uppercase">✨ Welcome to RajRebel Creations ✨</p>
       </div>
     </div>
+    <div id="loadMoreStatus" class="text-center text-xs text-gray-500 py-4 hidden">Loading more posts...</div>
   </main>
 
-  <!-- POST DETAIL MODAL -->
   <div id="detailModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
     <div class="glass-card w-full max-w-xl rounded-3xl max-h-[92vh] flex flex-col overflow-hidden border border-gray-700/80 shadow-2xl my-auto animate-scale-up">
       <div class="p-4 border-b border-gray-800/80 flex justify-between items-center bg-gray-950/60 flex-shrink-0">
         <span id="modalCategory" class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-yellow-400 bg-yellow-500/10 px-3 py-1 rounded-lg border border-yellow-500/20 shadow-sm">Category</span>
         <button onclick="closeDetailModal()" class="text-gray-400 hover:text-white text-xl p-1.5 rounded-full hover:bg-gray-800 transition"><i class="fa-solid fa-xmark"></i></button>
       </div>
-
       <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar space-y-4">
         <div class="w-full bg-gray-950 rounded-2xl overflow-hidden border border-gray-800/80 flex justify-center shadow-inner">
-          <img id="modalImage" src="" alt="Post Image" class="max-h-[50vh] w-auto max-w-full object-contain">
+          <img id="modalImage" src="" alt="Post Image" loading="eager" decoding="async" class="max-h-[50vh] w-auto max-w-full object-contain">
         </div>
-
         <div class="space-y-1">
           <h2 id="modalTitle" class="text-base sm:text-2xl font-black text-white tracking-tight"></h2>
           <p id="modalDesc" class="text-gray-300 text-xs sm:text-sm leading-relaxed"></p>
         </div>
-
         <div id="processSection" class="space-y-2">
-          <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5">
-            <i class="fa-solid fa-list-check"></i> How to Create / Process
-          </h3>
+          <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-list-check"></i> How to Create / Process</h3>
           <div id="modalProcess" class="bg-gray-950/70 rounded-2xl p-3 text-xs sm:text-sm text-gray-300 whitespace-pre-line border border-gray-800/80 leading-relaxed shadow-inner"></div>
         </div>
-
         <div id="modalPromptsContainer" class="space-y-3 pt-1"></div>
       </div>
     </div>
   </div>
 
-  <!-- ADMIN MODAL -->
   <div id="adminModal" class="fixed inset-0 bg-black/95 backdrop-blur-lg z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
     <div class="glass-card w-full max-w-2xl rounded-3xl max-h-[92vh] flex flex-col overflow-hidden border border-gray-700/80 shadow-2xl my-auto animate-scale-up">
       <div class="p-4 border-b border-gray-800/80 flex justify-between items-center bg-gray-950/60 flex-shrink-0">
         <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-user-shield text-yellow-400"></i> Admin Management Portal</h3>
         <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white text-xl p-1.5 rounded-full hover:bg-gray-800 transition"><i class="fa-solid fa-xmark"></i></button>
       </div>
-
       <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar">
         <div id="adminLoginView" class="max-w-md mx-auto space-y-4 py-6">
           <h4 class="text-center text-lg font-bold text-white">Sign in to Access Admin Controls</h4>
@@ -372,7 +436,6 @@
             <button onclick="handleAdminLogin()" class="w-full bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black py-3 rounded-2xl transition text-xs sm:text-sm shadow-lg shadow-yellow-500/20">Login to Admin</button>
           </div>
         </div>
-
         <div id="adminDashboardView" class="hidden space-y-5">
           <div class="flex flex-wrap justify-between items-center gap-3 pb-3 border-b border-gray-800/80">
             <span class="text-[11px] text-green-400 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20 font-semibold"><i class="fa-solid fa-circle text-[6px] mr-1"></i> Secure Admin Session Active</span>
@@ -381,27 +444,15 @@
               <button onclick="handleAdminLogout()" class="px-3.5 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-right-from-bracket mr-1"></i> Logout</button>
             </div>
           </div>
-
           <form id="postForm" onsubmit="handlePostSubmit(event)" class="bg-gray-950/60 p-4 sm:p-5 rounded-2xl border border-gray-800/80 space-y-3.5 shadow-inner">
             <h4 id="formTitle" class="text-xs sm:text-sm font-extrabold text-yellow-400">Create New Prompt / Tutorial Post</h4>
             <input type="hidden" id="editPostId" value="">
-
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <input type="text" id="postTitleInput" placeholder="Post Title" required class="bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500">
               <select id="postCatInput" required class="bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500">
-                <option value="AI Photo Prompts">AI Photo Prompts</option>
-                <option value="AI Couple Prompts">AI Couple Prompts</option>
-                <option value="AI Video Prompts">AI Video Prompts</option>
-                <option value="Gods Photo Prompts">Gods Photo Prompts</option>
-                <option value="Gods Video Prompts">Gods Video Prompts</option>
-                <option value="Wishes Photo Prompts">Wishes Photo Prompts</option>
-                <option value="Wishes Video Prompts">Wishes Video Prompts</option>
-                <option value="Google Flow">Google Flow</option>
-                <option value="Gemini AI">Gemini AI</option>
-                <option value="Tips & Tricks">Tips & Tricks</option>
+                <option value="AI Photo Prompts">AI Photo Prompts</option><option value="AI Couple Prompts">AI Couple Prompts</option><option value="AI Video Prompts">AI Video Prompts</option><option value="Gods Photo Prompts">Gods Photo Prompts</option><option value="Gods Video Prompts">Gods Video Prompts</option><option value="Wishes Photo Prompts">Wishes Photo Prompts</option><option value="Wishes Video Prompts">Wishes Video Prompts</option><option value="Google Flow">Google Flow</option><option value="Gemini AI">Gemini AI</option><option value="Tips & Tricks">Tips & Tricks</option>
               </select>
             </div>
-
             <div class="space-y-1.5">
               <input type="text" id="postImgInput" placeholder="Image URL or Selected Image Data" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500">
               <div class="flex flex-col sm:flex-row sm:items-center gap-2">
@@ -409,26 +460,20 @@
                 <input type="file" id="galleryUploadInput" accept="image/*" onchange="uploadFromGallery(this)" class="text-xs text-gray-400 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-yellow-500 file:text-black hover:file:bg-yellow-400 cursor-pointer">
               </div>
             </div>
-
             <textarea id="postDescInput" placeholder="Short Description" rows="2" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500"></textarea>
             <textarea id="postProcessInput" placeholder="Process Steps / Instructions (Step 1, Step 2...)" rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500"></textarea>
-
             <div class="space-y-2 pt-1 border-t border-gray-800/80">
               <div class="flex justify-between items-center">
                 <label class="text-xs font-extrabold text-yellow-400 uppercase tracking-wider">AI Prompts (Add extra only if needed)</label>
-                <button type="button" onclick="addPromptBox()" class="px-3 py-1 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 border border-yellow-500/30 rounded-xl text-xs font-bold transition flex items-center gap-1">
-                  <i class="fa-solid fa-plus text-[10px]"></i> Add Another Prompt
-                </button>
+                <button type="button" onclick="addPromptBox()" class="px-3 py-1 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 border border-yellow-500/30 rounded-xl text-xs font-bold transition flex items-center gap-1"><i class="fa-solid fa-plus text-[10px]"></i> Add Another Prompt</button>
               </div>
               <div id="adminPromptsContainer" class="space-y-3"></div>
             </div>
-
             <div class="flex justify-end gap-2 pt-2 border-t border-gray-800/80">
               <button type="button" onclick="resetForm()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-xs font-semibold transition">Cancel</button>
               <button type="submit" id="submitBtn" class="px-5 py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold rounded-xl text-xs shadow transition">Publish Post</button>
             </div>
           </form>
-
           <div class="space-y-2">
             <h4 class="text-xs sm:text-sm font-bold text-white">Manage Existing Posts</h4>
             <div id="adminPostsList" class="space-y-2"></div>
@@ -438,33 +483,24 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="border-t border-gray-800/80 py-8 mt-12 bg-gray-950/90">
     <div class="max-w-6xl mx-auto px-4 text-center space-y-3">
-      <div class="flex items-center justify-center gap-3">
-        <span class="text-xs font-bold text-gray-300">RajRebel Creations - Crafted by Raj</span>
-      </div>
+      <div class="flex items-center justify-center gap-3"><span class="text-xs font-bold text-gray-300">RajRebel Creations - Crafted by Raj</span></div>
       <p class="text-xs text-gray-500 font-medium">© 2026 RajRebel Creations. All rights reserved.</p>
-      <div class="flex justify-center gap-4 text-xs text-gray-500">
-        <a href="#" onclick="openAdminModal(); return false;" class="hover:text-yellow-400 transition font-medium">Admin Portal</a>
-      </div>
+      <div class="flex justify-center gap-4 text-xs text-gray-500"><a href="#" onclick="openAdminModal(); return false;" class="hover:text-yellow-400 transition font-medium">Admin Portal</a></div>
     </div>
   </footer>
 
-  <!-- APPLICATION SCRIPT -->
   <script>
     let currentCategory = 'All';
     let isAdminLoggedIn = false;
+    let renderPostsTimer = null;
 
     window.addEventListener('DOMContentLoaded', () => {
       const container = document.getElementById('adminPromptsContainer');
-      if (container && container.children.length === 0) {
-        addPromptBox();
-      }
-      // INSTANT RENDER FROM LOCALSTORAGE CACHE
-      if (window.firebasePosts && window.firebasePosts.length > 0) {
-        renderPosts();
-      }
+      if (container && container.children.length === 0) addPromptBox();
+      if (window.firebasePosts && window.firebasePosts.length > 0) renderPosts();
+      if (typeof window.checkForSharedPost === 'function') window.checkForSharedPost();
     });
 
     function renderPosts() {
@@ -472,26 +508,21 @@
       const grid = document.getElementById('postsGrid');
       const searchInput = document.getElementById('searchInput');
       const searchVal = searchInput ? searchInput.value.toLowerCase() : '';
-
       if (!grid) return;
-      grid.innerHTML = '';
 
       const filtered = posts.filter(post => {
         const matchesCat = currentCategory === 'All' || post.category === currentCategory;
-        const matchesSearch =
-          (post.title || '').toLowerCase().includes(searchVal) ||
+        const matchesSearch = (post.title || '').toLowerCase().includes(searchVal) ||
           (post.description || '').toLowerCase().includes(searchVal);
-
         return matchesCat && matchesSearch;
       });
 
+      // Avoid replacing every card when the list content hasn't changed.
+      grid.innerHTML = '';
+
       if (filtered.length === 0) {
         if (posts.length === 0) {
-          grid.innerHTML = `
-            <div class="col-span-full text-center py-16 space-y-3">
-              <i class="fa-solid fa-spinner fa-spin text-3xl text-yellow-400"></i>
-              <p class="text-xs sm:text-sm text-gray-300 font-medium">Loading Prompts Instantly...</p>
-            </div>`;
+          grid.innerHTML = `<div class="col-span-full text-center py-16 space-y-3"><i class="fa-solid fa-spinner fa-spin text-3xl text-yellow-400"></i><p class="text-xs sm:text-sm text-gray-300 font-medium">Loading Prompts...</p><p class="text-[11px] text-yellow-400 font-semibold tracking-wider uppercase">✨ Welcome to RajRebel Creations ✨</p></div>`;
         } else {
           grid.innerHTML = `<div class="col-span-full text-center py-16 text-gray-500 text-sm">No prompts found matching your query.</div>`;
         }
@@ -501,17 +532,20 @@
       filtered.forEach((post, index) => {
         const card = document.createElement('div');
         card.className = "glass-card rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col justify-between animate-pop-up opacity-0";
-        card.style.animationDelay = `${index * 0.03}s`;
+        card.style.animationDelay = `${Math.min(index, 8) * 0.02}s`;
 
         const imageWrap = document.createElement('div');
         imageWrap.className = 'relative w-full bg-gray-950 flex items-center justify-center overflow-hidden cursor-pointer';
         imageWrap.onclick = () => openDetailModal(post);
 
         const image = document.createElement('img');
-        image.src = post.image || '';
         image.alt = post.title || 'Post image';
+        image.loading = index < 4 ? 'eager' : 'lazy';
+        image.decoding = 'async';
+        image.fetchPriority = index < 4 ? 'high' : 'low';
         image.className = 'w-full h-auto object-contain group-hover:scale-105 transition duration-500';
         image.onerror = () => { image.alt = 'Image unavailable'; };
+        image.src = post.image || '';
         imageWrap.appendChild(image);
 
         const category = document.createElement('span');
@@ -530,12 +564,11 @@
         const desc = document.createElement('p');
         desc.className = 'text-[11px] sm:text-xs text-gray-300 line-clamp-2 leading-relaxed';
         desc.textContent = post.description || '';
-
         content.append(title, desc);
 
         const bottom = document.createElement('div');
         bottom.className = 'px-3 pb-3 sm:px-4 sm:pb-4 pt-1 flex items-center justify-between gap-2 border-t border-gray-800/50';
-        
+
         const viewBtn = document.createElement('button');
         viewBtn.className = 'text-[11px] sm:text-xs text-yellow-400 font-extrabold flex items-center gap-1 hover:underline';
         viewBtn.innerHTML = '<span>View Prompt</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>';
@@ -544,40 +577,40 @@
         const shareBtn = document.createElement('button');
         shareBtn.className = 'px-2.5 py-1.5 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-xl text-[11px] font-bold transition flex items-center gap-1 shadow-sm';
         shareBtn.innerHTML = '<i class="fa-solid fa-share-nodes text-[10px]"></i> <span>Share</span>';
-        shareBtn.onclick = (e) => {
-          e.stopPropagation();
-          sharePostLink(post.id, post.title);
-        };
+        shareBtn.onclick = e => { e.stopPropagation(); sharePostLink(post.id, post.title); };
 
         bottom.append(viewBtn, shareBtn);
-
         card.append(imageWrap, content, bottom);
         grid.appendChild(card);
       });
     }
 
     function sharePostLink(postId, postTitle) {
-      // USING HASH FORMAT (#post=ID) SO AUTO-DM TOOLS ACCEPT IT WITHOUT "INVALID LINK" ERROR
-      const shareUrl = window.location.origin + window.location.pathname + '#post=' + postId;
-      
+      if (!postId) {
+        alert('Post ID is missing. Cannot create a post link.');
+        return;
+      }
+      const shareUrl = new URL(window.location.origin + window.location.pathname);
+      shareUrl.searchParams.set('post', String(postId));
+      const finalUrl = shareUrl.toString();
+
       if (navigator.share) {
         navigator.share({
-          title: postTitle,
+          title: postTitle || 'RajRebel Creations',
           text: 'Get this AI prompt & tutorial from RajRebel Creations:',
-          url: shareUrl,
+          url: finalUrl
         }).catch(() => {});
+      } else if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(finalUrl)
+          .then(() => alert('Post link copied successfully!'))
+          .catch(() => prompt('Copy this post link:', finalUrl));
       } else {
-        navigator.clipboard.writeText(shareUrl).then(() => {
-          alert('Direct Post Link copied! Auto-DM ready and Valid.');
-        }).catch(() => {
-          prompt('Copy this link:', shareUrl);
-        });
+        prompt('Copy this post link:', finalUrl);
       }
     }
 
     function setCategory(cat) {
       currentCategory = cat;
-
       document.querySelectorAll('.cat-btn').forEach(btn => {
         if (btn.innerText === cat) {
           btn.className = "cat-btn px-3.5 py-2 rounded-xl bg-yellow-500 text-black font-bold whitespace-nowrap shadow-lg shadow-yellow-500/20 transition";
@@ -585,109 +618,81 @@
           btn.className = "cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition";
         }
       });
-
       renderPosts();
     }
-
-    function filterPosts() {
-      renderPosts();
-    }
+    function filterPosts() { renderPosts(); }
 
     function addPromptBox(value = '') {
       const container = document.getElementById('adminPromptsContainer');
       const count = container.children.length + 1;
-
       const wrapper = document.createElement('div');
       wrapper.className = "flex gap-2 items-start admin-prompt-row";
-
       const textarea = document.createElement('textarea');
       textarea.className = "w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs font-mono text-gray-200 focus:outline-none focus:border-yellow-500 admin-prompt-textarea";
       textarea.rows = 2;
       textarea.placeholder = count === 1 ? 'Main Prompt (Required)' : `Prompt ${count} (Optional)`;
       textarea.value = value;
-
       const delBtn = document.createElement('button');
       delBtn.type = 'button';
       delBtn.className = 'px-2.5 py-2.5 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-xl text-xs transition flex-shrink-0';
       delBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
-      delBtn.onclick = () => {
-        wrapper.remove();
-        updatePromptLabels();
-      };
-
+      delBtn.onclick = () => { wrapper.remove(); updatePromptLabels(); };
       wrapper.append(textarea, delBtn);
       container.appendChild(wrapper);
       updatePromptLabels();
     }
 
     function updatePromptLabels() {
-      const rows = document.querySelectorAll('#adminPromptsContainer .admin-prompt-row');
-      rows.forEach((row, idx) => {
-        const ta = row.querySelector('textarea');
-        ta.placeholder = idx === 0 ? 'Main Prompt (Required)' : `Prompt ${idx + 1} (Optional)`;
+      document.querySelectorAll('#adminPromptsContainer .admin-prompt-row').forEach((row, idx) => {
+        row.querySelector('textarea').placeholder = idx === 0 ? 'Main Prompt (Required)' : `Prompt ${idx + 1} (Optional)`;
       });
     }
 
     function uploadFromGallery(input) {
       const file = input.files && input.files[0];
       if (!file) return;
-
       if (!file.type.startsWith('image/')) {
         alert('Please select an image file.');
         input.value = '';
         return;
       }
-
       const imgInput = document.getElementById('postImgInput');
       imgInput.value = 'Processing image...';
-
       const reader = new FileReader();
-
       reader.onload = function(event) {
         const img = new Image();
-
         img.onload = function() {
           const maxSize = 1200;
           const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
           const canvas = document.createElement('canvas');
-
           canvas.width = Math.max(1, Math.round(img.width * scale));
           canvas.height = Math.max(1, Math.round(img.height * scale));
-
           const ctx = canvas.getContext('2d');
-
           if (!ctx) {
             imgInput.value = '';
             alert('Your browser could not process this image.');
             return;
           }
-
           ctx.fillStyle = '#ffffff';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
           const compressed = canvas.toDataURL('image/jpeg', 0.70);
           const approxBytes = Math.ceil((compressed.length * 3) / 4);
-
           if (approxBytes > 950000) {
             imgInput.value = '';
             alert('This photo is too large. Please choose a smaller image.');
             input.value = '';
             return;
           }
-
           imgInput.value = compressed;
           alert('Photo prepared successfully. Now tap Publish Post.');
         };
-
         img.onerror = function() {
           imgInput.value = '';
           alert('Could not process this photo.');
         };
-
         img.src = event.target.result;
       };
-
       reader.readAsDataURL(file);
     }
 
@@ -697,56 +702,41 @@
       document.getElementById('modalDesc').innerText = post.description || '';
       document.getElementById('modalImage').src = post.image || '';
       document.getElementById('modalProcess').innerText = post.process || "Follow standard prompt generation procedures.";
-      
       const container = document.getElementById('modalPromptsContainer');
       container.innerHTML = '';
-
       let promptsList = [];
-      if (Array.isArray(post.prompts) && post.prompts.length > 0) {
-        promptsList = post.prompts;
-      } else if (post.prompt) {
-        promptsList = [post.prompt];
-      } else {
-        promptsList = [''];
-      }
-
+      if (Array.isArray(post.prompts) && post.prompts.length > 0) promptsList = post.prompts;
+      else if (post.prompt) promptsList = [post.prompt];
+      else promptsList = [''];
       const totalPrompts = promptsList.length;
-
       promptsList.forEach((pText, idx) => {
         const promptNum = idx + 1;
         const div = document.createElement('div');
         div.className = 'space-y-2 pt-1';
-
         const titleText = totalPrompts > 1 ? `Prompt ${promptNum}` : `Full AI Prompt`;
         const btnText = totalPrompts > 1 ? `Copy Prompt ${promptNum}` : `Copy Prompt`;
-
         div.innerHTML = `
           <div class="flex justify-between items-center">
-            <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5">
-              <i class="fa-solid fa-code"></i> ${titleText}
-            </h3>
-            <button onclick="copySpecificPrompt('modalPrompt_${idx}')" class="px-3.5 py-1.5 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black text-xs rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-yellow-500/25 active:scale-95">
-              <i class="fa-regular fa-copy"></i> ${btnText}
-            </button>
+            <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-code"></i> ${titleText}</h3>
+            <button onclick="copySpecificPrompt('modalPrompt_${idx}')" class="px-3.5 py-1.5 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black text-xs rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-yellow-500/25 active:scale-95"><i class="fa-regular fa-copy"></i> ${btnText}</button>
           </div>
-          <textarea id="modalPrompt_${idx}" readonly class="w-full h-24 sm:h-32 bg-gray-950 text-gray-200 border border-gray-800/80 rounded-2xl p-3 text-xs sm:text-sm font-mono resize-none focus:outline-none shadow-inner">${escapeHtml(pText)}</textarea>
-        `;
+          <textarea id="modalPrompt_${idx}" readonly class="w-full h-24 sm:h-32 bg-gray-950 text-gray-200 border border-gray-800/80 rounded-2xl p-3 text-xs sm:text-sm font-mono resize-none focus:outline-none shadow-inner">${escapeHtml(pText)}</textarea>`;
         container.appendChild(div);
       });
-
       document.getElementById('detailModal').classList.remove('hidden');
     }
 
     function escapeHtml(text) {
       if (!text) return '';
-      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
 
     function closeDetailModal() {
       document.getElementById('detailModal').classList.add('hidden');
+      // Remove ?post=ID from the address after closing, without reloading the page.
       if (history.pushState) {
-        const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        history.pushState({path:newurl}, '', newurl);
+        const cleanUrl = window.location.origin + window.location.pathname;
+        history.pushState({ path: cleanUrl }, '', cleanUrl);
       }
     }
 
@@ -755,11 +745,8 @@
       if (!textarea) return;
       textarea.select();
       textarea.setSelectionRange(0, 99999);
-
       if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(textarea.value).then(() => {
-          alert('Prompt copied to clipboard successfully!');
-        }).catch(() => {
+        navigator.clipboard.writeText(textarea.value).then(() => alert('Prompt copied to clipboard successfully!')).catch(() => {
           document.execCommand('copy');
           alert('Prompt copied to clipboard.');
         });
@@ -772,101 +759,72 @@
     function openAdminModal() {
       const adminModal = document.getElementById('adminModal');
       if (!adminModal) return;
-
       adminModal.classList.remove('hidden');
-
-      if (isAdminLoggedIn) {
-        showAdminDashboard();
-      } else {
-        showAdminLogin();
-      }
+      if (isAdminLoggedIn) showAdminDashboard();
+      else showAdminLogin();
     }
-
-    function closeAdminModal() {
-      document.getElementById('adminModal').classList.add('hidden');
-    }
-
+    function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
     function showAdminLogin() {
       document.getElementById('adminLoginView').classList.remove('hidden');
       document.getElementById('adminDashboardView').classList.add('hidden');
     }
-
     function showAdminDashboard() {
       document.getElementById('adminLoginView').classList.add('hidden');
       document.getElementById('adminDashboardView').classList.remove('hidden');
+      if (window.loadAllPostsForAdmin) window.loadAllPostsForAdmin();
+      if (window.startAdminPostsListener) window.startAdminPostsListener();
       renderAdminPosts();
     }
 
     function handleAdminLogin() {
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
-
       if (!email || !password) {
         alert('Please enter both email and password.');
         return;
       }
-
-      if (window.handleFirebaseLogin) {
-        window.handleFirebaseLogin(email, password);
-      }
+      if (window.handleFirebaseLogin) window.handleFirebaseLogin(email, password);
     }
-
-    function handleAdminLogout() {
-      if (window.handleFirebaseLogout) {
-        window.handleFirebaseLogout();
-      }
-    }
+    function handleAdminLogout() { if (window.handleFirebaseLogout) window.handleFirebaseLogout(); }
 
     function renderAdminPosts() {
-      const posts = window.getStoredPosts ? window.getStoredPosts() : [];
+      const posts = window.adminFirebasePosts || window.getStoredPosts?.() || [];
       const list = document.getElementById('adminPostsList');
-
       if (!list) return;
       list.innerHTML = '';
-
       posts.forEach(post => {
         const item = document.createElement('div');
         item.className = "flex justify-between items-center bg-gray-950 p-3 rounded-2xl border border-gray-800 text-xs shadow-inner";
-
         const left = document.createElement('div');
         left.className = 'flex items-center gap-3 overflow-hidden';
-
         const thumb = document.createElement('img');
         thumb.src = post.image || '';
         thumb.alt = '';
+        thumb.loading = 'lazy';
+        thumb.decoding = 'async';
         thumb.className = 'w-10 h-10 object-cover rounded-xl flex-shrink-0';
-
         const details = document.createElement('div');
         details.className = 'truncate';
-
         const title = document.createElement('p');
         title.className = 'font-bold text-white truncate';
         title.textContent = post.title || '';
-
         const cat = document.createElement('p');
         cat.className = 'text-gray-400 text-[10px]';
         cat.textContent = post.category || '';
-
         details.append(title, cat);
         left.append(thumb, details);
-
         const actions = document.createElement('div');
         actions.className = 'flex gap-2 flex-shrink-0';
-
         const edit = document.createElement('button');
         edit.type = 'button';
         edit.className = 'px-3 py-1.5 bg-blue-600/20 text-blue-400 font-semibold rounded-xl hover:bg-blue-600/30 transition';
         edit.textContent = 'Edit';
         edit.onclick = () => editPost(post.id);
-
         const del = document.createElement('button');
         del.type = 'button';
         del.className = 'px-3 py-1.5 bg-red-600/20 text-red-400 font-semibold rounded-xl hover:bg-red-600/30 transition';
         del.textContent = 'Delete';
-        del.onclick = () => {
-          if (window.deleteFirebasePost) window.deleteFirebasePost(post.id);
-        };
-
+        del.onclick = () => { if (window.deleteFirebasePost) window.deleteFirebasePost(post.id); };
         actions.append(edit, del);
         item.append(left, actions);
         list.appendChild(item);
@@ -875,30 +833,22 @@
 
     function handlePostSubmit(e) {
       e.preventDefault();
-
       try {
         const id = document.getElementById('editPostId').value || 'post-' + Date.now();
         const imageValue = document.getElementById('postImgInput').value.trim();
-
         if (!imageValue || imageValue === 'Processing image...') {
           alert('Please select a photo or enter a valid image URL and wait for processing to finish.');
           return;
         }
-
         const promptTextarrays = document.querySelectorAll('#adminPromptsContainer textarea');
         const promptsArr = [];
-        promptTextarrays.forEach(ta => {
-          const val = ta.value.trim();
-          if (val) promptsArr.push(val);
-        });
-
+        promptTextarrays.forEach(ta => { const val = ta.value.trim(); if (val) promptsArr.push(val); });
         if (promptsArr.length === 0) {
           alert('Please add at least one prompt.');
           return;
         }
-
         const postObj = {
-          id: id,
+          id,
           title: document.getElementById('postTitleInput').value.trim(),
           category: document.getElementById('postCatInput').value,
           image: imageValue,
@@ -907,10 +857,7 @@
           prompts: promptsArr,
           prompt: promptsArr[0]
         };
-
-        if (window.saveFirebasePost) {
-          window.saveFirebasePost(postObj, id);
-        }
+        if (window.saveFirebasePost) window.saveFirebasePost(postObj, id);
       } catch (error) {
         console.error('Publish failed:', error);
         alert('Publish failed: ' + (error.message || 'Unknown error'));
@@ -918,33 +865,22 @@
     }
 
     function editPost(id) {
-      const posts = window.getStoredPosts ? window.getStoredPosts() : [];
+      const posts = window.adminFirebasePosts || window.getStoredPosts?.() || [];
       const post = posts.find(p => p.id === id);
       if (!post) return;
-
       document.getElementById('editPostId').value = post.id;
       document.getElementById('postTitleInput').value = post.title || '';
       document.getElementById('postCatInput').value = post.category || 'AI Photo Prompts';
       document.getElementById('postImgInput').value = post.image || '';
       document.getElementById('postDescInput').value = post.description || '';
       document.getElementById('postProcessInput').value = post.process || '';
-      
       const container = document.getElementById('adminPromptsContainer');
       container.innerHTML = '';
-
       let listToLoad = [];
-      if (Array.isArray(post.prompts) && post.prompts.length > 0) {
-        listToLoad = post.prompts;
-      } else if (post.prompt) {
-        listToLoad = [post.prompt];
-      } else {
-        listToLoad = [''];
-      }
-
-      listToLoad.forEach(pVal => {
-        addPromptBox(pVal);
-      });
-
+      if (Array.isArray(post.prompts) && post.prompts.length > 0) listToLoad = post.prompts;
+      else if (post.prompt) listToLoad = [post.prompt];
+      else listToLoad = [''];
+      listToLoad.forEach(pVal => addPromptBox(pVal));
       document.getElementById('formTitle').innerText = 'Edit Prompt / Tutorial Post';
     }
 
@@ -952,8 +888,7 @@
       document.getElementById('postForm').reset();
       document.getElementById('editPostId').value = '';
       document.getElementById('formTitle').innerText = 'Create New Prompt / Tutorial Post';
-      
-      let container = document.getElementById('adminPromptsContainer');
+      const container = document.getElementById('adminPromptsContainer');
       container.innerHTML = '';
       addPromptBox();
     }
