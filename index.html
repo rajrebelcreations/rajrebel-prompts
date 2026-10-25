@@ -69,6 +69,9 @@
       prompt: "A cinematic hyper-realistic portrait of a stylish young Indian man in modern street fashion."
     }];
 
+    // INSTANT LOAD INITIALIZATION
+    window.firebasePosts = samplePosts;
+
     window.getStoredPosts = function() {
       return window.firebasePosts || samplePosts;
     };
@@ -416,6 +419,8 @@
       if (container && container.children.length === 0) {
         addPromptBox();
       }
+      // INSTANT RENDER ON START
+      renderPosts();
     });
 
     function renderPosts() {
