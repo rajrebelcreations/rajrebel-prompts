@@ -59,25 +59,41 @@
     const db = getDatabase(app);
     const auth = getAuth(app);
 
-    let samplePosts = [];
-    window.firebasePosts = samplePosts;
+    // INSTANT LOCALSTORAGE CACHE FOR LIGHTNING-FAST LOAD
+    let cachedPosts = [];
+    try {
+      const saved = localStorage.getItem('rajrebel_cached_posts');
+      if (saved) { cachedPosts = JSON.parse(saved); }
+    } catch (e) {}
+
+    window.firebasePosts = cachedPosts;
 
     window.getStoredPosts = function() {
-      return window.firebasePosts || samplePosts;
+      return window.firebasePosts || cachedPosts;
     };
+
+    // Render immediately from cache if available
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof renderPosts === 'function' && window.firebasePosts.length > 0) {
+        renderPosts();
+      }
+      checkForSharedPost();
+    });
 
     const postsRef = ref(db, 'posts');
     onValue(postsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
         window.firebasePosts = Object.values(data).reverse();
+        try {
+          localStorage.setItem('rajrebel_cached_posts', JSON.stringify(window.firebasePosts));
+        } catch (e) {}
       } else {
         window.firebasePosts = [];
       }
       if (typeof renderPosts === 'function') renderPosts();
       if (typeof renderAdminPosts === 'function') renderAdminPosts();
       
-      // Check URL parameters for direct post sharing/opening
       checkForSharedPost();
     });
 
@@ -123,14 +139,22 @@
     };
 
     function checkForSharedPost() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const postId = urlParams.get('post');
-      if (postId && window.firebasePosts) {
+      // Support both hash format (#post=ID) and old query format (?post=ID) for backward compatibility
+      let postId = null;
+      const hash = window.location.hash;
+      if (hash && hash.includes('post=')) {
+        postId = hash.split('post=')[1];
+      } else {
+        const urlParams = new URLSearchParams(window.location.search);
+        postId = urlParams.get('post');
+      }
+
+      if (postId && window.firebasePosts && window.firebasePosts.length > 0) {
         const targetPost = window.firebasePosts.find(p => p.id === postId);
         if (targetPost && typeof openDetailModal === 'function') {
           setTimeout(() => {
             openDetailModal(targetPost);
-          }, 300);
+          }, 150);
         }
       }
     }
@@ -179,7 +203,7 @@
     @keyframes popUp {
       from { 
         opacity: 0; 
-        transform: translateY(20px) scale(0.97); 
+        transform: translateY(15px) scale(0.98); 
       }
       to { 
         opacity: 1; 
@@ -188,7 +212,7 @@
     }
 
     .animate-pop-up {
-      animation: popUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: popUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     @keyframes scaleUp {
@@ -197,7 +221,7 @@
     }
 
     .animate-scale-up {
-      animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     .custom-scrollbar::-webkit-scrollbar { width: 4px; }
@@ -289,7 +313,7 @@
     </div>
   </section>
 
-  <!-- POSTS 2-COLUMN MOBILE GRID WITH POP-UP ANIMATIONS -->
+  <!-- POSTS 2-COLUMN MOBILE GRID -->
   <main class="max-w-6xl mx-auto px-3 sm:px-4 py-3 flex-1 w-full">
     <div id="postsGrid" class="mobile-grid">
       <div class="col-span-full text-center py-16 space-y-3">
@@ -437,6 +461,10 @@
       if (container && container.children.length === 0) {
         addPromptBox();
       }
+      // INSTANT RENDER FROM LOCALSTORAGE CACHE
+      if (window.firebasePosts && window.firebasePosts.length > 0) {
+        renderPosts();
+      }
     });
 
     function renderPosts() {
@@ -458,15 +486,22 @@
       });
 
       if (filtered.length === 0) {
-        grid.innerHTML = `<div class="col-span-full text-center py-16 text-gray-500 text-sm">No prompts found matching your query.</div>`;
+        if (posts.length === 0) {
+          grid.innerHTML = `
+            <div class="col-span-full text-center py-16 space-y-3">
+              <i class="fa-solid fa-spinner fa-spin text-3xl text-yellow-400"></i>
+              <p class="text-xs sm:text-sm text-gray-300 font-medium">Loading Prompts Instantly...</p>
+            </div>`;
+        } else {
+          grid.innerHTML = `<div class="col-span-full text-center py-16 text-gray-500 text-sm">No prompts found matching your query.</div>`;
+        }
         return;
       }
 
       filtered.forEach((post, index) => {
         const card = document.createElement('div');
-        // STAGGERED POP-UP ANIMATION FOR INSTANT VISUAL LOAD
         card.className = "glass-card rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col justify-between animate-pop-up opacity-0";
-        card.style.animationDelay = `${index * 0.04}s`;
+        card.style.animationDelay = `${index * 0.03}s`;
 
         const imageWrap = document.createElement('div');
         imageWrap.className = 'relative w-full bg-gray-950 flex items-center justify-center overflow-hidden cursor-pointer';
@@ -522,7 +557,8 @@
     }
 
     function sharePostLink(postId, postTitle) {
-      const shareUrl = window.location.origin + window.location.pathname + '?post=' + postId;
+      // USING HASH FORMAT (#post=ID) SO AUTO-DM TOOLS ACCEPT IT WITHOUT "INVALID LINK" ERROR
+      const shareUrl = window.location.origin + window.location.pathname + '#post=' + postId;
       
       if (navigator.share) {
         navigator.share({
@@ -532,7 +568,7 @@
         }).catch(() => {});
       } else {
         navigator.clipboard.writeText(shareUrl).then(() => {
-          alert('Direct Post Link copied successfully! Ready for Auto-DM and WhatsApp.');
+          alert('Direct Post Link copied! Auto-DM ready and Valid.');
         }).catch(() => {
           prompt('Copy this link:', shareUrl);
         });
@@ -708,7 +744,6 @@
 
     function closeDetailModal() {
       document.getElementById('detailModal').classList.add('hidden');
-      // Clean up URL query param without reloading page
       if (history.pushState) {
         const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname;
         history.pushState({path:newurl}, '', newurl);
