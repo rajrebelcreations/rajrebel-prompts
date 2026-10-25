@@ -59,17 +59,9 @@
     const db = getDatabase(app);
     const auth = getAuth(app);
 
-    let samplePosts = [{
-      id: "post-1",
-      title: "Arya 2 Poster Prompt",
-      category: "AI Photo Prompts",
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
-      description: "Generate hyper-realistic cinematic portraits with natural lighting.",
-      process: "1. Copy prompt.\n2. Open Bing Image Creator.\n3. Generate.",
-      prompt: "A cinematic hyper-realistic portrait of a stylish young Indian man in modern street fashion."
-    }];
+    // Initial fallback if offline
+    let samplePosts = [];
 
-    // INSTANT LOAD INITIALIZATION
     window.firebasePosts = samplePosts;
 
     window.getStoredPosts = function() {
@@ -82,8 +74,7 @@
       if (data) {
         window.firebasePosts = Object.values(data).reverse();
       } else {
-        window.firebasePosts = samplePosts;
-        set(postsRef, samplePosts);
+        window.firebasePosts = [];
       }
       if (typeof renderPosts === 'function') renderPosts();
       if (typeof renderAdminPosts === 'function') renderAdminPosts();
@@ -419,8 +410,6 @@
       if (container && container.children.length === 0) {
         addPromptBox();
       }
-      // INSTANT RENDER ON START
-      renderPosts();
     });
 
     function renderPosts() {
@@ -442,7 +431,7 @@
       });
 
       if (filtered.length === 0) {
-        grid.innerHTML = `<div class="col-span-full text-center py-16 text-gray-500 text-sm">No prompts found matching your query.</div>`;
+        grid.innerHTML = `<div class="col-span-full text-center py-16 text-gray-500 text-sm">No prompts found yet. Publish your posts from Admin!</div>`;
         return;
       }
 
