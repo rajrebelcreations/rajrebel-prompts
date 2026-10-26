@@ -38,7 +38,7 @@
       getDatabase, ref, set, onValue, remove, get,
       query, orderByKey, limitToLast, endAt
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBkgdcYfcaCyvw6WJ2LDAzOfSukO4vOIc",
@@ -69,20 +69,16 @@
       return Array.isArray(window.firebasePosts) ? window.firebasePosts : [];
     };
 
-    // Display cached content as soon as the page is ready.
     window.addEventListener('DOMContentLoaded', () => {
       if (window.firebasePosts.length && typeof renderPosts === 'function') renderPosts();
       checkForSharedPost();
     });
 
-    // Public feed: initially download only the newest 12 posts.
-    // Older posts are requested in batches when the visitor scrolls down.
     const PAGE_SIZE = 12;
     let publicPosts = new Map();
     let oldestLoadedKey = null;
     let loadingOlderPosts = false;
     let hasMorePosts = true;
-    let allPostsLoadedForAdmin = false;
     let allPostsCache = cachedPosts.slice();
     let sharedPostFetchInProgress = false;
     let sharedPostOpenedId = null;
@@ -93,13 +89,12 @@
         const aNum = Number(String(a.id || '').replace(/^post-/, ''));
         const bNum = Number(String(b.id || '').replace(/^post-/, ''));
         if (Number.isFinite(aNum) && Number.isFinite(bNum) && aNum !== bNum) return bNum - aNum;
-        return String(b.id || '').localeCompare(String(a.id || ''));
+        return String(b.id || '').localeCompare(String(b.id || ''));
       });
     }
 
     function syncPublicPosts() {
       const merged = new Map(publicPosts);
-      // Keep cached posts available instantly while Firebase is loading.
       for (const p of cachedPosts) {
         if (p && p.id && !merged.has(p.id)) merged.set(p.id, p);
       }
@@ -113,11 +108,8 @@
       if (cacheWriteTimer) clearTimeout(cacheWriteTimer);
       cacheWriteTimer = setTimeout(() => {
         try {
-          // Save only what is currently known, including cached posts.
           localStorage.setItem('rajrebel_cached_posts', JSON.stringify(window.firebasePosts || []));
-        } catch (e) {
-          // Browser storage can reject very large Base64 caches; the site still works.
-        }
+        } catch (e) {}
       }, 1200);
     }
 
@@ -136,7 +128,6 @@
         syncPublicPosts();
       } catch (error) {
         console.error('Could not load latest posts:', error);
-        // Keep cache visible if network is unavailable.
         if (typeof renderPosts === 'function') renderPosts();
       }
     }
@@ -145,7 +136,6 @@
       if (loadingOlderPosts || !hasMorePosts || !oldestLoadedKey) return;
       loadingOlderPosts = true;
       try {
-        // endAt includes the last key, so request one extra and remove the duplicate.
         const olderQuery = query(
           ref(db, 'posts'),
           orderByKey(),
@@ -169,19 +159,16 @@
       }
     };
 
-    // A small scroll-ahead buffer loads the next batch before the visitor reaches the bottom.
     window.addEventListener('scroll', () => {
       if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 900) {
         window.loadOlderPosts();
       }
     }, { passive: true });
 
-    // A shared URL can point to a post outside the newest batch; fetch that exact post.
     async function checkForSharedPost() {
       const params = new URLSearchParams(window.location.search);
       let postId = params.get('post');
 
-      // Keep compatibility with old links, but all new links use ?post=ID.
       if (!postId && window.location.hash.includes('post=')) {
         postId = new URLSearchParams(window.location.hash.slice(1)).get('post');
       }
@@ -213,8 +200,6 @@
             sharedPostOpenedId = postId;
             setTimeout(() => openDetailModal(target), 100);
           }
-        } else {
-          console.warn('Shared post not found:', postId);
         }
       } catch (error) {
         console.error('Could not fetch shared post:', error);
@@ -224,7 +209,6 @@
     }
     window.checkForSharedPost = checkForSharedPost;
 
-    // Admin dashboard still loads the complete list, only when requested.
     window.loadAllPostsForAdmin = async function() {
       try {
         const snap = await get(ref(db, 'posts'));
@@ -232,7 +216,6 @@
         allPostsCache = sortNewestFirst(Object.entries(data)
           .filter(([, value]) => !!value)
           .map(([key, value]) => ({ ...value, id: value.id || key })));
-        allPostsLoadedForAdmin = true;
         window.adminFirebasePosts = allPostsCache;
         if (typeof renderAdminPosts === 'function') renderAdminPosts();
       } catch (error) {
@@ -242,7 +225,6 @@
       }
     };
 
-    // Keep admin list current while dashboard is open by listening to the full path only for admins.
     window.startAdminPostsListener = function() {
       if (window.adminPostsUnsubscribe) return;
       const adminRef = ref(db, 'posts');
@@ -284,7 +266,19 @@
       }
     };
 
-    window.handleFirebaseLogin = function(email, password) {
+    // Corrected Login Functionality Linked Globally
+    window.handleAdminLogin = function() {
+      const emailInput = document.getElementById('loginEmail');
+      const passwordInput = document.getElementById('loginPassword');
+      if (!emailInput || !passwordInput) return;
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      
+      if (!email || !password) {
+        alert('Please enter both email and password.');
+        return;
+      }
+
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
           isAdminLoggedIn = true;
@@ -433,7 +427,7 @@
           <div class="space-y-3 pt-2">
             <input type="email" id="loginEmail" placeholder="Admin Email" class="w-full bg-gray-950 border border-gray-800 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-yellow-500 shadow-inner">
             <input type="password" id="loginPassword" placeholder="Password" class="w-full bg-gray-950 border border-gray-800 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-yellow-500 shadow-inner">
-            <button onclick="handleAdminLogin()" class="w-full bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black py-3 rounded-2xl transition text-xs sm:text-sm shadow-lg shadow-yellow-500/20">Login to Admin</button>
+            <button type="button" onclick="handleAdminLogin()" class="w-full bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black py-3 rounded-2xl transition text-xs sm:text-sm shadow-lg shadow-yellow-500/20">Login to Admin</button>
           </div>
         </div>
         <div id="adminDashboardView" class="hidden space-y-5">
@@ -441,7 +435,7 @@
             <span class="text-[11px] text-green-400 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20 font-semibold"><i class="fa-solid fa-circle text-[6px] mr-1"></i> Secure Admin Session Active</span>
             <div class="flex gap-2">
               <button onclick="resetForm()" class="px-3.5 py-1.5 bg-yellow-500 hover:bg-yellow-400 text-black rounded-xl text-xs font-bold shadow transition"><i class="fa-solid fa-plus mr-1"></i> New Post</button>
-              <button onclick="handleAdminLogout()" class="px-3.5 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-right-from-bracket mr-1"></i> Logout</button>
+              <button onclick="handleFirebaseLogout()" class="px-3.5 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-right-from-bracket mr-1"></i> Logout</button>
             </div>
           </div>
           <form id="postForm" onsubmit="handlePostSubmit(event)" class="bg-gray-950/60 p-4 sm:p-5 rounded-2xl border border-gray-800/80 space-y-3.5 shadow-inner">
@@ -494,7 +488,6 @@
   <script>
     let currentCategory = 'All';
     let isAdminLoggedIn = false;
-    let renderPostsTimer = null;
 
     window.addEventListener('DOMContentLoaded', () => {
       const container = document.getElementById('adminPromptsContainer');
@@ -517,7 +510,6 @@
         return matchesCat && matchesSearch;
       });
 
-      // Avoid replacing every card when the list content hasn't changed.
       grid.innerHTML = '';
 
       if (filtered.length === 0) {
@@ -677,19 +669,8 @@
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           const compressed = canvas.toDataURL('image/jpeg', 0.70);
-          const approxBytes = Math.ceil((compressed.length * 3) / 4);
-          if (approxBytes > 950000) {
-            imgInput.value = '';
-            alert('This photo is too large. Please choose a smaller image.');
-            input.value = '';
-            return;
-          }
           imgInput.value = compressed;
           alert('Photo prepared successfully. Now tap Publish Post.');
-        };
-        img.onerror = function() {
-          imgInput.value = '';
-          alert('Could not process this photo.');
         };
         img.src = event.target.result;
       };
@@ -733,7 +714,6 @@
 
     function closeDetailModal() {
       document.getElementById('detailModal').classList.add('hidden');
-      // Remove ?post=ID from the address after closing, without reloading the page.
       if (history.pushState) {
         const cleanUrl = window.location.origin + window.location.pathname;
         history.pushState({ path: cleanUrl }, '', cleanUrl);
@@ -775,17 +755,6 @@
       if (window.startAdminPostsListener) window.startAdminPostsListener();
       renderAdminPosts();
     }
-
-    function handleAdminLogin() {
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
-      if (!email || !password) {
-        alert('Please enter both email and password.');
-        return;
-      }
-      if (window.handleFirebaseLogin) window.handleFirebaseLogin(email, password);
-    }
-    function handleAdminLogout() { if (window.handleFirebaseLogout) window.handleFirebaseLogout(); }
 
     function renderAdminPosts() {
       const posts = window.adminFirebasePosts || window.getStoredPosts?.() || [];
