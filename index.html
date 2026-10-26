@@ -38,7 +38,7 @@
       getDatabase, ref, set, onValue, remove, get,
       query, orderByKey, limitToLast, endAt
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBkgdcYfcaCyvw6WJ2LDAzOfSukO4vOIc",
@@ -266,7 +266,6 @@
       }
     };
 
-    // Corrected Login Functionality Linked Globally
     window.handleAdminLogin = function() {
       const emailInput = document.getElementById('loginEmail');
       const passwordInput = document.getElementById('loginPassword');
