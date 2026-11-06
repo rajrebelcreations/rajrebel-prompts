@@ -2,896 +2,1224 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#07090e">
-  <title>RajRebel Creations | AI Prompts, Video Prompts & ChatGPT Prompts Hub</title>
-  <meta name="description" content="Official Hub for RajRebel Creations (RajRebel). Explore trending AI Photo Prompts, Video Prompts, ChatGPT Prompts, Gemini AI, Google Flow & Mobile Tutorials. Copy prompts with one click!">
-  <meta name="keywords" content="RajRebel, RajRebel Creations, RajRebel Prompts, AI Prompts, Video Prompts, AI Video Prompts, Gemini AI Prompts, ChatGPT Prompts, AI Photo Prompts Telugu">
+  <title>RajRebel Creations | AI Photo &amp; Video Prompts</title>
+  <meta name="description" content="Free AI photo and video prompts by RajRebel Creations. Copy a prompt with one tap and create with your own photo in ChatGPT, Gemini and Google Flow.">
+  <meta name="keywords" content="RajRebel, RajRebel Creations, AI Prompts, AI Photo Prompts, AI Video Prompts, Couple Prompts, Google Flow Prompts, ChatGPT Prompts, Gemini Prompts">
   <meta name="author" content="RajRebel Creations">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://rajrebelcreations.com/">
-  <meta property="og:title" content="RajRebel Creations | AI Prompts & Content Hub">
-  <meta property="og:description" content="Explore AI Photo Prompts, Video Prompts, Editing Tutorials & Tools by RajRebel Creations. Copy prompts with one click!">
+  <meta property="og:title" content="RajRebel Creations | AI Photo &amp; Video Prompts">
+  <meta property="og:description" content="Free AI photo and video prompts. Copy with one tap and create with your own photo.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rajrebelcreations.com/">
   <meta property="og:site_name" content="RajRebel Creations">
   <meta property="og:image" content="https://raw.githubusercontent.com/rajrebelcreations/rajrebel-prompts/main/1000261330.png">
-  <meta property="og:image:secure_url" content="https://raw.githubusercontent.com/rajrebelcreations/rajrebel-prompts/main/1000261330.png">
-  <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="RajRebel Creations | AI Prompts & Content Hub">
-  <meta name="twitter:description" content="Explore AI Photo Prompts, Video Prompts, Editing Tutorials & Tools by RajRebel Creations.">
   <meta name="twitter:image" content="https://raw.githubusercontent.com/rajrebelcreations/rajrebel-prompts/main/1000261330.png">
   <link rel="manifest" href="/manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/rajrebelcreations/rajrebel-prompts/main/1000261330.png">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://rajrebel-prompts-default-rtdb.firebaseio.com">
+  <link rel="preconnect" href="https://www.gstatic.com">
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import {
-      getDatabase, ref, set, onValue, remove, get,
-      query, orderByKey, limitToLast, endAt
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+<style>
+:root{
+  --bg:#07090e;--bg2:#0d111b;--card:#121827;--card2:#171f31;--line:#232b3f;
+  --text:#f3f4f6;--muted:#a3abbd;--dim:#7c8599;
+  --yellow:#f5c518;--yellow-ink:#1a1400;--green:#25d366;--green-ink:#06301a;
+  --pink:#f07bb5;--purple:#a99bff;
+  --r:16px;--safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans","Noto Sans Telugu",sans-serif;line-height:1.5}
+body{overflow-x:hidden}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer}
+img{display:block;max-width:100%}
+.hidden{display:none!important}
+.wrap{max-width:1100px;margin:0 auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.grad{background:linear-gradient(135deg,#7aa7ff,#ec4899,#eab308);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ico{width:20px;height:20px;flex:none}
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBkgdcYfcaCyvw6WJ2qLDAzOfSukO4vOIc",
-      authDomain: "rajrebel-prompts.firebaseapp.com",
-      databaseURL: "https://rajrebel-prompts-default-rtdb.firebaseio.com",
-      projectId: "rajrebel-prompts",
-      storageBucket: "rajrebel-prompts.firebasestorage.app",
-      messagingSenderId: "552582522547",
-      appId: "1:552582522547:web:a8e4ab6951b8224b4e32c6",
-      measurementId: "G-CMZJM76L8V"
-    };
+/* header */
+.top{position:sticky;top:0;z-index:30;background:rgba(7,9,14,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo{width:36px;height:36px;border-radius:50%;padding:2px;background:linear-gradient(135deg,#2563eb,#db2777,#eab308);flex:none}
+.logo span{display:flex;width:100%;height:100%;border-radius:50%;background:#0b0f17;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--yellow)}
+.brand b{font-size:17px;font-weight:800;letter-spacing:.2px}
+.icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);display:flex;align-items:center;justify-content:center}
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const auth = getAuth(app);
+/* home hero */
+.hero{padding:14px 14px 4px}
+.banner{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:#0b0f17;aspect-ratio:16/7;max-height:300px;width:100%}
+.banner img{width:100%;height:100%;object-fit:cover}
+.hero h1{margin:14px 0 2px;font-size:22px;line-height:1.25;font-weight:800;text-align:center}
+.hero p{margin:0;color:var(--muted);font-size:14px;text-align:center}
+.socials{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:12px 14px 4px;max-width:560px;margin:0 auto}
+.soc{min-height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;font-weight:700;font-size:12px;opacity:0;animation:popIn .5s cubic-bezier(.2,.8,.2,1) both}
+.soc:nth-child(1){animation-delay:.1s}.soc:nth-child(2){animation-delay:.2s}.soc:nth-child(3){animation-delay:.3s}.soc:nth-child(4){animation-delay:.4s}
+.soc.ig{background:#c13584;color:#fff}.soc.yt{background:#d71920;color:#fff;animation:popIn .5s cubic-bezier(.2,.8,.2,1) .2s both,beat 1.8s ease-in-out 1.4s infinite}
+.soc.fb{background:#1665d8;color:#fff}.soc.wa{background:var(--green);color:var(--green-ink)}
+.soc .ico{width:18px;height:18px}
+.soc.yt .ico{animation:bell 3s ease-in-out 1.4s infinite;transform-origin:50% 15%}
+.soc .lbl{display:none}
+@media(min-width:420px){.soc .lbl{display:inline}}
 
-    let cachedPosts = [];
-    try {
-      const saved = localStorage.getItem('rajrebel_cached_posts');
-      if (saved) cachedPosts = JSON.parse(saved);
-      if (!Array.isArray(cachedPosts)) cachedPosts = [];
-    } catch (e) {
-      cachedPosts = [];
-    }
+/* search + chips */
+.searchbar{padding:12px 14px 0}
+.search{display:flex;align-items:center;gap:8px;height:48px;border-radius:999px;border:1px solid var(--line);background:var(--card);padding:0 16px}
+.search input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--text);font-size:15px}
+.search input::placeholder{color:var(--dim)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 14px 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:13px;font-weight:600;white-space:nowrap}
+.chip.on{background:var(--yellow);border-color:var(--yellow);color:var(--yellow-ink)}
+.sec-title{display:flex;align-items:baseline;justify-content:space-between;padding:14px 14px 8px;font-weight:800;font-size:16px}
+.sec-title small{color:var(--dim);font-weight:500;font-size:12px}
 
-    window.firebasePosts = cachedPosts;
-    window.getStoredPosts = function() {
-      return Array.isArray(window.firebasePosts) ? window.firebasePosts : [];
-    };
+/* grid */
+.grid{display:flex;gap:10px;padding:0 14px;align-items:flex-start}
+.col{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+.card{position:relative;border-radius:var(--r);overflow:hidden;background:var(--card);border:1px solid var(--line);cursor:pointer;transition:transform .15s ease}
+.card:active{transform:scale(.97)}
+.card.anim{opacity:0;animation:rise .55s cubic-bezier(.2,.8,.2,1) both}
+.thumb{position:relative;background:#0b0f17;overflow:hidden;min-height:140px}
+.thumb img{width:100%;height:auto;filter:blur(12px);transform:scale(1.06);transition:filter .6s ease,transform .6s ease}
+.thumb img.ok{filter:none;transform:none}
+.badges{position:absolute;top:8px;left:8px;right:44px;display:flex;flex-wrap:wrap;gap:4px}
+.badge{font-size:9.5px;font-weight:800;letter-spacing:.3px;padding:3px 8px;border-radius:999px;background:var(--yellow);color:var(--yellow-ink)}
+.badge.new{background:var(--pink);color:#3a0d22;animation:shine 1.6s ease-in-out infinite}
+.badge.tut{background:#8b7cf6;color:#15103a}
+.badge.pin{background:#fff;color:#111}
+.play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.play span{width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+.share-mini{position:absolute;top:6px;right:6px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center}
+.share-mini .ico{width:17px;height:17px}
+.card .ttl{padding:9px 10px 11px;font-size:12.5px;font-weight:700;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.skel{border-radius:var(--r);background:linear-gradient(90deg,#121827 25%,#1a2236 50%,#121827 75%);background-size:200% 100%;animation:sk 1.2s linear infinite}
+.empty{margin:10px 14px;padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r);font-size:14px}
+.more-status{text-align:center;color:var(--dim);font-size:12px;padding:16px}
+.ad-slot{margin:14px;min-height:90px;display:none}
+.ads-on .ad-slot{display:block}
 
-    // Display cached content as soon as the page is ready.
-    window.addEventListener('DOMContentLoaded', () => {
-      if (window.firebasePosts.length && typeof renderPosts === 'function') renderPosts();
-      checkForSharedPost();
-    });
+/* tutorials list */
+.tlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;padding:0 14px}
+.tcard{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;opacity:0;animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+.tcard .tt{width:120px;aspect-ratio:16/10;background:#0b0f17;position:relative;flex:none}
+.tcard .tt img{width:100%;height:100%;object-fit:cover}
+.tcard .tx{padding:8px 10px 8px 0;min-width:0}
+.tcard .tx b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13.5px}
+.tcard .tx small{color:var(--dim);font-size:11.5px}
 
-    // Public feed: initially download only the newest 12 posts.
-    // Older posts are requested in batches when the visitor scrolls down.
-    const PAGE_SIZE = 12;
-    let publicPosts = new Map();
-    let oldestLoadedKey = null;
-    let loadingOlderPosts = false;
-    let hasMorePosts = true;
-    let allPostsLoadedForAdmin = false;
-    let allPostsCache = cachedPosts.slice();
-    let sharedPostFetchInProgress = false;
-    let sharedPostOpenedId = null;
-    let cacheWriteTimer = null;
+/* footer */
+footer{margin-top:28px;border-top:1px solid var(--line);background:var(--bg2);padding:22px 14px calc(96px + var(--safe-b));text-align:center}
+footer nav{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;font-size:13px}
+footer nav a{color:var(--muted);text-decoration:none}
+footer p{margin:12px 0 0;color:var(--dim);font-size:12px}
 
-    function sortNewestFirst(posts) {
-      return posts.sort((a, b) => {
-        const aNum = Number(String(a.id || '').replace(/^post-/, ''));
-        const bNum = Number(String(b.id || '').replace(/^post-/, ''));
-        if (Number.isFinite(aNum) && Number.isFinite(bNum) && aNum !== bNum) return bNum - aNum;
-        return String(b.id || '').localeCompare(String(a.id || ''));
-      });
-    }
+/* bottom nav */
+.bnav{position:fixed;left:10px;right:10px;bottom:calc(10px + var(--safe-b));z-index:40;max-width:520px;margin:0 auto;height:60px;border-radius:20px;background:rgba(18,24,39,.96);border:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.bnav button{flex:1;height:100%;border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10.5px;font-weight:600}
+.bnav button.on{color:var(--yellow)}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:520px;background:var(--bg2);border:1px solid var(--line);border-radius:22px 22px 0 0;padding:18px 16px calc(22px + var(--safe-b));animation:slideUp .35s cubic-bezier(.2,.8,.2,1)}
+.sheet h3{margin:0 0 12px;font-size:16px}
+.sheet .socials{padding:0;grid-template-columns:repeat(2,minmax(0,1fr))}
+.sheet .soc .lbl{display:inline}
 
-    function syncPublicPosts() {
-      const merged = new Map(publicPosts);
-      // Keep cached posts available instantly while Firebase is loading.
-      for (const p of cachedPosts) {
-        if (p && p.id && !merged.has(p.id)) merged.set(p.id, p);
-      }
-      window.firebasePosts = sortNewestFirst(Array.from(merged.values()));
-      scheduleCacheWrite();
-      if (typeof renderPosts === 'function') renderPosts();
-      checkForSharedPost();
-    }
+/* prompt page */
+.pview{padding-bottom:calc(150px + var(--safe-b))}
+.pbar{display:flex;align-items:center;justify-content:space-between;padding:8px 10px}
+.back{min-height:44px;border:0;background:transparent;color:var(--yellow);font-weight:700;font-size:14px;display:flex;align-items:center;gap:4px;padding:0 6px}
+.pmain{max-width:720px;margin:0 auto;padding:0 14px}
+.pmedia{border-radius:18px;overflow:hidden;background:#0b0f17;border:1px solid var(--line);display:flex;justify-content:center}
+.pmedia img{max-height:46vh;width:auto;max-width:100%;object-fit:contain}
+.pmeta{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tag{font-size:11px;padding:4px 10px;border-radius:999px;background:#1c2340;color:#c9cfe0;font-weight:600}
+.pmain h1{margin:8px 0 4px;font-size:21px;line-height:1.3;font-weight:800}
+.pdesc{margin:0;color:var(--muted);font-size:14px}
+.pbox{margin-top:14px;border:1px solid var(--line);background:var(--card);border-radius:var(--r);overflow:hidden}
+.pbox-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.pbox-h b{font-size:13px;color:var(--yellow);letter-spacing:.3px}
+.cbtn-s{min-height:36px;padding:0 12px;border-radius:10px;border:1px solid var(--yellow);background:transparent;color:var(--yellow);font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:6px}
+.cbtn-s.done{border-color:var(--green);color:var(--green)}
+.ptext{padding:12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.6;color:#dde2f0;white-space:pre-wrap;word-break:break-word}
+.ptext.clip{max-height:170px;overflow:hidden;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
+.showmore{width:100%;min-height:42px;border:0;border-top:1px solid var(--line);background:transparent;color:var(--yellow);font-weight:700;font-size:13px}
+.blk{margin-top:18px}
+.blk h2{margin:0 0 8px;font-size:16px;font-weight:800}
+.steps{white-space:pre-line;color:#d5dae6;font-size:14px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.video{position:relative;aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;background:#000;border:1px solid var(--line);cursor:pointer}
+.video img{width:100%;height:100%;object-fit:cover;opacity:.8}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video .pl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.btn{min-height:48px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--text);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;padding:0 14px}
+.btn.wa{background:var(--green);border-color:var(--green);color:var(--green-ink)}
+.btn.y{background:var(--yellow);border-color:var(--yellow);color:var(--yellow-ink)}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.follow-note{color:var(--dim);font-size:12.5px;text-align:center;margin-top:16px}
 
-    function scheduleCacheWrite() {
-      if (cacheWriteTimer) clearTimeout(cacheWriteTimer);
-      cacheWriteTimer = setTimeout(() => {
-        try {
-          // Save only what is currently known, including cached posts.
-          localStorage.setItem('rajrebel_cached_posts', JSON.stringify(window.firebasePosts || []));
-        } catch (e) {
-          // Browser storage can reject very large Base64 caches; the site still works.
-        }
-      }, 1200);
-    }
+/* sticky copy */
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:45;background:rgba(13,17,27,.97);border-top:1px solid var(--line);padding:10px 14px calc(12px + var(--safe-b));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);animation:slideUp .6s cubic-bezier(.2,.8,.2,1) .25s both}
+.sticky .in{max-width:720px;margin:0 auto}
+.bigwrap{position:relative}
+.bigwrap .ring{position:absolute;inset:0;border:2px solid var(--yellow);border-radius:16px;animation:ring 1.6s ease-out 1s infinite;pointer-events:none}
+.big{position:relative;width:100%;height:54px;border-radius:16px;border:0;background:var(--yellow);color:var(--yellow-ink);font-size:16.5px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:9px;animation:beat 1.6s ease-in-out 1s infinite}
+.big.done{background:var(--green);color:var(--green-ink);animation:none}
+.done-wrap .ring{display:none}
+.tap{position:absolute;right:26px;bottom:-4px;animation:tap 1s ease-in-out 1s infinite;pointer-events:none}
+.done-wrap .tap{display:none}
+.appbtn{margin-top:8px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-weight:800;font-size:14.5px;animation:popIn .35s ease-out both}
+.appbtn.gpt{background:#f3f4f6;color:#0b0f17}
+.appbtn.flow{background:#8b7cf6;color:#15103a}
+.hint{color:var(--dim);font-size:11px;text-align:center;margin-top:6px}
 
-    async function loadNewestPosts() {
-      try {
-        const newestQuery = query(ref(db, 'posts'), orderByKey(), limitToLast(PAGE_SIZE));
-        const snapshot = await get(newestQuery);
-        publicPosts.clear();
-        const data = snapshot.val() || {};
-        Object.entries(data).forEach(([key, value]) => {
-          if (value) publicPosts.set(key, { ...value, id: value.id || key });
-        });
-        const keys = Object.keys(data).sort();
-        oldestLoadedKey = keys.length ? keys[0] : null;
-        hasMorePosts = keys.length === PAGE_SIZE;
-        syncPublicPosts();
-      } catch (error) {
-        console.error('Could not load latest posts:', error);
-        // Keep cache visible if network is unavailable.
-        if (typeof renderPosts === 'function') renderPosts();
-      }
-    }
+/* toast */
+.toast{position:fixed;left:50%;bottom:calc(150px + var(--safe-b));transform:translateX(-50%);z-index:90;background:#f3f4f6;color:#0b0f17;font-weight:700;font-size:13.5px;padding:10px 16px;border-radius:12px;animation:popIn .25s ease-out both;max-width:90vw;text-align:center}
 
-    window.loadOlderPosts = async function() {
-      if (loadingOlderPosts || !hasMorePosts || !oldestLoadedKey) return;
-      loadingOlderPosts = true;
-      try {
-        // endAt includes the last key, so request one extra and remove the duplicate.
-        const olderQuery = query(
-          ref(db, 'posts'),
-          orderByKey(),
-          endAt(oldestLoadedKey),
-          limitToLast(PAGE_SIZE + 1)
-        );
-        const snapshot = await get(olderQuery);
-        const data = snapshot.val() || {};
-        const entries = Object.entries(data).sort((a, b) => a[0].localeCompare(b[0]));
-        const olderEntries = entries.filter(([key]) => key < oldestLoadedKey);
-        olderEntries.forEach(([key, value]) => {
-          if (value) publicPosts.set(key, { ...value, id: value.id || key });
-        });
-        if (olderEntries.length) oldestLoadedKey = olderEntries[0][0];
-        hasMorePosts = olderEntries.length === PAGE_SIZE;
-        syncPublicPosts();
-      } catch (error) {
-        console.error('Could not load older posts:', error);
-      } finally {
-        loadingOlderPosts = false;
-      }
-    };
+/* admin */
+.admin-bg{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.85);overflow-y:auto;padding:16px}
+.admin{max-width:760px;margin:0 auto;background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:16px}
+.admin h2{margin:0;font-size:17px}
+.admin h3{margin:18px 0 8px;font-size:14px;color:var(--yellow)}
+.admin label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
+.admin input[type=text],.admin input[type=email],.admin input[type=password],.admin input[type=url],.admin select,.admin textarea{width:100%;background:#0b0f17;border:1px solid var(--line);border-radius:12px;color:var(--text);padding:11px 12px;font-size:14px;font-family:inherit}
+.admin textarea{min-height:90px;resize:vertical}
+.admin .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+.admin .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.abtn{min-height:42px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-weight:700;font-size:13px}
+.abtn.y{background:var(--yellow);border-color:var(--yellow);color:var(--yellow-ink)}
+.abtn.red{border-color:#7f1d1d;color:#fca5a5;background:transparent}
+.abtn.sm{min-height:34px;padding:0 10px;font-size:12px}
+.prow{border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px;background:#0b0f17}
+.prow .bar{margin-bottom:6px}
+.alist .it{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:8px;margin-top:8px;background:#0b0f17}
+.alist .it img{width:48px;height:48px;object-fit:cover;border-radius:10px;flex:none;background:#111}
+.alist .it .mid{flex:1;min-width:0}
+.alist .it .mid b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alist .it select{padding:6px 8px;font-size:12px;margin-top:4px}
+.alist .acts{display:flex;flex-direction:column;gap:4px}
+.note{font-size:12px;color:var(--muted);background:#0b0f17;border:1px dashed var(--line);border-radius:12px;padding:10px;margin-top:10px}
+.preview-img{max-height:140px;border-radius:12px;margin-top:8px}
+.info h1{font-size:24px}.info h2{font-size:17px;color:var(--yellow);margin:22px 0 6px}.info p{color:#d5dae6;font-size:14.5px;margin:8px 0}.info a{color:var(--yellow)}
+.info .box{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-top:12px}
 
-    // A small scroll-ahead buffer loads the next batch before the visitor reaches the bottom.
-    window.addEventListener('scroll', () => {
-      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 900) {
-        window.loadOlderPosts();
-      }
-    }, { passive: true });
-
-    // A shared URL can point to a post outside the newest batch; fetch that exact post.
-    async function checkForSharedPost() {
-      const params = new URLSearchParams(window.location.search);
-      let postId = params.get('post');
-
-      // Keep compatibility with old links, but all new links use ?post=ID.
-      if (!postId && window.location.hash.includes('post=')) {
-        postId = new URLSearchParams(window.location.hash.slice(1)).get('post');
-      }
-      if (!postId) return;
-
-      const localTarget = (window.firebasePosts || []).find(p => String(p.id) === String(postId));
-      if (localTarget) {
-        if (sharedPostOpenedId !== postId && typeof openDetailModal === 'function') {
-          sharedPostOpenedId = postId;
-          setTimeout(() => openDetailModal(localTarget), 100);
-        }
-        return;
-      }
-
-      if (sharedPostFetchInProgress) return;
-      sharedPostFetchInProgress = true;
-      try {
-        const snap = await get(ref(db, 'posts/' + postId));
-        const post = snap.val();
-        if (post) {
-          const target = { ...post, id: post.id || postId };
-          publicPosts.set(postId, target);
-          window.firebasePosts = sortNewestFirst([
-            ...Array.from(publicPosts.values()),
-            ...(window.firebasePosts || []).filter(p => p.id !== postId)
-          ]);
-          if (typeof renderPosts === 'function') renderPosts();
-          if (sharedPostOpenedId !== postId && typeof openDetailModal === 'function') {
-            sharedPostOpenedId = postId;
-            setTimeout(() => openDetailModal(target), 100);
-          }
-        } else {
-          console.warn('Shared post not found:', postId);
-        }
-      } catch (error) {
-        console.error('Could not fetch shared post:', error);
-      } finally {
-        sharedPostFetchInProgress = false;
-      }
-    }
-    window.checkForSharedPost = checkForSharedPost;
-
-    // Admin dashboard still loads the complete list, only when requested.
-    window.loadAllPostsForAdmin = async function() {
-      try {
-        const snap = await get(ref(db, 'posts'));
-        const data = snap.val() || {};
-        allPostsCache = sortNewestFirst(Object.entries(data)
-          .filter(([, value]) => !!value)
-          .map(([key, value]) => ({ ...value, id: value.id || key })));
-        allPostsLoadedForAdmin = true;
-        window.adminFirebasePosts = allPostsCache;
-        if (typeof renderAdminPosts === 'function') renderAdminPosts();
-      } catch (error) {
-        console.error('Could not load admin posts:', error);
-        window.adminFirebasePosts = allPostsCache.length ? allPostsCache : (window.firebasePosts || []);
-        if (typeof renderAdminPosts === 'function') renderAdminPosts();
-      }
-    };
-
-    // Keep admin list current while dashboard is open by listening to the full path only for admins.
-    window.startAdminPostsListener = function() {
-      if (window.adminPostsUnsubscribe) return;
-      const adminRef = ref(db, 'posts');
-      const unsubscribe = onValue(adminRef, snapshot => {
-        const data = snapshot.val() || {};
-        allPostsCache = sortNewestFirst(Object.entries(data)
-          .filter(([, value]) => !!value)
-          .map(([key, value]) => ({ ...value, id: value.id || key })));
-        window.adminFirebasePosts = allPostsCache;
-        if (typeof renderAdminPosts === 'function') renderAdminPosts();
-      });
-      window.adminPostsUnsubscribe = unsubscribe;
-    };
-
-    window.saveFirebasePost = function(postObj, id) {
-      const postRef = ref(db, 'posts/' + id);
-      set(postRef, postObj).then(() => {
-        publicPosts.set(id, { ...postObj, id });
-        window.firebasePosts = sortNewestFirst([...publicPosts.values()]);
-        scheduleCacheWrite();
-        if (typeof renderPosts === 'function') renderPosts();
-        if (typeof renderAdminPosts === 'function') renderAdminPosts();
-        alert('Post Published to Live Successfully!');
-        resetForm();
-      }).catch((error) => {
-        alert('Error saving post: ' + error.message);
-      });
-    };
-
-    window.deleteFirebasePost = function(id) {
-      if (confirm('Are you sure you want to delete this post?')) {
-        remove(ref(db, 'posts/' + id)).then(() => {
-          publicPosts.delete(id);
-          window.firebasePosts = (window.firebasePosts || []).filter(p => p.id !== id);
-          scheduleCacheWrite();
-          if (typeof renderPosts === 'function') renderPosts();
-          alert('Post Deleted from Live Successfully!');
-        }).catch(error => alert('Delete failed: ' + error.message));
-      }
-    };
-
-    window.handleFirebaseLogin = function(email, password) {
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          isAdminLoggedIn = true;
-          showAdminDashboard();
-          alert('Admin Login Successful!');
-        })
-        .catch((error) => {
-          alert('Login Failed: ' + error.message);
-        });
-    };
-
-    window.handleFirebaseLogout = function() {
-      signOut(auth).then(() => {
-        isAdminLoggedIn = false;
-        showAdminLogin();
-        if (window.adminPostsUnsubscribe) {
-          window.adminPostsUnsubscribe();
-          window.adminPostsUnsubscribe = null;
-        }
-        alert('Logged out successfully!');
-      }).catch((error) => {
-        alert('Logout Error: ' + error.message);
-      });
-    };
-
-    loadNewestPosts();
-  </script>
-
-  <style>
-    body { background-color: #07090e; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; overflow-x: hidden; }
-    .glass-card { background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
-    .glass-card:hover { border-color: rgba(234, 179, 8, 0.3); box-shadow: 0 12px 40px 0 rgba(234, 179, 8, 0.1); }
-    .gradient-text { background: linear-gradient(135deg, #60a5fa, #ec4899, #eab308); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .mobile-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-    @media (min-width: 768px) { .mobile-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
-    @keyframes popUp { from { opacity: 0; transform: translateY(15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    .animate-pop-up { animation: popUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    @keyframes scaleUp { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-    .animate-scale-up { animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #0b0f17; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
-  </style>
+@keyframes rise{0%{opacity:0;transform:translateY(24px) scale(.96)}100%{opacity:1;transform:none}}
+@keyframes popIn{0%{opacity:0;transform:translateY(14px) scale(.95)}70%{opacity:1;transform:translateY(-2px) scale(1.02)}100%{opacity:1;transform:none}}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+@keyframes bell{0%,80%,100%{transform:rotate(0)}84%{transform:rotate(16deg)}88%{transform:rotate(-14deg)}92%{transform:rotate(7deg)}}
+@keyframes slideUp{0%{transform:translateY(110%)}70%{transform:translateY(-6%)}100%{transform:none}}
+@keyframes ring{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.18,1.35);opacity:0}}
+@keyframes tap{0%,100%{transform:translate(0,0)}50%{transform:translate(-4px,-6px)}}
+@keyframes shine{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.card.anim,.tcard,.soc{opacity:1}}
+@media(min-width:768px){.grid .col{gap:14px}.grid{gap:14px}}
+</style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-yellow-500 selection:text-black">
-  <header class="sticky top-0 z-40 glass-card border-b border-gray-800/80">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2.5 group">
-        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 via-pink-600 to-yellow-500 p-[2px] shadow-lg group-hover:scale-105 transition duration-300">
-          <div class="w-full h-full bg-gray-950 rounded-full flex items-center justify-center font-extrabold text-yellow-400 text-[10px]">RRC</div>
-        </div>
-        <span class="text-base sm:text-lg font-extrabold tracking-wider gradient-text">RajRebel Creations</span>
-      </a>
-      <div class="flex items-center gap-3">
-        <button id="adminBtn" onclick="openAdminModal()" class="px-3 py-1.5 text-xs font-semibold bg-gray-900/80 hover:bg-gray-800 text-gray-300 rounded-xl border border-gray-700/60 shadow transition flex items-center gap-1.5">
-          <i class="fa-solid fa-lock text-yellow-400 text-[10px]"></i> Admin
-        </button>
-      </div>
-    </div>
-  </header>
+<body>
 
-  <section class="max-w-6xl mx-auto px-3 sm:px-4 py-5 animate-pop-up">
-    <div class="glass-card rounded-3xl overflow-hidden shadow-2xl relative border border-gray-800/80">
-      <div class="w-full h-44 sm:h-64 md:h-80 overflow-hidden relative">
-        <img id="heroBanner" src="./1000261330.png" alt="RajRebel Banner" fetchpriority="high" class="w-full h-full object-cover brightness-95 hover:scale-105 transition duration-700">
-        <div class="absolute inset-0 bg-gradient-to-t from-[#07090e] via-[#07090e]/50 to-transparent"></div>
-      </div>
-      <div class="p-4 sm:p-7 -mt-16 sm:-mt-24 relative z-10 flex flex-col items-center sm:items-start text-center sm:text-left space-y-3">
-        <span class="inline-block text-[10px] sm:text-xs uppercase tracking-widest text-yellow-400 font-bold bg-yellow-500/10 px-3.5 py-1 rounded-full border border-yellow-500/30 shadow-sm">Official Creator Hub</span>
-        <h1 class="text-xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">Welcome to <span class="gradient-text">RajRebel Creations</span></h1>
-        <p class="text-gray-300 text-xs sm:text-sm max-w-2xl leading-relaxed">Explore trending AI Photo Prompts, Video Prompts, ChatGPT Prompts, Gemini AI, Google Flow & Mobile Tutorials. Copy prompts with one click!</p>
-        <div class="flex flex-row flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
-          <a href="https://www.instagram.com/rajrebel_creations/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-pink-600/20 transition"><i class="fa-brands fa-instagram text-sm"></i> Instagram</a>
-          <a href="https://youtube.com/@rajrebelcreations" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-red-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-red-600/20 transition"><i class="fa-brands fa-youtube text-sm"></i> YouTube</a>
-          <a href="https://www.facebook.com/share/1E4gLSvPMM/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:scale-105 shadow-lg shadow-blue-600/20 transition"><i class="fa-brands fa-facebook text-sm"></i> Facebook</a>
-        </div>
-      </div>
-    </div>
-  </section>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-9-9a4.8 4.8 0 0 1 9-3 4.8 4.8 0 0 1 9 3c-2 4.6-9 9-9 9z"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12M11 11.5V10a1.5 1.5 0 0 1 3 0v2M14 11a1.5 1.5 0 0 1 3 0v1.5M17 12a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-1.5a6 6 0 0 1-4.5-2l-3.2-3.6a1.6 1.6 0 0 1 2.3-2.2L8 15.5"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-yt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3l2 3H4l2-3v-3a7 7 0 0 1 4-6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/></symbol>
+  <symbol id="i-fb" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8.5V6.8c0-.8.5-1 1-1h2V2.2L14.2 2C11.1 2 10.4 4.3 10.4 5.8v2.7H8V12h2.4v10H14V12h2.7l.4-3.5z"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.5-.3z"/></symbol>
+</svg>
 
-  <section class="max-w-6xl mx-auto px-3 sm:px-4 py-2 space-y-3 w-full animate-pop-up">
-    <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
-      <div class="relative w-full sm:w-80">
-        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400 text-xs"></i>
-        <input type="text" id="searchInput" onkeyup="filterPosts()" placeholder="Search prompts or tutorials..." class="w-full bg-gray-900/90 border border-gray-700/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-yellow-500 shadow-inner">
-      </div>
-      <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 custom-scrollbar text-xs">
-        <button onclick="setCategory('All')" class="cat-btn px-3.5 py-2 rounded-xl bg-yellow-500 text-black font-bold whitespace-nowrap shadow-lg shadow-yellow-500/20 transition">All</button>
-        <button onclick="setCategory('AI Photo Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">AI Photo Prompts</button>
-        <button onclick="setCategory('AI Couple Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">AI Couple Prompts</button>
-        <button onclick="setCategory('AI Video Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">AI Video Prompts</button>
-        <button onclick="setCategory('Gods Photo Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Gods Photo Prompts</button>
-        <button onclick="setCategory('Gods Video Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Gods Video Prompts</button>
-        <button onclick="setCategory('Wishes Photo Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Wishes Photo Prompts</button>
-        <button onclick="setCategory('Wishes Video Prompts')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Wishes Video Prompts</button>
-        <button onclick="setCategory('Google Flow')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Google Flow</button>
-        <button onclick="setCategory('Gemini AI')" class="cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition">Gemini AI</button>
-      </div>
-    </div>
-  </section>
-
-  <main class="max-w-6xl mx-auto px-3 sm:px-4 py-3 flex-1 w-full">
-    <div id="postsGrid" class="mobile-grid">
-      <div class="col-span-full text-center py-16 space-y-3">
-        <i class="fa-solid fa-spinner fa-spin text-3xl text-yellow-400"></i>
-        <p class="text-xs sm:text-sm text-gray-300 font-medium">Loading Prompts...</p>
-        <p class="text-[11px] text-yellow-400 font-semibold tracking-wider uppercase">✨ Welcome to RajRebel Creations ✨</p>
-      </div>
-    </div>
-    <div id="loadMoreStatus" class="text-center text-xs text-gray-500 py-4 hidden">Loading more posts...</div>
-  </main>
-
-  <div id="detailModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-    <div class="glass-card w-full max-w-xl rounded-3xl max-h-[92vh] flex flex-col overflow-hidden border border-gray-700/80 shadow-2xl my-auto animate-scale-up">
-      <div class="p-4 border-b border-gray-800/80 flex justify-between items-center bg-gray-950/60 flex-shrink-0">
-        <span id="modalCategory" class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-yellow-400 bg-yellow-500/10 px-3 py-1 rounded-lg border border-yellow-500/20 shadow-sm">Category</span>
-        <button onclick="closeDetailModal()" class="text-gray-400 hover:text-white text-xl p-1.5 rounded-full hover:bg-gray-800 transition"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar space-y-4">
-        <div class="w-full bg-gray-950 rounded-2xl overflow-hidden border border-gray-800/80 flex justify-center shadow-inner">
-          <img id="modalImage" src="" alt="Post Image" loading="eager" decoding="async" class="max-h-[50vh] w-auto max-w-full object-contain">
-        </div>
-        <div class="space-y-1">
-          <h2 id="modalTitle" class="text-base sm:text-2xl font-black text-white tracking-tight"></h2>
-          <p id="modalDesc" class="text-gray-300 text-xs sm:text-sm leading-relaxed"></p>
-        </div>
-        <div id="processSection" class="space-y-2">
-          <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-list-check"></i> How to Create / Process</h3>
-          <div id="modalProcess" class="bg-gray-950/70 rounded-2xl p-3 text-xs sm:text-sm text-gray-300 whitespace-pre-line border border-gray-800/80 leading-relaxed shadow-inner"></div>
-        </div>
-        <div id="modalPromptsContainer" class="space-y-3 pt-1"></div>
-      </div>
-    </div>
+<header class="top">
+  <div class="wrap">
+    <a href="./" class="brand" id="brandLink" aria-label="RajRebel Creations home">
+      <span class="logo"><span>RRC</span></span>
+      <b class="grad">RajRebel Creations</b>
+    </a>
+    <button class="icon-btn" id="topSearch" aria-label="Search prompts"><svg class="ico"><use href="#i-search"/></svg></button>
   </div>
+</header>
 
-  <div id="adminModal" class="fixed inset-0 bg-black/95 backdrop-blur-lg z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-    <div class="glass-card w-full max-w-2xl rounded-3xl max-h-[92vh] flex flex-col overflow-hidden border border-gray-700/80 shadow-2xl my-auto animate-scale-up">
-      <div class="p-4 border-b border-gray-800/80 flex justify-between items-center bg-gray-950/60 flex-shrink-0">
-        <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-user-shield text-yellow-400"></i> Admin Management Portal</h3>
-        <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white text-xl p-1.5 rounded-full hover:bg-gray-800 transition"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar">
-        <div id="adminLoginView" class="max-w-md mx-auto space-y-4 py-6">
-          <h4 class="text-center text-lg font-bold text-white">Sign in to Access Admin Controls</h4>
-          <p class="text-center text-xs text-gray-400">Secure Firebase Login</p>
-          <div class="space-y-3 pt-2">
-            <input type="email" id="loginEmail" placeholder="Admin Email" class="w-full bg-gray-950 border border-gray-800 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-yellow-500 shadow-inner">
-            <input type="password" id="loginPassword" placeholder="Password" class="w-full bg-gray-950 border border-gray-800 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-yellow-500 shadow-inner">
-            <button onclick="handleAdminLogin()" class="w-full bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black py-3 rounded-2xl transition text-xs sm:text-sm shadow-lg shadow-yellow-500/20">Login to Admin</button>
-          </div>
-        </div>
-        <div id="adminDashboardView" class="hidden space-y-5">
-          <div class="flex flex-wrap justify-between items-center gap-3 pb-3 border-b border-gray-800/80">
-            <span class="text-[11px] text-green-400 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20 font-semibold"><i class="fa-solid fa-circle text-[6px] mr-1"></i> Secure Admin Session Active</span>
-            <div class="flex gap-2">
-              <button onclick="resetForm()" class="px-3.5 py-1.5 bg-yellow-500 hover:bg-yellow-400 text-black rounded-xl text-xs font-bold shadow transition"><i class="fa-solid fa-plus mr-1"></i> New Post</button>
-              <button onclick="handleAdminLogout()" class="px-3.5 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-right-from-bracket mr-1"></i> Logout</button>
-            </div>
-          </div>
-          <form id="postForm" onsubmit="handlePostSubmit(event)" class="bg-gray-950/60 p-4 sm:p-5 rounded-2xl border border-gray-800/80 space-y-3.5 shadow-inner">
-            <h4 id="formTitle" class="text-xs sm:text-sm font-extrabold text-yellow-400">Create New Prompt / Tutorial Post</h4>
-            <input type="hidden" id="editPostId" value="">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input type="text" id="postTitleInput" placeholder="Post Title" required class="bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500">
-              <select id="postCatInput" required class="bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500">
-                <option value="AI Photo Prompts">AI Photo Prompts</option><option value="AI Couple Prompts">AI Couple Prompts</option><option value="AI Video Prompts">AI Video Prompts</option><option value="Gods Photo Prompts">Gods Photo Prompts</option><option value="Gods Video Prompts">Gods Video Prompts</option><option value="Wishes Photo Prompts">Wishes Photo Prompts</option><option value="Wishes Video Prompts">Wishes Video Prompts</option><option value="Google Flow">Google Flow</option><option value="Gemini AI">Gemini AI</option><option value="Tips & Tricks">Tips & Tricks</option>
-              </select>
-            </div>
-            <div class="space-y-1.5">
-              <input type="text" id="postImgInput" placeholder="Image URL or Selected Image Data" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500">
-              <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-                <span class="text-[11px] text-gray-400">Upload from Phone Gallery (Any Size):</span>
-                <input type="file" id="galleryUploadInput" accept="image/*" onchange="uploadFromGallery(this)" class="text-xs text-gray-400 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-yellow-500 file:text-black hover:file:bg-yellow-400 cursor-pointer">
-              </div>
-            </div>
-            <textarea id="postDescInput" placeholder="Short Description" rows="2" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500"></textarea>
-            <textarea id="postProcessInput" placeholder="Process Steps / Instructions (Step 1, Step 2...)" rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500"></textarea>
-            <div class="space-y-2 pt-1 border-t border-gray-800/80">
-              <div class="flex justify-between items-center">
-                <label class="text-xs font-extrabold text-yellow-400 uppercase tracking-wider">AI Prompts (Add extra only if needed)</label>
-                <button type="button" onclick="addPromptBox()" class="px-3 py-1 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 border border-yellow-500/30 rounded-xl text-xs font-bold transition flex items-center gap-1"><i class="fa-solid fa-plus text-[10px]"></i> Add Another Prompt</button>
-              </div>
-              <div id="adminPromptsContainer" class="space-y-3"></div>
-            </div>
-            <div class="flex justify-end gap-2 pt-2 border-t border-gray-800/80">
-              <button type="button" onclick="resetForm()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-xs font-semibold transition">Cancel</button>
-              <button type="submit" id="submitBtn" class="px-5 py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold rounded-xl text-xs shadow transition">Publish Post</button>
-            </div>
-          </form>
-          <div class="space-y-2">
-            <h4 class="text-xs sm:text-sm font-bold text-white">Manage Existing Posts</h4>
-            <div id="adminPostsList" class="space-y-2"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+<!-- HOME -->
+<main id="home">
+  <section class="hero wrap">
+    <div class="banner"><img src="./1000261330.png" alt="RajRebel Creations banner" fetchpriority="high" decoding="async"></div>
+    <h1>Free AI <span class="grad">Photo &amp; Video</span> Prompts</h1>
+    <p>Copy a prompt with one tap and create with your own photo.</p>
+  </section>
+  <nav class="socials" aria-label="Follow RajRebel Creations" id="homeSocials"></nav>
+
+  <div class="wrap">
+    <div class="searchbar"><label class="search"><svg class="ico" style="color:var(--dim)"><use href="#i-search"/></svg><span class="sr">Search prompts</span><input id="searchInput" type="search" placeholder="Search prompts (Diwali, couple, god...)" autocomplete="off"></label></div>
+    <div class="chips" id="catChips" role="tablist" aria-label="Categories"></div>
+    <div class="sec-title"><span id="gridTitle">Latest prompts</span><small id="gridCount"></small></div>
+    <div class="grid" id="grid"></div>
+    <div class="empty hidden" id="gridEmpty">No prompts here yet. Check back soon!</div>
+    <div class="ad-slot" data-ad="home"></div>
+    <div class="more-status" id="moreStatus"></div>
   </div>
+</main>
 
-  <footer class="border-t border-gray-800/80 py-8 mt-12 bg-gray-950/90">
-    <div class="max-w-6xl mx-auto px-4 text-center space-y-3">
-      <div class="flex items-center justify-center gap-3"><span class="text-xs font-bold text-gray-300">RajRebel Creations - Crafted by Raj</span></div>
-      <p class="text-xs text-gray-500 font-medium">© 2026 RajRebel Creations. All rights reserved.</p>
-      <div class="flex justify-center gap-4 text-xs text-gray-500"><a href="#" onclick="openAdminModal(); return false;" class="hover:text-yellow-400 transition font-medium">Admin Portal</a></div>
+<!-- TUTORIALS -->
+<main id="tutorials" class="hidden">
+  <div class="wrap">
+    <div class="sec-title" style="padding-top:18px"><span>Tips &amp; Tutorials</span><small id="tutCount"></small></div>
+    <p style="margin:0 14px 4px;color:var(--muted);font-size:14px">Mobile tricks, photo &amp; video editing and AI tool guides.</p>
+    <div class="chips" id="tutChips"></div>
+    <div class="tlist" id="tutList"></div>
+    <div class="empty hidden" id="tutEmpty">Tutorials are coming soon.</div>
+    <div class="ad-slot" data-ad="tutorials"></div>
+  </div>
+</main>
+
+<!-- PROMPT / TUTORIAL PAGE -->
+<main id="pview" class="pview hidden" aria-live="polite">
+  <div class="pbar wrap">
+    <button class="back" id="backBtn"><svg class="ico"><use href="#i-left"/></svg> All prompts</button>
+    <button class="icon-btn" id="pShareTop" aria-label="Share this prompt"><svg class="ico"><use href="#i-share"/></svg></button>
+  </div>
+  <article class="pmain" id="pmain"></article>
+</main>
+
+<!-- ABOUT / CONTACT / PRIVACY / TERMS -->
+<main id="info" class="hidden"><article class="pmain info" id="infoBody" style="padding-top:16px"></article></main>
+
+<footer id="footer">
+  <nav aria-label="Site links">
+    <a href="?page=about" data-page="about">About</a>
+    <a href="?page=contact" data-page="contact">Contact</a>
+    <a href="?page=privacy" data-page="privacy">Privacy Policy</a>
+    <a href="?page=terms" data-page="terms">Terms &amp; Disclaimer</a>
+  </nav>
+  <p>&copy; <span id="yr"></span> RajRebel Creations. All rights reserved.</p>
+</footer>
+
+<nav class="bnav" id="bnav" aria-label="Main">
+  <button id="nHome" class="on"><svg class="ico"><use href="#i-home"/></svg>Home</button>
+  <button id="nSearch"><svg class="ico"><use href="#i-search"/></svg>Search</button>
+  <button id="nTut"><svg class="ico"><use href="#i-play"/></svg>Tutorials</button>
+  <button id="nFollow"><svg class="ico"><use href="#i-heart"/></svg>Follow</button>
+</nav>
+
+<div id="stickyMount"></div>
+
+<script type="module">
+/* ====================== SETTINGS (edit here) ====================== */
+const SOCIAL = {
+  instagram: "https://www.instagram.com/rajrebel_creations/",
+  youtube:   "https://youtube.com/@rajrebelcreations",
+  facebook:  "https://www.facebook.com/share/1E4gLSvPMM/",
+  whatsapp:  "https://whatsapp.com/channel/0029VbCXBrIHVvTgrW2oBv09"
+};
+const CHATGPT_URL = "https://chatgpt.com/";
+const FLOW_URL    = "https://labs.google/fx/tools/flow";
+// After AdSense approval paste your publisher id here, e.g. "ca-pub-1234567890123456"
+const ADSENSE_CLIENT = "";
+const ADSENSE_SLOT   = "";   // optional ad unit id
+const PAGE_SIZE = 12;
+// fast preview cards live inside "posts" so the current Firebase rules already allow them
+const CARDS = "posts/__cards";
+const PINNED = "posts/__pinned";
+const CONTACT_EMAIL = "rajrebelcreations@gmail.com";
+const NEW_DAYS  = 7;
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBkgdcYfcaCyvw6WJ2qLDAzOfSukO4vOIc",
+  authDomain: "rajrebel-prompts.firebaseapp.com",
+  databaseURL: "https://rajrebel-prompts-default-rtdb.firebaseio.com",
+  projectId: "rajrebel-prompts",
+  storageBucket: "rajrebel-prompts.firebasestorage.app",
+  messagingSenderId: "552582522547",
+  appId: "1:552582522547:web:a8e4ab6951b8224b4e32c6",
+  measurementId: "G-CMZJM76L8V"
+};
+
+/* Categories in display order. "old" = names already saved in Firebase,
+   shown with the new name. Nothing in the database is renamed. */
+const CATS = [
+  { label: "Photo Prompts",            type: "photo",    old: ["AI Photo Prompts", "Gemini AI"] },
+  { label: "Video Prompts",            type: "video",    old: ["AI Video Prompts", "Google Flow"] },
+  { label: "Couple Photo Prompts",     type: "photo",    old: ["AI Couple Prompts"] },
+  { label: "Couple Video Prompts",     type: "video",    old: [] },
+  { label: "Girls Photo Prompts",      type: "photo",    old: [] },
+  { label: "Boys Photo Prompts",       type: "photo",    old: [] },
+  { label: "Wishes Photo Prompts",     type: "photo",    old: [] },
+  { label: "Wishes Video Prompts",     type: "video",    old: [] },
+  { label: "Devotional Photo Prompts", type: "photo",    old: ["Gods Photo Prompts"] },
+  { label: "Devotional Video Prompts", type: "video",    old: ["Gods Video Prompts"] },
+  { label: "Tips & Tutorials",         type: "tutorial", old: ["Tips & Tricks"] }
+];
+const TUT_TOPICS = ["Mobile Tricks", "Photo Editing", "Video Editing", "AI Tools"];
+/* ================================================================== */
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, get, set, update, remove, query, orderByKey, limitToLast, endAt }
+  from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (t) => String(t ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+const icon = (id, cls = "ico") => `<svg class="${cls}"><use href="#i-${id}"/></svg>`;
+const BASE = location.origin + location.pathname.replace(/index\.html$/, "");
+const tsOf = (id) => { const n = Number(String(id || "").replace(/^post-/, "")); return Number.isFinite(n) ? n : 0; };
+const isNew = (id) => { const t = tsOf(id); return t > 0 && (Date.now() - t) < NEW_DAYS * 864e5; };
+function catOf(name) {
+  const n = String(name || "").trim();
+  return CATS.find(c => c.label === n || c.old.includes(n)) || { label: n || "Prompts", type: /video/i.test(n) ? "video" : "photo", old: [] };
+}
+const postLink = (id) => BASE + "?post=" + encodeURIComponent(id);
+function ytId(url) {
+  const m = String(url || "").match(/(?:youtu\.be\/|v=|shorts\/|embed\/|live\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : "";
+}
+const promptsOf = (p) => (Array.isArray(p.prompts) && p.prompts.filter(Boolean).length) ? p.prompts.filter(Boolean) : (p.prompt ? [p.prompt] : []);
+
+let toastTimer;
+function toast(msg) {
+  document.querySelectorAll(".toast").forEach(t => t.remove());
+  const t = document.createElement("div");
+  t.className = "toast"; t.textContent = msg; document.body.appendChild(t);
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.remove(), 2200);
+}
+async function copyText(text) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return true; }
+  } catch (e) {}
+  const ta = document.createElement("textarea");
+  ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length + 1);
+  let ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+  ta.remove(); return ok;
+}
+async function sharePost(id, title) {
+  const url = postLink(id);
+  if (navigator.share) {
+    try { await navigator.share({ title: title || "RajRebel Creations", text: "Try this AI prompt from RajRebel Creations:", url }); return; } catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  (await copyText(url)) ? toast("Link copied ✓") : window.prompt("Copy this link:", url);
+}
+
+/* ---------- state ---------- */
+const S = {
+  cards: new Map(),     // id -> light card
+  mode: "cards",        // "cards" (fast) or "posts" (fallback until cards are built)
+  oldestKey: null, hasMore: true, loading: false, allLoaded: false,
+  cat: "All", q: "", tutTopic: "All",
+  seen: new Set(), view: "home", current: null, cameFromHome: false, firstLoaded: false
+};
+
+/* ---------- cache (instant first paint on repeat visits) ---------- */
+const CACHE_KEY = "rrc_cards_v2";
+try {
+  const c = JSON.parse(localStorage.getItem(CACHE_KEY) || "[]");
+  if (Array.isArray(c)) c.forEach(x => x && x.id && S.cards.set(x.id, x));
+} catch (e) {}
+let cacheTimer;
+function saveCache() {
+  if (S.mode !== "cards") return;
+  clearTimeout(cacheTimer);
+  cacheTimer = setTimeout(() => {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(sortedCards().slice(0, 60))); } catch (e) {}
+  }, 800);
+}
+
+function cardFromPost(id, p) {
+  return {
+    id, title: p.title || "", category: p.category || "", thumb: p.thumb || p.image || "",
+    t: tsOf(id), n: promptsOf(p).length, pinned: !!p.pinned,
+    d: String(p.description || "").slice(0, 90), yt: ytId(p.videoUrl), tp: p.topic || ""
+  };
+}
+function sortedCards() {
+  return Array.from(S.cards.values()).sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.t || 0) - (a.t || 0) || String(b.id).localeCompare(String(a.id)));
+}
+
+/* ---------- loading ---------- */
+async function loadFirstPage() {
+  S.loading = true;
+  try {
+    const snap = await get(query(ref(db, CARDS), orderByKey(), limitToLast(PAGE_SIZE)));
+    const data = snap.val();
+    if (!data) throw new Error("no-cards");
+    S.mode = "cards";
+    const fresh = new Map();
+    Object.entries(data).forEach(([k, v]) => v && fresh.set(k, { ...v, id: k }));
+    // keep cached cards that are older than this page; drop cached ones that were deleted inside the page range
+    const keys = Object.keys(data).sort();
+    S.oldestKey = keys[0] || null;
+    S.hasMore = keys.length === PAGE_SIZE;
+    for (const [id] of S.cards) if (id >= S.oldestKey && !fresh.has(id)) S.cards.delete(id);
+    fresh.forEach((v, k) => S.cards.set(k, v));
+    loadPinned();
+  } catch (e) {
+    // cards not built yet (or rules not updated) -> old way, reading posts
+    S.mode = "posts";
+    S.cards.clear();
+    try {
+      const snap = await get(query(ref(db, "posts"), orderByKey(), limitToLast(PAGE_SIZE)));
+      const data = snap.val() || {};
+      Object.keys(data).forEach(k => { if (k.startsWith("__")) delete data[k]; });
+      Object.entries(data).forEach(([k, v]) => v && S.cards.set(k, cardFromPost(v.id || k, v)));
+      const keys = Object.keys(data).sort();
+      S.oldestKey = keys[0] || null;
+      S.hasMore = keys.length === PAGE_SIZE;
+    } catch (err) { console.error(err); }
+  }
+  S.loading = false; S.firstLoaded = true;
+  saveCache();
+  if (S.view === "home") renderGrid();
+  if (S.view === "tutorials") renderTutorials();
+}
+async function loadPinned() {
+  // pinned cards older than the first page still show on top
+  try {
+    const snap = await get(ref(db, PINNED));
+    const ids = Object.keys(snap.val() || {});
+    const missing = ids.filter(id => !S.cards.has(id));
+    await Promise.all(missing.map(async id => {
+      const s = await get(ref(db, CARDS + "/" + id)); const v = s.val(); if (v) S.cards.set(id, { ...v, id });
+    }));
+    if (missing.length && S.view === "home") renderGrid();
+  } catch (e) {}
+}
+async function loadMore() {
+  if (S.loading || !S.hasMore || !S.oldestKey) return;
+  S.loading = true; $("#moreStatus").textContent = "Loading more…";
+  const path = S.mode === "cards" ? CARDS : "posts";
+  try {
+    const snap = await get(query(ref(db, path), orderByKey(), endAt(S.oldestKey), limitToLast(PAGE_SIZE + 1)));
+    const data = snap.val() || {};
+    const entries = Object.entries(data).filter(([k]) => k < S.oldestKey && !k.startsWith("__")).sort((a, b) => a[0].localeCompare(b[0]));
+    entries.forEach(([k, v]) => v && S.cards.set(k, S.mode === "cards" ? { ...v, id: k } : cardFromPost(v.id || k, v)));
+    if (entries.length) S.oldestKey = entries[0][0];
+    S.hasMore = entries.length === PAGE_SIZE;
+  } catch (e) { console.error(e); }
+  S.loading = false; $("#moreStatus").textContent = "";
+  saveCache();
+  if (S.view === "home") renderGrid(true);
+  if (S.view === "tutorials") renderTutorials();
+}
+async function loadAll() {
+  // cards are small, so filters/search/tutorials can load all of them
+  if (S.allLoaded || S.mode !== "cards") return;
+  S.allLoaded = true;
+  try {
+    const snap = await get(ref(db, CARDS));
+    Object.entries(snap.val() || {}).forEach(([k, v]) => v && S.cards.set(k, { ...v, id: k }));
+    S.hasMore = false;
+    if (S.view === "home") renderGrid(true);
+    if (S.view === "tutorials") renderTutorials();
+  } catch (e) { S.allLoaded = false; }
+}
+window.addEventListener("scroll", () => {
+  if (S.view !== "home") return;
+  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 900) loadMore();
+}, { passive: true });
+
+/* ---------- home ---------- */
+function renderSocials(target) {
+  target.innerHTML = `
+    <a class="soc ig" aria-label="Instagram" href="${SOCIAL.instagram}" target="_blank" rel="noopener">${icon("ig")}<span class="lbl">Instagram</span></a>
+    <a class="soc yt" aria-label="Subscribe on YouTube" href="${SOCIAL.youtube}" target="_blank" rel="noopener">${icon("yt")}<span class="lbl">Subscribe</span></a>
+    <a class="soc fb" aria-label="Facebook" href="${SOCIAL.facebook}" target="_blank" rel="noopener">${icon("fb")}<span class="lbl">Facebook</span></a>
+    <a class="soc wa" aria-label="WhatsApp channel" href="${SOCIAL.whatsapp}" rel="noopener">${icon("wa")}<span class="lbl">WhatsApp</span></a>`;
+}
+function renderChips() {
+  const list = ["All", ...CATS.filter(c => c.type !== "tutorial").map(c => c.label)];
+  $("#catChips").innerHTML = list.map(l => `<button class="chip ${S.cat === l ? "on" : ""}" role="tab" aria-selected="${S.cat === l}" data-cat="${esc(l)}">${esc(l)}</button>`).join("");
+}
+$("#catChips").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-cat]"); if (!b) return;
+  S.cat = b.dataset.cat; renderChips(); renderGrid(); if (S.cat !== "All") loadAll();
+  b.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+});
+let qTimer;
+$("#searchInput").addEventListener("input", (e) => {
+  clearTimeout(qTimer);
+  qTimer = setTimeout(() => { S.q = e.target.value.trim().toLowerCase(); renderGrid(); if (S.q) loadAll(); }, 200);
+});
+
+function filteredCards() {
+  return sortedCards().filter(c => {
+    const cat = catOf(c.category);
+    if (cat.type === "tutorial") return false;
+    if (S.cat !== "All" && cat.label !== S.cat) return false;
+    if (S.q) {
+      const hay = ((c.title || "") + " " + (c.d || "") + " " + cat.label).toLowerCase();
+      if (!hay.includes(S.q)) return false;
+    }
+    return true;
+  });
+}
+function cardHTML(c, i, animate) {
+  const cat = catOf(c.category);
+  const badge = cat.type === "video" ? "VIDEO PROMPT" : cat.type === "tutorial" ? "TUTORIAL" : "PHOTO PROMPT";
+  const thumb = c.thumb || (c.yt ? `https://i.ytimg.com/vi/${c.yt}/hqdefault.jpg` : "");
+  return `<div class="card ${animate ? "anim" : ""}" style="${animate ? `animation-delay:${Math.min(i, 10) * 0.07}s` : ""}" data-id="${esc(c.id)}" tabindex="0" role="link" aria-label="${esc(c.title)}">
+    <div class="thumb">
+      ${thumb ? `<img src="${esc(thumb)}" alt="${esc(c.title)}" loading="${i < 4 ? "eager" : "lazy"}" decoding="async" onload="this.classList.add('ok')" onerror="this.classList.add('ok')">` : `<div class="skel" style="height:180px;border-radius:0"></div>`}
+      <div class="badges"><span class="badge ${cat.type === "tutorial" ? "tut" : ""}">${badge}</span>${c.pinned ? `<span class="badge pin">TOP</span>` : ""}${isNew(c.id) ? `<span class="badge new">NEW</span>` : ""}</div>
+      ${cat.type === "video" ? `<div class="play"><span>${icon("play")}</span></div>` : ""}
+      <button class="share-mini" data-share="${esc(c.id)}" aria-label="Share ${esc(c.title)}">${icon("share")}</button>
     </div>
-  </footer>
+    <div class="ttl">${esc(c.title)}</div>
+  </div>`;
+}
+function renderGrid(append = false) {
+  const list = filteredCards();
+  const grid = $("#grid");
+  $("#gridTitle").textContent = S.cat === "All" ? (S.q ? "Search results" : "Latest prompts") : S.cat;
+  $("#gridCount").textContent = list.length ? `${list.length}${S.hasMore && S.cat === "All" && !S.q ? "+" : ""}` : "";
+  if (!list.length) {
+    const waiting = !S.firstLoaded || (S.loading && !S.cards.size);
+    grid.innerHTML = waiting ? skeletonCols() : "";
+    $("#gridEmpty").classList.toggle("hidden", waiting);
+    return;
+  }
+  $("#gridEmpty").classList.add("hidden");
+  if (!append) S.seen.clear();
+  const cols = [[], []];
+  let k = 0;
+  list.forEach((c, i) => {
+    const animate = !S.seen.has(c.id);
+    cols[i % 2].push(cardHTML(c, animate ? k++ : 0, animate));
+    S.seen.add(c.id);
+  });
+  grid.innerHTML = `<div class="col">${cols[0].join("")}</div><div class="col">${cols[1].join("")}</div>`;
+}
+function skeletonCols() {
+  const h = [220, 170, 190, 240, 160, 200];
+  const col = (o) => h.filter((_, i) => i % 2 === o).map(x => `<div class="skel" style="height:${x}px"></div>`).join("");
+  return `<div class="col">${col(0)}</div><div class="col">${col(1)}</div>`;
+}
+$("#grid").addEventListener("click", (e) => {
+  const sh = e.target.closest("[data-share]");
+  if (sh) { e.stopPropagation(); const c = S.cards.get(sh.dataset.share); sharePost(sh.dataset.share, c && c.title); return; }
+  const card = e.target.closest("[data-id]"); if (card) openFromList(card.dataset.id);
+});
+$("#grid").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") { const card = e.target.closest("[data-id]"); if (card) openFromList(card.dataset.id); }
+});
 
-  <script>
-    let currentCategory = 'All';
-    let isAdminLoggedIn = false;
-    let renderPostsTimer = null;
+/* ---------- tutorials ---------- */
+function renderTutChips() {
+  $("#tutChips").innerHTML = ["All", ...TUT_TOPICS].map(t => `<button class="chip ${S.tutTopic === t ? "on" : ""}" data-tt="${esc(t)}">${esc(t)}</button>`).join("");
+}
+$("#tutChips").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-tt]"); if (!b) return; S.tutTopic = b.dataset.tt; renderTutChips(); renderTutorials();
+});
+function renderTutorials() {
+  const list = sortedCards().filter(c => catOf(c.category).type === "tutorial" && (S.tutTopic === "All" || c.tp === S.tutTopic));
+  $("#tutCount").textContent = list.length ? String(list.length) : "";
+  $("#tutEmpty").classList.toggle("hidden", !!list.length || S.loading);
+  $("#tutList").innerHTML = list.map((c, i) => {
+    const th = c.thumb || (c.yt ? `https://i.ytimg.com/vi/${c.yt}/hqdefault.jpg` : "");
+    return `<div class="tcard" style="animation-delay:${Math.min(i, 10) * 0.06}s" data-id="${esc(c.id)}" role="link" tabindex="0">
+      <div class="tt">${th ? `<img src="${esc(th)}" alt="" loading="lazy">` : ""}${c.yt ? `<div class="play"><span>${icon("play")}</span></div>` : ""}</div>
+      <div class="tx"><b>${esc(c.title)}</b><small>${esc(c.tp || "Tutorial")}${isNew(c.id) ? " · NEW" : ""}</small></div></div>`;
+  }).join("");
+}
+$("#tutList").addEventListener("click", (e) => { const c = e.target.closest("[data-id]"); if (c) openFromList(c.dataset.id); });
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const container = document.getElementById('adminPromptsContainer');
-      if (container && container.children.length === 0) addPromptBox();
-      if (window.firebasePosts && window.firebasePosts.length > 0) renderPosts();
-      if (typeof window.checkForSharedPost === 'function') window.checkForSharedPost();
-    });
+/* ---------- prompt page ---------- */
+function setMeta(title, desc, img) {
+  document.title = title ? `${title} | RajRebel Creations` : "RajRebel Creations | AI Photo & Video Prompts";
+  const m = $('meta[name="description"]'); if (m && desc) m.setAttribute("content", desc);
+  const ot = $('meta[property="og:title"]'); if (ot && title) ot.setAttribute("content", title);
+  const oi = $('meta[property="og:image"]'); if (oi && img && /^https?:/.test(img)) oi.setAttribute("content", img);
+}
+function openFromList(id) {
+  S.cameFromHome = true;
+  history.pushState({ post: id }, "", "?post=" + encodeURIComponent(id));
+  openPost(id);
+}
+async function openPost(id) {
+  showView("pview");
+  window.scrollTo(0, 0);
+  S.current = id;
+  const card = S.cards.get(id);
+  // instant shell from the card while the full post loads
+  $("#pmain").innerHTML = `
+    <div class="pmedia">${card && card.thumb ? `<img src="${esc(card.thumb)}" alt="" style="filter:blur(6px)">` : `<div class="skel" style="width:100%;height:300px;border-radius:0"></div>`}</div>
+    <h1>${card ? esc(card.title) : `<span class="skel" style="display:block;height:24px;width:70%;margin-top:14px"></span>`}</h1>
+    <div class="skel" style="height:150px;margin-top:14px"></div>`;
+  renderSticky({ loading: true });
+  try {
+    const snap = id.startsWith("__") ? { val: () => null } : await get(ref(db, "posts/" + id));
+    const post = snap.val();
+    if (S.current !== id) return;
+    if (!post) { $("#pmain").innerHTML = `<div class="empty">This prompt was not found. It may have been removed.<br><br><a class="btn y" href="./">Explore all prompts</a></div>`; renderSticky(null); return; }
+    renderPost(id, post);
+  } catch (e) {
+    console.error(e);
+    $("#pmain").innerHTML = `<div class="empty">Could not load this prompt. Check your internet and try again.<br><br><button class="btn y" onclick="location.reload()">Try again</button></div>`;
+    renderSticky(null);
+  }
+  if (!S.firstLoaded && !S.loading) loadFirstPage().then(() => { if (S.current === id) renderMoreLike(id); });
+}
+function defaultSteps(type, couple) {
+  if (type === "video") return `1. Tap "Copy Prompt".\n2. Tap "Open Google Flow" and upload your photo${couple ? " and your partner's photo" : ""}.\n3. Paste the prompt and tap Generate.`;
+  return `1. Tap "Copy Prompt".\n2. Tap "Open ChatGPT" and upload your photo${couple ? " and your partner's photo" : ""}.\n3. Paste the prompt and send.`;
+}
+function renderPost(id, post) {
+  const cat = catOf(post.category);
+  const prompts = promptsOf(post);
+  const labels = Array.isArray(post.promptLabels) ? post.promptLabels : [];
+  const yt = ytId(post.videoUrl);
+  const couple = /couple/i.test(cat.label) || /couple/i.test(post.category || "");
+  const typeTag = cat.type === "video" ? "VIDEO PROMPT" : cat.type === "tutorial" ? "TUTORIAL" : "PHOTO PROMPT";
+  setMeta(post.title, post.description || `${cat.label} by RajRebel Creations`, post.image);
 
-    function renderPosts() {
-      const posts = window.getStoredPosts ? window.getStoredPosts() : [];
-      const grid = document.getElementById('postsGrid');
-      const searchInput = document.getElementById('searchInput');
-      const searchVal = searchInput ? searchInput.value.toLowerCase() : '';
-      if (!grid) return;
+  const videoBlock = (post.videoUrl) ? (yt
+    ? `<div class="video" data-yt="${yt}"><img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="Video tutorial" loading="lazy"><div class="pl"><svg width="62" height="62" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#d71920"/><path d="M16 13l11 7-11 7z" fill="#fff"/></svg></div></div>`
+    : `<a class="btn" href="${esc(post.videoUrl)}" target="_blank" rel="noopener">${icon("play")} Watch the video</a>`) : "";
 
-      const filtered = posts.filter(post => {
-        const matchesCat = currentCategory === 'All' || post.category === currentCategory;
-        const matchesSearch = (post.title || '').toLowerCase().includes(searchVal) ||
-          (post.description || '').toLowerCase().includes(searchVal);
-        return matchesCat && matchesSearch;
-      });
+  $("#pmain").innerHTML = `
+    ${cat.type === "tutorial" && yt ? videoBlock : `<div class="pmedia"><img src="${esc(post.image || "")}" alt="${esc(post.title)}" decoding="async"></div>`}
+    <div class="pmeta"><span class="badge ${cat.type === "tutorial" ? "tut" : ""}">${typeTag}</span><span class="tag">${esc(cat.label)}</span>${post.topic ? `<span class="tag">${esc(post.topic)}</span>` : ""}${isNew(id) ? `<span class="badge new">NEW</span>` : ""}</div>
+    <h1>${esc(post.title)}</h1>
+    ${post.description ? `<p class="pdesc">${esc(post.description)}</p>` : ""}
+    ${prompts.map((p, i) => `
+      <section class="pbox" id="pb${i}">
+        <div class="pbox-h"><b>${esc(labels[i] || (prompts.length > 1 ? `PROMPT ${i + 1}` : "PROMPT"))}</b>
+          <button class="cbtn-s" data-copy="${i}">${icon("copy")} Copy</button></div>
+        <div class="ptext ${p.length > 380 ? "clip" : ""}" id="pt${i}">${esc(p)}</div>
+        ${p.length > 380 ? `<button class="showmore" data-more="${i}">Show full prompt</button>` : ""}
+      </section>`).join("")}
+    <div class="blk"><h2>${cat.type === "tutorial" ? "Steps" : "How to use"}</h2>
+      <div class="steps">${esc(post.process || (cat.type === "tutorial" ? "Watch the video above and follow along." : defaultSteps(cat.type, couple)))}</div></div>
+    ${cat.type !== "tutorial" && videoBlock ? `<div class="blk"><h2>Video tutorial</h2>${videoBlock}</div>` : ""}
+    <div class="ad-slot" data-ad="post"></div>
+    <div class="blk"><h2>Share with friends</h2>
+      <div class="row3">
+        <button class="btn" data-act="share">${icon("share")} Share</button>
+        <a class="btn wa" href="https://wa.me/?text=${encodeURIComponent((post.title || "AI prompt") + " " + postLink(id))}" target="_blank" rel="noopener">${icon("wa")} WhatsApp</a>
+        <button class="btn" data-act="link">${icon("link")} Link</button>
+      </div></div>
+    <div class="blk" id="moreLike"></div>
+    <div class="blk"><a class="btn y" href="./" data-act="home">Explore all prompts</a></div>
+    <p class="follow-note">Follow <a href="${SOCIAL.instagram}" target="_blank" rel="noopener" style="color:var(--yellow)">@rajrebel_creations</a> for new prompts every week</p>`;
+  const img = $("#pmain .pmedia img"); if (img) img.style.filter = "";
+  renderMoreLike(id, post.category);
+  mountAds($("#pmain"));
 
-      // Avoid replacing every card when the list content hasn't changed.
-      grid.innerHTML = '';
+  if (prompts.length) renderSticky({ prompts, type: cat.type, id, title: post.title });
+  else if (post.videoUrl) renderSticky({ watch: post.videoUrl });
+  else renderSticky(null);
+}
+function renderMoreLike(id, category) {
+  const box = $("#moreLike"); if (!box) return;
+  const me = S.cards.get(id);
+  const label = catOf(category || (me && me.category)).label;
+  let list = sortedCards().filter(c => c.id !== id && catOf(c.category).label === label);
+  if (list.length < 4) list = list.concat(sortedCards().filter(c => c.id !== id && catOf(c.category).type !== "tutorial" && !list.includes(c)));
+  list = list.slice(0, 6);
+  if (!list.length) { box.innerHTML = ""; return; }
+  const cols = [[], []];
+  list.forEach((c, i) => cols[i % 2].push(cardHTML(c, i, true)));
+  box.innerHTML = `<h2>More like this</h2><div class="grid" style="padding:0"><div class="col">${cols[0].join("")}</div><div class="col">${cols[1].join("")}</div></div>`;
+}
+$("#pmain").addEventListener("click", async (e) => {
+  const c = e.target.closest("[data-copy]");
+  if (c) {
+    const i = Number(c.dataset.copy);
+    const txt = $("#pt" + i).textContent;
+    if (await copyText(txt)) { c.classList.add("done"); c.innerHTML = `${icon("check")} Copied`; toast(`Prompt ${i + 1} copied ✓`); stickyMarkCopied(i); }
+    return;
+  }
+  const m = e.target.closest("[data-more]");
+  if (m) { const t = $("#pt" + m.dataset.more); t.classList.toggle("clip"); m.textContent = t.classList.contains("clip") ? "Show full prompt" : "Show less"; return; }
+  const v = e.target.closest("[data-yt]");
+  if (v && !v.querySelector("iframe")) { v.innerHTML = `<iframe src="https://www.youtube.com/embed/${v.dataset.yt}?autoplay=1&rel=0" title="Video tutorial" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`; return; }
+  const a = e.target.closest("[data-act]");
+  if (a) {
+    if (a.dataset.act === "share") { e.preventDefault(); const c2 = S.cards.get(S.current); sharePost(S.current, c2 && c2.title); }
+    if (a.dataset.act === "link") { (await copyText(postLink(S.current))) ? toast("Link copied ✓") : null; }
+    if (a.dataset.act === "home") { e.preventDefault(); goHome(); }
+    return;
+  }
+  const sh = e.target.closest("[data-share]");
+  if (sh) { e.stopPropagation(); const c3 = S.cards.get(sh.dataset.share); sharePost(sh.dataset.share, c3 && c3.title); return; }
+  const card = e.target.closest("[data-id]"); if (card) openFromList(card.dataset.id);
+});
+$("#pShareTop").addEventListener("click", () => { const c = S.cards.get(S.current); sharePost(S.current, c && c.title); });
 
-      if (filtered.length === 0) {
-        if (posts.length === 0) {
-          grid.innerHTML = `<div class="col-span-full text-center py-16 space-y-3"><i class="fa-solid fa-spinner fa-spin text-3xl text-yellow-400"></i><p class="text-xs sm:text-sm text-gray-300 font-medium">Loading Prompts...</p><p class="text-[11px] text-yellow-400 font-semibold tracking-wider uppercase">✨ Welcome to RajRebel Creations ✨</p></div>`;
-        } else {
-          grid.innerHTML = `<div class="col-span-full text-center py-16 text-gray-500 text-sm">No prompts found matching your query.</div>`;
-        }
-        return;
-      }
+/* ---------- sticky copy bar ---------- */
+let ST = null;
+function renderSticky(opts) {
+  const mount = $("#stickyMount");
+  ST = opts;
+  if (!opts || S.view !== "pview") { mount.innerHTML = ""; return; }
+  if (opts.loading) {
+    mount.innerHTML = `<div class="sticky"><div class="in"><div class="bigwrap"><button class="big" disabled style="opacity:.7">${icon("copy")} Loading prompt…</button></div></div></div>`;
+    return;
+  }
+  if (opts.watch) {
+    mount.innerHTML = `<div class="sticky"><div class="in"><div class="bigwrap"><span class="ring"></span><a class="big" style="text-decoration:none" href="${esc(opts.watch)}" target="_blank" rel="noopener">${icon("play")} Watch Video</a></div></div></div>`;
+    return;
+  }
+  opts.next = opts.next || 0; opts.copied = opts.copied || new Set();
+  drawSticky();
+}
+function drawSticky() {
+  const o = ST; if (!o || !o.prompts) return;
+  const n = o.prompts.length;
+  const allDone = o.copied.size >= n;
+  const justCopied = o.flash;
+  const label = justCopied ? (n > 1 ? `Prompt ${o.flashIdx + 1} copied` : "Copied")
+    : (n > 1 ? (allDone ? `Copy again (${n} prompts)` : `Copy Prompt ${o.next + 1} of ${n}`) : (allDone ? "Copy again" : "Copy Prompt"));
+  const app = o.type === "video" ? { cls: "flow", text: "Open Google Flow", url: FLOW_URL }
+    : o.type === "photo" ? { cls: "gpt", text: "Open ChatGPT", url: chatUrl(o.prompts[0]) } : null;
+  $("#stickyMount").innerHTML = `<div class="sticky" style="${o.drawn ? "animation:none" : ""}"><div class="in">
+    <div class="bigwrap ${o.copied.size ? "done-wrap" : ""}">
+      <span class="ring"></span>
+      <button class="big ${justCopied ? "done" : ""}" id="bigCopy">${icon(justCopied ? "check" : "copy")} ${esc(label)}</button>
+      <svg class="tap" width="26" height="26" style="color:#fff" aria-hidden="true"><use href="#i-hand"/></svg>
+    </div>
+    ${o.copied.size && app ? `<a class="appbtn ${app.cls}" href="${app.url}" target="_blank" rel="noopener">${esc(app.text)} →</a>
+      <div class="hint">Not opening? Tap ⋯ at the top and choose “Open in browser”.</div>` : ""}
+  </div></div>`;
+  o.drawn = true;
+  $("#bigCopy").onclick = async () => {
+    const i = allDone ? 0 : o.next;
+    if (!(await copyText(o.prompts[i]))) { toast("Copy failed. Long-press the prompt to copy."); return; }
+    stickyMarkCopied(i, true);
+  };
+}
+function stickyMarkCopied(i, fromSticky) {
+  const o = ST; if (!o || !o.prompts) return;
+  if (o.copied.size >= o.prompts.length && fromSticky) o.copied.clear();
+  o.copied.add(i);
+  let nx = 0; while (o.copied.has(nx) && nx < o.prompts.length) nx++;
+  o.next = Math.min(nx, o.prompts.length - 1);
+  o.flash = true; o.flashIdx = i;
+  const btn = $(`[data-copy="${i}"]`); if (btn) { btn.classList.add("done"); btn.innerHTML = `${icon("check")} Copied`; }
+  drawSticky();
+  clearTimeout(o.ft); o.ft = setTimeout(() => { o.flash = false; drawSticky(); }, 1500);
+}
+function chatUrl(prompt) {
+  const q = encodeURIComponent(prompt || "");
+  return q.length && q.length < 3500 ? `${CHATGPT_URL}?q=${q}` : CHATGPT_URL;
+}
 
-      filtered.forEach((post, index) => {
-        const card = document.createElement('div');
-        card.className = "glass-card rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col justify-between animate-pop-up opacity-0";
-        card.style.animationDelay = `${Math.min(index, 8) * 0.02}s`;
+/* ---------- about / contact / privacy / terms ---------- */
+const INFO = {
+  about: { title: "About", html: () => `<h1>About RajRebel Creations</h1>
+<p style="color:var(--muted)">Free AI photo prompts, AI video prompts and mobile tutorials.</p>
+<p>RajRebel Creations is a content creator hub run by Raj. I make videos about AI tools, photo editing, video editing and mobile tricks on Instagram, YouTube and Facebook.</p>
+<p>This website is where I share the prompts used in my videos, so you can create the same results with your own photos. Every prompt can be copied with one tap and used in tools like ChatGPT, Gemini and Google Flow.</p>
+<h2>What you will find here</h2>
+<div class="box">
+<p><b>Photo prompts:</b> couple, girls, boys, wishes and devotional photo ideas.</p>
+<p><b>Video prompts:</b> detailed prompts for AI video tools like Google Flow.</p>
+<p><b>Tips &amp; tutorials:</b> mobile tricks, photo editing, video editing and AI tool guides.</p>
+</div>
+<h2>Follow for new prompts</h2>
+__SOCIAL__` },
+  contact: { title: "Contact", html: () => `<h1>Contact</h1>
+<p style="color:var(--muted)">Questions, feedback, prompt requests or brand collaborations are welcome.</p>
+<div class="box">
+<p><b>Email:</b> <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a></p>
+<p style="color:var(--muted)">I usually reply within a few days.</p>
+</div>
+<h2>Other ways to reach me</h2>
+__SOCIAL__
+<p style="color:var(--muted)">Please do not send passwords, bank details or other private information by email or message.</p>` },
+  privacy: { title: "Privacy Policy", html: () => `<h1>Privacy Policy</h1>
+<p style="color:var(--muted)">Last updated: 6 November 2026</p>
+<p>This Privacy Policy explains how RajRebel Creations ("we", "us") at <a href="https://rajrebelcreations.com/">rajrebelcreations.com</a> handles information when you visit this website.</p>
+<h2>Information we collect</h2>
+<p>We do not ask you to create an account and we do not collect your name, phone number or photos on this website. The photos you use with our prompts are uploaded by you to third-party tools (such as ChatGPT, Gemini or Google Flow), not to this website.</p>
+<p>Like most websites, our hosting and service providers may automatically log basic technical information such as your IP address, browser type, device type and the pages you visit. This helps keep the site secure and working.</p>
+<h2>Cookies and local storage</h2>
+<p>We use your browser's local storage to remember the list of prompts, so the website opens faster on your next visit. You can clear it any time in your browser settings.</p>
+<h2>Advertising (Google AdSense)</h2>
+<p>We use or may use Google AdSense to show ads. Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this website or other websites.</p>
+<p>Google's use of advertising cookies enables it and its partners to serve ads to you based on your visits to this and/or other sites on the Internet.</p>
+<p>You may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ads Settings</a>. You can also opt out of some third-party vendors' use of cookies for personalized advertising by visiting <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener">www.aboutads.info</a>.</p>
+<p>To learn more, see <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">How Google uses information from sites or apps that use its services</a>.</p>
+<h2>Third-party services</h2>
+<p>This website uses Google Firebase to store and deliver prompts, and may show embedded YouTube videos and links to Instagram, Facebook, WhatsApp, ChatGPT, Gemini and Google Flow. These services have their own privacy policies, and we are not responsible for their content or practices.</p>
+<h2>Children's privacy</h2>
+<p>This website is not directed to children under 13, and we do not knowingly collect personal information from children.</p>
+<h2>Changes to this policy</h2>
+<p>We may update this policy from time to time. Changes will be posted on this page with a new "Last updated" date.</p>
+<h2>Contact</h2>
+<p>If you have any questions about this policy, email <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.</p>` },
+  terms: { title: "Terms & Disclaimer", html: () => `<h1>Terms &amp; Disclaimer</h1>
+<p style="color:var(--muted)">Last updated: 6 November 2026</p>
+<p>By using <a href="https://rajrebelcreations.com/">rajrebelcreations.com</a>, you agree to these terms.</p>
+<h2>Use of prompts</h2>
+<p>All prompts on this website are free to copy and use for personal and creative purposes. Please do not re-sell the prompts or publish them as your own collection without credit.</p>
+<h2>AI results may vary</h2>
+<p>AI tools change often. The same prompt can give different results depending on the tool, its version, your photo and your settings. We do not guarantee any specific result.</p>
+<h2>Use AI responsibly</h2>
+<p>Only upload photos of yourself, or of people who have given you permission. Do not use our prompts to create fake, misleading, harmful, sexual or illegal content, or content that impersonates or harasses anyone. You are responsible for what you create and share, and for following the rules of each AI tool you use.</p>
+<h2>Third-party tools and links</h2>
+<p>This website links to third-party tools and platforms such as ChatGPT, Gemini, Google Flow, YouTube, Instagram, Facebook and WhatsApp. We are not affiliated with or endorsed by these companies, and we are not responsible for their services, content or policies. All trademarks belong to their owners.</p>
+<h2>Content ownership</h2>
+<p>The text, images, videos and design of this website belong to RajRebel Creations unless stated otherwise.</p>
+<h2>No warranty</h2>
+<p>The website and its content are provided "as is", without warranties of any kind. We are not liable for any loss or damage arising from the use of this website or the prompts and tutorials on it.</p>
+<h2>Changes</h2>
+<p>We may update these terms at any time. Continued use of the website means you accept the updated terms.</p>
+<h2>Contact</h2>
+<p>Questions? Email <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.</p>` },
+};
+function showInfo(key) {
+  const pg = INFO[key] || INFO.about;
+  showView("info");
+  const social = `<div class="row2" style="margin-top:10px"><a class="btn" href="${SOCIAL.instagram}" target="_blank" rel="noopener">${icon("ig")} Instagram</a><a class="btn" href="${SOCIAL.youtube}" target="_blank" rel="noopener">${icon("yt")} YouTube</a><a class="btn" href="${SOCIAL.facebook}" target="_blank" rel="noopener">${icon("fb")} Facebook</a><a class="btn wa" href="${SOCIAL.whatsapp}" rel="noopener">${icon("wa")} WhatsApp</a></div>`;
+  $("#infoBody").innerHTML = pg.html().split("__SOCIAL__").join(social) + `<div class="blk"><a class="btn y" href="./" data-home>Explore all prompts</a></div>`;
+  document.title = `${pg.title} | RajRebel Creations`;
+  window.scrollTo(0, 0);
+}
+$("#footer").addEventListener("click", (e) => {
+  const a = e.target.closest("[data-page]"); if (!a) return;
+  e.preventDefault(); history.pushState({}, "", "?page=" + a.dataset.page); showInfo(a.dataset.page);
+});
+$("#infoBody").addEventListener("click", (e) => { if (e.target.closest("[data-home]")) { e.preventDefault(); history.pushState({}, "", BASE); showView("home"); renderGrid(); if (!S.firstLoaded && !S.loading) loadFirstPage(); } });
 
-        const imageWrap = document.createElement('div');
-        imageWrap.className = 'relative w-full bg-gray-950 flex items-center justify-center overflow-hidden cursor-pointer';
-        imageWrap.onclick = () => openDetailModal(post);
+/* ---------- views & routing ---------- */
+function showView(v) {
+  S.view = v;
+  $("#home").classList.toggle("hidden", v !== "home");
+  $("#tutorials").classList.toggle("hidden", v !== "tutorials");
+  $("#pview").classList.toggle("hidden", v !== "pview");
+  $("#info").classList.toggle("hidden", v !== "info");
+  $("#bnav").classList.toggle("hidden", v === "pview");
+  $("#nHome").classList.toggle("on", v === "home");
+  $("#nTut").classList.toggle("on", v === "tutorials");
+  if (v !== "pview") { renderSticky(null); if (v !== "info") setMeta(); }
+}
+function goHome() {
+  if (S.cameFromHome && history.state && history.state.post) { history.back(); return; }
+  history.pushState({}, "", BASE);
+  showView("home"); renderGrid(); if (!S.firstLoaded && !S.loading) loadFirstPage();
+}
+$("#backBtn").addEventListener("click", goHome);
+$("#brandLink").addEventListener("click", (e) => { e.preventDefault(); goHome(); });
+$("#nHome").addEventListener("click", () => { if (S.view !== "home") { history.pushState({}, "", BASE); showView("home"); renderGrid(); } window.scrollTo({ top: 0, behavior: "smooth" }); });
+function focusSearch() {
+  if (S.view !== "home") { history.pushState({}, "", BASE); showView("home"); renderGrid(); }
+  const box = $("#searchInput"); box.scrollIntoView({ block: "center", behavior: "smooth" }); setTimeout(() => box.focus(), 300);
+}
+$("#nSearch").addEventListener("click", focusSearch);
+$("#topSearch").addEventListener("click", focusSearch);
+$("#nTut").addEventListener("click", () => {
+  history.pushState({}, "", "?view=tutorials"); showView("tutorials"); renderTutChips(); renderTutorials(); loadAll(); window.scrollTo(0, 0);
+});
+$("#nFollow").addEventListener("click", () => {
+  const bg = document.createElement("div");
+  bg.className = "sheet-bg";
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-label="Follow"><h3>Follow RajRebel Creations</h3><nav class="socials"></nav></div>`;
+  renderSocials($("nav", bg));
+  bg.addEventListener("click", (e) => { if (e.target === bg) bg.remove(); });
+  document.body.appendChild(bg);
+});
+window.addEventListener("popstate", route);
 
-        const image = document.createElement('img');
-        image.alt = post.title || 'Post image';
-        image.loading = index < 4 ? 'eager' : 'lazy';
-        image.decoding = 'async';
-        image.fetchPriority = index < 4 ? 'high' : 'low';
-        image.className = 'w-full h-auto object-contain group-hover:scale-105 transition duration-500';
-        image.onerror = () => { image.alt = 'Image unavailable'; };
-        image.src = post.image || '';
-        imageWrap.appendChild(image);
+function route() {
+  const p = new URLSearchParams(location.search);
+  let postId = p.get("post");
+  if (!postId && location.hash.includes("post=")) {
+    postId = new URLSearchParams(location.hash.slice(1)).get("post");
+    if (postId) history.replaceState({ post: postId }, "", "?post=" + encodeURIComponent(postId));
+  }
+  if (p.has("admin") || location.hash === "#admin") openAdmin();
+  if (postId) { if (S.current !== postId || S.view !== "pview") openPost(postId); return; }
+  S.current = null;
+  if (p.get("page")) { showInfo(p.get("page")); return; }
+  if (p.get("view") === "tutorials") { showView("tutorials"); renderTutChips(); renderTutorials(); loadAll(); return; }
+  showView("home"); renderGrid();
+}
 
-        const category = document.createElement('span');
-        category.className = 'absolute top-2.5 left-2.5 text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-black bg-yellow-400 px-2.5 py-0.5 rounded-lg shadow-lg';
-        category.textContent = post.category || '';
-        imageWrap.appendChild(category);
+/* ---------- ads ---------- */
+function mountAds(scope = document) {
+  if (!ADSENSE_CLIENT) return;
+  document.body.classList.add("ads-on");
+  if (!document.getElementById("adsjs")) {
+    const s = document.createElement("script");
+    s.id = "adsjs"; s.async = true; s.crossOrigin = "anonymous";
+    s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + ADSENSE_CLIENT;
+    document.head.appendChild(s);
+  }
+  scope.querySelectorAll(".ad-slot:not([data-done])").forEach(slot => {
+    slot.dataset.done = "1";
+    slot.innerHTML = `<ins class="adsbygoogle" style="display:block" data-ad-client="${ADSENSE_CLIENT}" ${ADSENSE_SLOT ? `data-ad-slot="${ADSENSE_SLOT}"` : ""} data-ad-format="auto" data-full-width-responsive="true"></ins>`;
+    try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+  });
+}
 
-        const content = document.createElement('div');
-        content.className = 'p-3 sm:p-4 space-y-1 cursor-pointer';
-        content.onclick = () => openDetailModal(post);
+/* ---------- start ---------- */
+$("#yr").textContent = new Date().getFullYear();
+renderSocials($("#homeSocials"));
+renderChips();
+route();
+// A shared link (?post=) opens the prompt first; openPost() loads the home list quietly afterwards.
+if (!S.current) loadFirstPage();
+mountAds();
 
-        const title = document.createElement('h3');
-        title.className = 'font-extrabold text-white text-xs sm:text-base group-hover:text-yellow-400 transition tracking-tight line-clamp-1';
-        title.textContent = post.title || '';
+/* ====================== ADMIN (open with ?admin) ====================== */
+let AUTH = null, adminPosts = [], editing = null, newImage = null, newThumb = null;
 
-        const desc = document.createElement('p');
-        desc.className = 'text-[11px] sm:text-xs text-gray-300 line-clamp-2 leading-relaxed';
-        desc.textContent = post.description || '';
-        content.append(title, desc);
+async function openAdmin() {
+  if ($("#adminBg")) return;
+  const bg = document.createElement("div");
+  bg.className = "admin-bg"; bg.id = "adminBg";
+  bg.innerHTML = `<div class="admin"><div class="bar"><h2>Admin</h2><button class="abtn sm" id="aClose">Close</button></div><div id="aBody"><p style="color:var(--muted)">Loading…</p></div></div>`;
+  document.body.appendChild(bg);
+  $("#aClose").onclick = () => { bg.remove(); const u = new URL(location.href); u.searchParams.delete("admin"); if (u.hash === "#admin") u.hash = ""; history.replaceState(history.state, "", u.pathname + u.search + u.hash); };
+  const m = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
+  const auth = m.getAuth(app);
+  AUTH = { auth, m };
+  m.onAuthStateChanged(auth, (user) => user ? adminDashboard() : adminLogin());
+}
+function adminLogin() {
+  $("#aBody").innerHTML = `
+    <label for="aEmail">Email</label><input type="email" id="aEmail" autocomplete="username">
+    <label for="aPass">Password</label><input type="password" id="aPass" autocomplete="current-password">
+    <div style="margin-top:14px"><button class="abtn y" id="aLogin" style="width:100%">Log in</button></div>`;
+  $("#aLogin").onclick = async () => {
+    try { await AUTH.m.signInWithEmailAndPassword(AUTH.auth, $("#aEmail").value.trim(), $("#aPass").value); }
+    catch (e) { toast("Login failed: " + (e.code || e.message)); }
+  };
+}
+function catOptions(selected) {
+  const sel = catOf(selected).label;
+  return CATS.map(c => `<option ${c.label === sel ? "selected" : ""}>${esc(c.label)}</option>`).join("");
+}
+async function adminDashboard() {
+  $("#aBody").innerHTML = `
+    <div class="bar" style="margin-top:8px">
+      <button class="abtn y" id="aNew">+ New post</button>
+      <div style="display:flex;gap:8px"><button class="abtn" id="aCards">Build fast cards</button><button class="abtn red" id="aOut">Log out</button></div>
+    </div>
+    <div class="note" id="aCardsNote">Tap "Build fast cards" once: it makes small preview photos for all posts so the home page opens fast. New posts get one automatically.</div>
+    <div id="aForm"></div>
+    <h3>All posts <span id="aCount" style="color:var(--muted);font-weight:400"></span></h3>
+    <label class="search" style="height:42px"><svg class="ico" style="color:var(--dim)"><use href="#i-search"/></svg><input id="aFind" type="search" placeholder="Find a post"></label>
+    <div class="alist" id="aList"><p style="color:var(--muted)">Loading posts…</p></div>`;
+  $("#aOut").onclick = () => AUTH.m.signOut(AUTH.auth);
+  $("#aNew").onclick = () => showForm(null);
+  $("#aCards").onclick = buildCards;
+  $("#aFind").oninput = renderAdminList;
+  await loadAdminPosts();
+}
+async function loadAdminPosts() {
+  try {
+    const snap = await get(ref(db, "posts"));
+    adminPosts = Object.entries(snap.val() || {}).filter(([k, v]) => v && !k.startsWith("__")).map(([k, v]) => ({ ...v, id: v.id || k, _key: k }))
+      .sort((a, b) => tsOf(b.id) - tsOf(a.id));
+    renderAdminList();
+  } catch (e) { $("#aList").innerHTML = `<p style="color:#fca5a5">Could not load posts: ${esc(e.message)}</p>`; }
+}
+function renderAdminList() {
+  const q = ($("#aFind")?.value || "").toLowerCase();
+  const list = adminPosts.filter(p => !q || (p.title || "").toLowerCase().includes(q));
+  $("#aCount").textContent = `(${adminPosts.length})`;
+  $("#aList").innerHTML = list.map(p => `
+    <div class="it" data-aid="${esc(p._key)}">
+      <img src="${esc(p.thumb || p.image || "")}" alt="" loading="lazy">
+      <div class="mid"><b>${esc(p.title)}</b>
+        <select data-cat-change="${esc(p._key)}" aria-label="Category">${catOptions(p.category)}</select>
+      </div>
+      <div class="acts">
+        <button class="abtn sm" data-alink="${esc(p._key)}">Copy link</button>
+        <button class="abtn sm" data-aedit="${esc(p._key)}">Edit</button>
+        <button class="abtn sm red" data-adel="${esc(p._key)}">Delete</button>
+      </div>
+    </div>`).join("") || `<p style="color:var(--muted)">No posts.</p>`;
+}
+document.addEventListener("click", async (e) => {
+  const l = e.target.closest("[data-alink]");
+  if (l) { (await copyText(postLink(l.dataset.alink))) ? toast("Post link copied ✓") : window.prompt("Copy:", postLink(l.dataset.alink)); return; }
+  const ed = e.target.closest("[data-aedit]");
+  if (ed) { showForm(adminPosts.find(p => p._key === ed.dataset.aedit)); $("#aForm").scrollIntoView({ behavior: "smooth" }); return; }
+  const del = e.target.closest("[data-adel]");
+  if (del) {
+    const p = adminPosts.find(x => x._key === del.dataset.adel);
+    if (!p || !confirm(`Delete "${p.title}"? This cannot be undone.`)) return;
+    try {
+      await remove(ref(db, "posts/" + p._key));
+      try { await remove(ref(db, CARDS + "/" + p._key)); await remove(ref(db, PINNED + "/" + p._key)); } catch (err) {}
+      adminPosts = adminPosts.filter(x => x._key !== p._key); S.cards.delete(p._key); renderAdminList(); toast("Deleted");
+    } catch (err) { toast("Delete failed: " + err.message); }
+  }
+});
+document.addEventListener("change", async (e) => {
+  const s = e.target.closest("[data-cat-change]"); if (!s) return;
+  const key = s.dataset.catChange, val = s.value;
+  try {
+    await update(ref(db, "posts/" + key), { category: val });
+    try { await update(ref(db, CARDS + "/" + key), { category: val }); } catch (err) {}
+    const p = adminPosts.find(x => x._key === key); if (p) p.category = val;
+    const c = S.cards.get(key); if (c) c.category = val;
+    toast("Category saved ✓");
+  } catch (err) { toast("Save failed: " + err.message); }
+});
 
-        const bottom = document.createElement('div');
-        bottom.className = 'px-3 pb-3 sm:px-4 sm:pb-4 pt-1 flex items-center justify-between gap-2 border-t border-gray-800/50';
+function showForm(post) {
+  editing = post || null; newImage = null; newThumb = null;
+  const p = post || {};
+  const prompts = promptsOf(p); const labels = Array.isArray(p.promptLabels) ? p.promptLabels : [];
+  $("#aForm").innerHTML = `
+    <h3>${post ? "Edit post" : "New post"}</h3>
+    <label for="fTitle">Title</label><input type="text" id="fTitle" value="${esc(p.title || "")}">
+    <label for="fCat">Category</label><select id="fCat">${catOptions(p.category || "Couple Photo Prompts")}</select>
+    <div id="fTopicWrap"><label for="fTopic">Tutorial topic</label><select id="fTopic">${TUT_TOPICS.map(t => `<option ${p.topic === t ? "selected" : ""}>${t}</option>`).join("")}</select></div>
+    <label>Photo</label>
+    <input type="file" id="fFile" accept="image/*">
+    <input type="url" id="fImgUrl" placeholder="…or paste an image URL" value="${p.image && /^https?:/.test(p.image) ? esc(p.image) : ""}" style="margin-top:6px">
+    ${p.image ? `<img class="preview-img" id="fPrev" src="${esc(p.thumb || p.image)}" alt="">` : `<img class="preview-img hidden" id="fPrev" alt="">`}
+    <label for="fDesc">Short description</label><textarea id="fDesc" style="min-height:60px">${esc(p.description || "")}</textarea>
+    <label for="fSteps">How to use / steps (optional, one per line)</label><textarea id="fSteps">${esc(p.process || "")}</textarea>
+    <label for="fVideo">YouTube or Instagram video link (optional)</label><input type="url" id="fVideo" value="${esc(p.videoUrl || "")}" placeholder="https://youtube.com/...">
+    <label style="display:flex;gap:8px;align-items:center;margin-top:12px;color:var(--text)"><input type="checkbox" id="fPin" ${p.pinned ? "checked" : ""}> Pin to top</label>
+    <h3>Prompts</h3>
+    <div id="fPrompts"></div>
+    <button class="abtn" id="fAdd" style="margin-top:8px">+ Add another prompt</button>
+    <div class="bar" style="margin-top:16px"><button class="abtn" id="fCancel">Cancel</button><button class="abtn y" id="fSave">${post ? "Save changes" : "Publish post"}</button></div>`;
+  const box = $("#fPrompts");
+  (prompts.length ? prompts : [""]).forEach((t, i) => addPromptRow(t, labels[i] || ""));
+  const syncTopic = () => $("#fTopicWrap").classList.toggle("hidden", catOf($("#fCat").value).type !== "tutorial");
+  $("#fCat").onchange = syncTopic; syncTopic();
+  $("#fAdd").onclick = () => addPromptRow("", "");
+  $("#fCancel").onclick = () => { $("#aForm").innerHTML = ""; editing = null; };
+  $("#fFile").onchange = onPickImage;
+  $("#fSave").onclick = savePost;
+  box.addEventListener("click", (e) => {
+    const row = e.target.closest(".prow"); if (!row) return;
+    if (e.target.closest("[data-up]") && row.previousElementSibling) row.parentNode.insertBefore(row, row.previousElementSibling);
+    if (e.target.closest("[data-down]") && row.nextElementSibling) row.parentNode.insertBefore(row.nextElementSibling, row);
+    if (e.target.closest("[data-rm]") && box.children.length > 1) row.remove();
+    numberRows();
+  });
+}
+function addPromptRow(text, label) {
+  const row = document.createElement("div");
+  row.className = "prow";
+  row.innerHTML = `<div class="bar"><b class="pn" style="font-size:12px;color:var(--yellow)"></b>
+      <div style="display:flex;gap:4px"><button class="abtn sm" data-up type="button" aria-label="Move up">↑</button><button class="abtn sm" data-down type="button" aria-label="Move down">↓</button><button class="abtn sm red" data-rm type="button">Remove</button></div></div>
+    <input type="text" class="plabel" placeholder="Label (optional), e.g. Scene 1: Entry" value="${esc(label)}">
+    <textarea class="ptxt mono" placeholder="Paste the prompt here" style="margin-top:6px">${esc(text)}</textarea>`;
+  $("#fPrompts").appendChild(row); numberRows();
+}
+function numberRows() { document.querySelectorAll("#fPrompts .prow .pn").forEach((b, i) => b.textContent = `Prompt ${i + 1}`); }
 
-        const viewBtn = document.createElement('button');
-        viewBtn.className = 'text-[11px] sm:text-xs text-yellow-400 font-extrabold flex items-center gap-1 hover:underline';
-        viewBtn.innerHTML = '<span>View Prompt</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>';
-        viewBtn.onclick = () => openDetailModal(post);
-
-        const shareBtn = document.createElement('button');
-        shareBtn.className = 'px-2.5 py-1.5 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-xl text-[11px] font-bold transition flex items-center gap-1 shadow-sm';
-        shareBtn.innerHTML = '<i class="fa-solid fa-share-nodes text-[10px]"></i> <span>Share</span>';
-        shareBtn.onclick = e => { e.stopPropagation(); sharePostLink(post.id, post.title); };
-
-        bottom.append(viewBtn, shareBtn);
-        card.append(imageWrap, content, bottom);
-        grid.appendChild(card);
-      });
-    }
-
-    function sharePostLink(postId, postTitle) {
-      if (!postId) {
-        alert('Post ID is missing. Cannot create a post link.');
-        return;
-      }
-      const shareUrl = new URL(window.location.origin + window.location.pathname);
-      shareUrl.searchParams.set('post', String(postId));
-      const finalUrl = shareUrl.toString();
-
-      if (navigator.share) {
-        navigator.share({
-          title: postTitle || 'RajRebel Creations',
-          text: 'Get this AI prompt & tutorial from RajRebel Creations:',
-          url: finalUrl
-        }).catch(() => {});
-      } else if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(finalUrl)
-          .then(() => alert('Post link copied successfully!'))
-          .catch(() => prompt('Copy this post link:', finalUrl));
-      } else {
-        prompt('Copy this post link:', finalUrl);
-      }
-    }
-
-    function setCategory(cat) {
-      currentCategory = cat;
-      document.querySelectorAll('.cat-btn').forEach(btn => {
-        if (btn.innerText === cat) {
-          btn.className = "cat-btn px-3.5 py-2 rounded-xl bg-yellow-500 text-black font-bold whitespace-nowrap shadow-lg shadow-yellow-500/20 transition";
-        } else {
-          btn.className = "cat-btn px-3.5 py-2 rounded-xl bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-medium whitespace-nowrap border border-gray-800 transition";
-        }
-      });
-      renderPosts();
-    }
-    function filterPosts() { renderPosts(); }
-
-    function addPromptBox(value = '') {
-      const container = document.getElementById('adminPromptsContainer');
-      const count = container.children.length + 1;
-      const wrapper = document.createElement('div');
-      wrapper.className = "flex gap-2 items-start admin-prompt-row";
-      const textarea = document.createElement('textarea');
-      textarea.className = "w-full bg-gray-950 border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs font-mono text-gray-200 focus:outline-none focus:border-yellow-500 admin-prompt-textarea";
-      textarea.rows = 2;
-      textarea.placeholder = count === 1 ? 'Main Prompt (Required)' : `Prompt ${count} (Optional)`;
-      textarea.value = value;
-      const delBtn = document.createElement('button');
-      delBtn.type = 'button';
-      delBtn.className = 'px-2.5 py-2.5 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-xl text-xs transition flex-shrink-0';
-      delBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
-      delBtn.onclick = () => { wrapper.remove(); updatePromptLabels(); };
-      wrapper.append(textarea, delBtn);
-      container.appendChild(wrapper);
-      updatePromptLabels();
-    }
-
-    function updatePromptLabels() {
-      document.querySelectorAll('#adminPromptsContainer .admin-prompt-row').forEach((row, idx) => {
-        row.querySelector('textarea').placeholder = idx === 0 ? 'Main Prompt (Required)' : `Prompt ${idx + 1} (Optional)`;
-      });
-    }
-
-    function uploadFromGallery(input) {
-      const file = input.files && input.files[0];
-      if (!file) return;
-      if (!file.type.startsWith('image/')) {
-        alert('Please select an image file.');
-        input.value = '';
-        return;
-      }
-      const imgInput = document.getElementById('postImgInput');
-      imgInput.value = 'Processing image...';
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const img = new Image();
-        img.onload = function() {
-          const maxSize = 1200;
-          const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
-          const canvas = document.createElement('canvas');
-          canvas.width = Math.max(1, Math.round(img.width * scale));
-          canvas.height = Math.max(1, Math.round(img.height * scale));
-          const ctx = canvas.getContext('2d');
-          if (!ctx) {
-            imgInput.value = '';
-            alert('Your browser could not process this image.');
-            return;
-          }
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const compressed = canvas.toDataURL('image/jpeg', 0.70);
-          const approxBytes = Math.ceil((compressed.length * 3) / 4);
-          if (approxBytes > 950000) {
-            imgInput.value = '';
-            alert('This photo is too large. Please choose a smaller image.');
-            input.value = '';
-            return;
-          }
-          imgInput.value = compressed;
-          alert('Photo prepared successfully. Now tap Publish Post.');
-        };
-        img.onerror = function() {
-          imgInput.value = '';
-          alert('Could not process this photo.');
-        };
-        img.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function openDetailModal(post) {
-      document.getElementById('modalCategory').innerText = post.category || '';
-      document.getElementById('modalTitle').innerText = post.title || '';
-      document.getElementById('modalDesc').innerText = post.description || '';
-      document.getElementById('modalImage').src = post.image || '';
-      document.getElementById('modalProcess').innerText = post.process || "Follow standard prompt generation procedures.";
-      const container = document.getElementById('modalPromptsContainer');
-      container.innerHTML = '';
-      let promptsList = [];
-      if (Array.isArray(post.prompts) && post.prompts.length > 0) promptsList = post.prompts;
-      else if (post.prompt) promptsList = [post.prompt];
-      else promptsList = [''];
-      const totalPrompts = promptsList.length;
-      promptsList.forEach((pText, idx) => {
-        const promptNum = idx + 1;
-        const div = document.createElement('div');
-        div.className = 'space-y-2 pt-1';
-        const titleText = totalPrompts > 1 ? `Prompt ${promptNum}` : `Full AI Prompt`;
-        const btnText = totalPrompts > 1 ? `Copy Prompt ${promptNum}` : `Copy Prompt`;
-        div.innerHTML = `
-          <div class="flex justify-between items-center">
-            <h3 class="text-xs sm:text-sm font-extrabold text-yellow-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-code"></i> ${titleText}</h3>
-            <button onclick="copySpecificPrompt('modalPrompt_${idx}')" class="px-3.5 py-1.5 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black text-xs rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-yellow-500/25 active:scale-95"><i class="fa-regular fa-copy"></i> ${btnText}</button>
-          </div>
-          <textarea id="modalPrompt_${idx}" readonly class="w-full h-24 sm:h-32 bg-gray-950 text-gray-200 border border-gray-800/80 rounded-2xl p-3 text-xs sm:text-sm font-mono resize-none focus:outline-none shadow-inner">${escapeHtml(pText)}</textarea>`;
-        container.appendChild(div);
-      });
-      document.getElementById('detailModal').classList.remove('hidden');
-    }
-
-    function escapeHtml(text) {
-      if (!text) return '';
-      return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    }
-
-    function closeDetailModal() {
-      document.getElementById('detailModal').classList.add('hidden');
-      // Remove ?post=ID from the address after closing, without reloading the page.
-      if (history.pushState) {
-        const cleanUrl = window.location.origin + window.location.pathname;
-        history.pushState({ path: cleanUrl }, '', cleanUrl);
-      }
-    }
-
-    function copySpecificPrompt(elementId) {
-      const textarea = document.getElementById(elementId);
-      if (!textarea) return;
-      textarea.select();
-      textarea.setSelectionRange(0, 99999);
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(textarea.value).then(() => alert('Prompt copied to clipboard successfully!')).catch(() => {
-          document.execCommand('copy');
-          alert('Prompt copied to clipboard.');
-        });
-      } else {
-        document.execCommand('copy');
-        alert('Prompt copied to clipboard.');
-      }
-    }
-
-    function openAdminModal() {
-      const adminModal = document.getElementById('adminModal');
-      if (!adminModal) return;
-      adminModal.classList.remove('hidden');
-      if (isAdminLoggedIn) showAdminDashboard();
-      else showAdminLogin();
-    }
-    function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
-    function showAdminLogin() {
-      document.getElementById('adminLoginView').classList.remove('hidden');
-      document.getElementById('adminDashboardView').classList.add('hidden');
-    }
-    function showAdminDashboard() {
-      document.getElementById('adminLoginView').classList.add('hidden');
-      document.getElementById('adminDashboardView').classList.remove('hidden');
-      if (window.loadAllPostsForAdmin) window.loadAllPostsForAdmin();
-      if (window.startAdminPostsListener) window.startAdminPostsListener();
-      renderAdminPosts();
-    }
-
-    function handleAdminLogin() {
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
-      if (!email || !password) {
-        alert('Please enter both email and password.');
-        return;
-      }
-      if (window.handleFirebaseLogin) window.handleFirebaseLogin(email, password);
-    }
-    function handleAdminLogout() { if (window.handleFirebaseLogout) window.handleFirebaseLogout(); }
-
-    function renderAdminPosts() {
-      const posts = window.adminFirebasePosts || window.getStoredPosts?.() || [];
-      const list = document.getElementById('adminPostsList');
-      if (!list) return;
-      list.innerHTML = '';
-      posts.forEach(post => {
-        const item = document.createElement('div');
-        item.className = "flex justify-between items-center bg-gray-950 p-3 rounded-2xl border border-gray-800 text-xs shadow-inner";
-        const left = document.createElement('div');
-        left.className = 'flex items-center gap-3 overflow-hidden';
-        const thumb = document.createElement('img');
-        thumb.src = post.image || '';
-        thumb.alt = '';
-        thumb.loading = 'lazy';
-        thumb.decoding = 'async';
-        thumb.className = 'w-10 h-10 object-cover rounded-xl flex-shrink-0';
-        const details = document.createElement('div');
-        details.className = 'truncate';
-        const title = document.createElement('p');
-        title.className = 'font-bold text-white truncate';
-        title.textContent = post.title || '';
-        const cat = document.createElement('p');
-        cat.className = 'text-gray-400 text-[10px]';
-        cat.textContent = post.category || '';
-        details.append(title, cat);
-        left.append(thumb, details);
-        const actions = document.createElement('div');
-        actions.className = 'flex gap-2 flex-shrink-0';
-        const edit = document.createElement('button');
-        edit.type = 'button';
-        edit.className = 'px-3 py-1.5 bg-blue-600/20 text-blue-400 font-semibold rounded-xl hover:bg-blue-600/30 transition';
-        edit.textContent = 'Edit';
-        edit.onclick = () => editPost(post.id);
-        const del = document.createElement('button');
-        del.type = 'button';
-        del.className = 'px-3 py-1.5 bg-red-600/20 text-red-400 font-semibold rounded-xl hover:bg-red-600/30 transition';
-        del.textContent = 'Delete';
-        del.onclick = () => { if (window.deleteFirebasePost) window.deleteFirebasePost(post.id); };
-        actions.append(edit, del);
-        item.append(left, actions);
-        list.appendChild(item);
-      });
-    }
-
-    function handlePostSubmit(e) {
-      e.preventDefault();
-      try {
-        const id = document.getElementById('editPostId').value || 'post-' + Date.now();
-        const imageValue = document.getElementById('postImgInput').value.trim();
-        if (!imageValue || imageValue === 'Processing image...') {
-          alert('Please select a photo or enter a valid image URL and wait for processing to finish.');
-          return;
-        }
-        const promptTextarrays = document.querySelectorAll('#adminPromptsContainer textarea');
-        const promptsArr = [];
-        promptTextarrays.forEach(ta => { const val = ta.value.trim(); if (val) promptsArr.push(val); });
-        if (promptsArr.length === 0) {
-          alert('Please add at least one prompt.');
-          return;
-        }
-        const postObj = {
-          id,
-          title: document.getElementById('postTitleInput').value.trim(),
-          category: document.getElementById('postCatInput').value,
-          image: imageValue,
-          description: document.getElementById('postDescInput').value.trim(),
-          process: document.getElementById('postProcessInput').value.trim(),
-          prompts: promptsArr,
-          prompt: promptsArr[0]
-        };
-        if (window.saveFirebasePost) window.saveFirebasePost(postObj, id);
-      } catch (error) {
-        console.error('Publish failed:', error);
-        alert('Publish failed: ' + (error.message || 'Unknown error'));
-      }
-    }
-
-    function editPost(id) {
-      const posts = window.adminFirebasePosts || window.getStoredPosts?.() || [];
-      const post = posts.find(p => p.id === id);
-      if (!post) return;
-      document.getElementById('editPostId').value = post.id;
-      document.getElementById('postTitleInput').value = post.title || '';
-      document.getElementById('postCatInput').value = post.category || 'AI Photo Prompts';
-      document.getElementById('postImgInput').value = post.image || '';
-      document.getElementById('postDescInput').value = post.description || '';
-      document.getElementById('postProcessInput').value = post.process || '';
-      const container = document.getElementById('adminPromptsContainer');
-      container.innerHTML = '';
-      let listToLoad = [];
-      if (Array.isArray(post.prompts) && post.prompts.length > 0) listToLoad = post.prompts;
-      else if (post.prompt) listToLoad = [post.prompt];
-      else listToLoad = [''];
-      listToLoad.forEach(pVal => addPromptBox(pVal));
-      document.getElementById('formTitle').innerText = 'Edit Prompt / Tutorial Post';
-    }
-
-    function resetForm() {
-      document.getElementById('postForm').reset();
-      document.getElementById('editPostId').value = '';
-      document.getElementById('formTitle').innerText = 'Create New Prompt / Tutorial Post';
-      const container = document.getElementById('adminPromptsContainer');
-      container.innerHTML = '';
-      addPromptBox();
-    }
-  </script>
+function loadImg(src, cors) {
+  return new Promise((res, rej) => { const im = new Image(); if (cors) im.crossOrigin = "anonymous"; im.onload = () => res(im); im.onerror = rej; im.src = src; });
+}
+function toJpeg(im, max, q) {
+  const s = Math.min(1, max / Math.max(im.naturalWidth || im.width, im.naturalHeight || im.height));
+  const c = document.createElement("canvas");
+  c.width = Math.max(1, Math.round((im.naturalWidth || im.width) * s)); c.height = Math.max(1, Math.round((im.naturalHeight || im.height) * s));
+  const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height);
+  return c.toDataURL("image/jpeg", q);
+}
+async function makeThumb(src) {
+  if (!src) return "";
+  try { const im = await loadImg(src, /^https?:/.test(src)); return toJpeg(im, 360, 0.58); }
+  catch (e) { return /^https?:/.test(src) ? src : ""; }
+}
+function onPickImage(e) {
+  const f = e.target.files && e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = async () => {
+    try {
+      const im = await loadImg(r.result);
+      newImage = toJpeg(im, 1200, 0.72);
+      if (newImage.length * 0.75 > 950000) newImage = toJpeg(im, 1000, 0.62);
+      newThumb = toJpeg(im, 360, 0.58);
+      const pv = $("#fPrev"); pv.src = newThumb; pv.classList.remove("hidden");
+      toast("Photo ready ✓");
+    } catch (err) { toast("Could not read this photo"); }
+  };
+  r.readAsDataURL(f);
+}
+async function savePost() {
+  const btn = $("#fSave"); btn.disabled = true; btn.textContent = "Saving…";
+  try {
+    const rows = [...document.querySelectorAll("#fPrompts .prow")];
+    const prompts = [], labels = [];
+    rows.forEach(r => { const t = r.querySelector(".ptxt").value.trim(); if (t) { prompts.push(t); labels.push(r.querySelector(".plabel").value.trim()); } });
+    const title = $("#fTitle").value.trim();
+    const category = $("#fCat").value;
+    const isTut = catOf(category).type === "tutorial";
+    const urlImg = $("#fImgUrl").value.trim();
+    const image = newImage || (urlImg && urlImg !== (editing && editing.image) ? urlImg : (editing && editing.image) || urlImg || "");
+    if (!title) throw new Error("Add a title.");
+    if (!image && !(isTut && ytId($("#fVideo").value))) throw new Error("Add a photo.");
+    if (!prompts.length && !isTut) throw new Error("Add at least one prompt.");
+    const id = editing ? editing._key : "post-" + Date.now();
+    const base = editing ? { ...editing } : {};
+    delete base._key;
+    const post = {
+      ...base, id, title, category, image,
+      description: $("#fDesc").value.trim(),
+      process: $("#fSteps").value.trim(),
+      prompts, prompt: prompts[0] || "",
+      promptLabels: labels.some(Boolean) ? labels : null,
+      videoUrl: $("#fVideo").value.trim() || null,
+      topic: isTut ? $("#fTopic").value : null,
+      pinned: $("#fPin").checked || null
+    };
+    let thumb = newThumb || (editing && editing.image === image && editing.thumb) || "";
+    if (!thumb) thumb = await makeThumb(image);
+    post.thumb = null; // the small photo lives in "cards" only
+    await set(ref(db, "posts/" + id), post);
+    let cardOk = true;
+    try {
+      await set(ref(db, CARDS + "/" + id), { ...cardFromPost(id, post), thumb, id: null });
+      post.pinned ? await set(ref(db, PINNED + "/" + id), true) : await remove(ref(db, PINNED + "/" + id));
+    } catch (err) { cardOk = false; }
+    S.cards.set(id, { ...cardFromPost(id, post), thumb });
+    toast(cardOk ? "Published ✓" : "Published ✓ (preview card not saved)");
+    $("#aForm").innerHTML = ""; editing = null;
+    await loadAdminPosts();
+    if (S.view === "home") renderGrid();
+  } catch (e) { toast(e.message || "Save failed"); }
+  finally { const b = $("#fSave"); if (b) { b.disabled = false; b.textContent = "Publish post"; } }
+}
+async function buildCards() {
+  const note = $("#aCardsNote"), btn = $("#aCards");
+  if (!adminPosts.length) await loadAdminPosts();
+  btn.disabled = true;
+  let done = 0, fail = 0;
+  for (const p of adminPosts) {
+    try {
+      const thumb = await makeThumb(p.image);
+      await set(ref(db, CARDS + "/" + p._key), { ...cardFromPost(p.id, p), thumb, id: null });
+      if (p.pinned) await set(ref(db, PINNED + "/" + p._key), true);
+      done++;
+    } catch (e) { fail++; if (fail === 1) console.error(e); }
+    note.textContent = `Building fast cards… ${done + fail} / ${adminPosts.length}${fail ? ` (${fail} failed)` : ""}`;
+  }
+  btn.disabled = false;
+  note.textContent = fail === adminPosts.length
+    ? "Could not save cards. Check your internet and try again."
+    : `Done ✓ ${done} cards built${fail ? `, ${fail} failed` : ""}. The home page now loads fast.`;
+  try { localStorage.removeItem(CACHE_KEY); } catch (e) {}
+  S.allLoaded = false; loadFirstPage();
+}
+</script>
 </body>
-</html> 
+</html>
