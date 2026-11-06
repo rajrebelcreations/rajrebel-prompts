@@ -15,16 +15,25 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rajrebelcreations.com/">
   <meta property="og:site_name" content="RajRebel Creations">
-  <meta property="og:image" content="https://raw.githubusercontent.com/rajrebelcreations/rajrebel-prompts/main/1000261330.png">
+  <meta property="og:image" content="https://rajrebelcreations.com/og-banner.jpg">
+  <meta property="og:image:secure_url" content="https://rajrebelcreations.com/og-banner.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="RajRebel Creations - AI Photo &amp; Video Prompts">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://raw.githubusercontent.com/rajrebelcreations/rajrebel-prompts/main/1000261330.png">
+  <meta name="twitter:image" content="https://rajrebelcreations.com/og-banner.jpg">
   <link rel="manifest" href="/manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/rajrebelcreations/rajrebel-prompts/main/1000261330.png">
+  <meta name="apple-mobile-web-app-title" content="RRC Prompts">
+  <meta name="application-name" content="RRC AI Prompts">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="google-adsense-account" content="ca-pub-6259806536022165">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6259806536022165"
+     crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://rajrebel-prompts-default-rtdb.firebaseio.com">
   <link rel="preconnect" href="https://www.gstatic.com">
 
@@ -134,6 +143,12 @@ footer p{margin:12px 0 0;color:var(--dim);font-size:12px}
 .sheet h3{margin:0 0 12px;font-size:16px}
 .sheet .socials{padding:0;grid-template-columns:repeat(2,minmax(0,1fr))}
 .sheet .soc .lbl{display:inline}
+.sheet-links{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:13px}
+.sheet-links a{color:var(--muted);text-decoration:none}
+.sheet-links a:hover{color:var(--yellow)}
+.install-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:14px;min-height:46px;border:0;border-radius:12px;background:var(--yellow);color:var(--yellow-ink);font:inherit;font-weight:800;font-size:14px;cursor:pointer}
+.install-btn img{width:24px;height:24px;border-radius:6px}
+.install-tip{color:var(--dim);font-size:12.5px;text-align:center;margin:10px 0 0}
 
 /* prompt page */
 .pview{padding-bottom:calc(150px + var(--safe-b))}
@@ -329,7 +344,7 @@ const SOCIAL = {
 const CHATGPT_URL = "https://chatgpt.com/";
 const FLOW_URL    = "https://labs.google/fx/tools/flow";
 // After AdSense approval paste your publisher id here, e.g. "ca-pub-1234567890123456"
-const ADSENSE_CLIENT = "";
+const ADSENSE_CLIENT = "ca-pub-6259806536022165";
 const ADSENSE_SLOT   = "";   // optional ad unit id
 const PAGE_SIZE = 12;
 // fast preview cards live inside "posts" so the current Firebase rules already allow them
@@ -795,7 +810,7 @@ function drawSticky() {
       <svg class="tap" width="26" height="26" style="color:#fff" aria-hidden="true"><use href="#i-hand"/></svg>
     </div>
     ${o.copied.size && app ? `<a class="appbtn ${app.cls}" href="${app.url}" target="_blank" rel="noopener">${esc(app.text)} →</a>
-      <div class="hint">Not opening? Tap ⋯ at the top and choose “Open in browser”.</div>` : ""}
+      <div class="hint">Upload your photo first, then paste the prompt. Not opening? Tap ⋯ and choose “Open in browser”.</div>` : ""}
   </div></div>`;
   o.drawn = true;
   $("#bigCopy").onclick = async () => {
@@ -815,9 +830,9 @@ function stickyMarkCopied(i, fromSticky) {
   drawSticky();
   clearTimeout(o.ft); o.ft = setTimeout(() => { o.flash = false; drawSticky(); }, 1500);
 }
-function chatUrl(prompt) {
-  const q = encodeURIComponent(prompt || "");
-  return q.length && q.length < 3500 ? `${CHATGPT_URL}?q=${q}` : CHATGPT_URL;
+function chatUrl() {
+  // open ChatGPT empty: the prompt is already copied, so people upload their photo first and then paste
+  return CHATGPT_URL;
 }
 
 /* ---------- about / contact / privacy / terms ---------- */
@@ -930,8 +945,16 @@ $("#nTut").addEventListener("click", () => {
 $("#nFollow").addEventListener("click", () => {
   const bg = document.createElement("div");
   bg.className = "sheet-bg";
-  bg.innerHTML = `<div class="sheet" role="dialog" aria-label="Follow"><h3>Follow RajRebel Creations</h3><nav class="socials"></nav></div>`;
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-label="Follow"><h3>Follow RajRebel Creations</h3><nav class="socials"></nav>${installHtml()}<div class="sheet-links"><a href="?page=about" data-page="about">About</a><a href="?page=contact" data-page="contact">Contact</a><a href="?page=privacy" data-page="privacy">Privacy Policy</a><a href="?page=terms" data-page="terms">Terms &amp; Disclaimer</a></div></div>`;
   renderSocials($("nav", bg));
+  bg.addEventListener("click", async (e) => {
+    const a = e.target.closest("[data-page]");
+    if (a) { e.preventDefault(); bg.remove(); history.pushState({}, "", "?page=" + a.dataset.page); showInfo(a.dataset.page); return; }
+    if (e.target.closest("#installBtn")) {
+      if (installEvt) { installEvt.prompt(); try { await installEvt.userChoice; } catch (err) {} installEvt = null; bg.remove(); }
+      else { const t = $(".install-tip", bg); if (t) t.hidden = false; }
+    }
+  });
   bg.addEventListener("click", (e) => { if (e.target === bg) bg.remove(); });
   document.body.appendChild(bg);
 });
@@ -952,11 +975,27 @@ function route() {
   showView("home"); renderGrid();
 }
 
+/* ---------- install app (PWA) ---------- */
+let installEvt = null;
+const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installEvt = e; });
+window.addEventListener("appinstalled", () => { installEvt = null; toast("App installed ✓"); });
+function installHtml() {
+  if (isStandalone()) return "";
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const tip = ios ? "On iPhone: tap the Share button, then “Add to Home Screen”."
+                  : "Tap ⋮ in your browser menu, then “Install app” or “Add to Home screen”. In Instagram, first choose “Open in browser”.";
+  return `<button class="install-btn" id="installBtn"><img src="/icon-192.png" alt="">Install RRC AI Prompts app</button><p class="install-tip"${installEvt ? " hidden" : ""}>${tip}</p>`;
+}
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  window.addEventListener("load", () => { navigator.serviceWorker.register("/sw.js").catch(() => {}); });
+}
+
 /* ---------- ads ---------- */
 function mountAds(scope = document) {
   if (!ADSENSE_CLIENT) return;
   document.body.classList.add("ads-on");
-  if (!document.getElementById("adsjs")) {
+  if (!document.getElementById("adsjs") && !document.querySelector('script[src*="adsbygoogle.js"]')) {
     const s = document.createElement("script");
     s.id = "adsjs"; s.async = true; s.crossOrigin = "anonymous";
     s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + ADSENSE_CLIENT;
