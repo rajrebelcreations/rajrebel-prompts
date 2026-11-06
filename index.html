@@ -815,7 +815,7 @@ function drawSticky() {
   const label = justCopied ? (n > 1 ? `Prompt ${o.flashIdx + 1} copied` : "Copied")
     : (n > 1 ? (allDone ? `Copy again (${n} prompts)` : `Copy Prompt ${o.next + 1} of ${n}`) : (allDone ? "Copy again" : "Copy Prompt"));
   const app = o.type === "video" ? { cls: "flow", text: "Open Google Flow", url: flowUrl() }
-    : o.type === "photo" ? { cls: "gpt", text: "Open ChatGPT", url: chatUrl(o.prompts[0]) } : null;
+    : o.type === "photo" ? { cls: "gpt", text: "Open ChatGPT", url: chatUrl(o.prompts[o.last ?? 0]) } : null;
   $("#stickyMount").innerHTML = `<div class="sticky" style="${o.drawn ? "animation:none" : ""}"><div class="in">
     <div class="bigwrap ${o.copied.size ? "done-wrap" : ""}">
       <span class="ring"></span>
@@ -823,7 +823,7 @@ function drawSticky() {
       <svg class="tap" width="26" height="26" style="color:#fff" aria-hidden="true"><use href="#i-hand"/></svg>
     </div>
     ${o.copied.size && app ? `<a class="appbtn ${app.cls}" href="${app.url}"${app.url.startsWith("intent:") ? "" : ' target="_blank"'} rel="noopener">${esc(app.text)} →</a>
-      <div class="hint">Upload your photo first, then paste the prompt. Not opening? Tap ⋯ and choose “Open in browser”.</div>` : ""}
+      <div class="hint">${app.cls === "gpt" ? "The prompt opens ready in ChatGPT: tap ＋, add your photo, then send. Prompt not there? Just paste it." : "Paste the prompt in Flow and add your photo."} Not opening? Tap ⋯ and choose “Open in browser”.</div>` : ""}
   </div></div>`;
   o.drawn = true;
   $("#bigCopy").onclick = async () => {
@@ -835,7 +835,7 @@ function drawSticky() {
 function stickyMarkCopied(i, fromSticky) {
   const o = ST; if (!o || !o.prompts) return;
   if (o.copied.size >= o.prompts.length && fromSticky) o.copied.clear();
-  o.copied.add(i);
+  o.copied.add(i); o.last = i;
   let nx = 0; while (o.copied.has(nx) && nx < o.prompts.length) nx++;
   o.next = Math.min(nx, o.prompts.length - 1);
   o.flash = true; o.flashIdx = i;
@@ -850,14 +850,17 @@ function flowUrl() {
   }
   return FLOW_URL;
 }
-function chatUrl() {
-  // open ChatGPT empty: the prompt is already copied, so people upload their photo first and then paste.
-  // Android: open the installed ChatGPT app (where people are already logged in); no app -> chatgpt.com.
-  // iPhone: the chatgpt.com link opens the ChatGPT app automatically when it is installed.
+function chatUrl(prompt) {
+  // ChatGPT puts "?prompt=" text into the message box but does NOT send it (people add their photo, then send).
+  // Very long prompts are left out of the link (too long for a URL); they are already copied, so people just paste.
+  const enc = encodeURIComponent(prompt || "");
+  const web = enc && enc.length <= 6000 ? CHATGPT_URL + "?prompt=" + enc : CHATGPT_URL;
+  // Android: open the installed ChatGPT app (already logged in); no app -> ChatGPT website
   if (/android/i.test(navigator.userAgent)) {
-    return "intent://chatgpt.com/#Intent;scheme=https;package=com.openai.chatgpt;S.browser_fallback_url=" + encodeURIComponent(CHATGPT_URL) + ";end";
+    const path = web.replace(/^https:\/\//, "");
+    return "intent://" + path + "#Intent;scheme=https;package=com.openai.chatgpt;S.browser_fallback_url=" + encodeURIComponent(web) + ";end";
   }
-  return CHATGPT_URL;
+  return web;
 }
 
 /* ---------- about / contact / privacy / terms ---------- */
