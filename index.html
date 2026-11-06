@@ -359,6 +359,7 @@ const PAGE_SIZE = 12;
 // fast preview cards live inside "posts" so the current Firebase rules already allow them
 const CARDS = "posts/__cards";
 const PINNED = "posts/__pinned";
+const CARDS_READY = "posts/__cardsReady";   // set only after "Build fast cards" has made cards for every post
 const CONTACT_EMAIL = "rajrebelcreations@gmail.com";
 const NEW_DAYS  = 7;
 
@@ -480,6 +481,9 @@ function sortedCards() {
 async function loadFirstPage() {
   S.loading = true;
   try {
+    // use the light cards only when they were built for ALL posts; otherwise read posts (never show a half list)
+    const ready = await get(ref(db, CARDS_READY));
+    if (ready.val() !== true) throw new Error("cards-not-ready");
     const snap = await get(query(ref(db, CARDS), orderByKey(), limitToLast(PAGE_SIZE)));
     const data = snap.val();
     if (!data) throw new Error("no-cards");
@@ -810,7 +814,7 @@ function drawSticky() {
   const justCopied = o.flash;
   const label = justCopied ? (n > 1 ? `Prompt ${o.flashIdx + 1} copied` : "Copied")
     : (n > 1 ? (allDone ? `Copy again (${n} prompts)` : `Copy Prompt ${o.next + 1} of ${n}`) : (allDone ? "Copy again" : "Copy Prompt"));
-  const app = o.type === "video" ? { cls: "flow", text: "Open Google Flow", url: FLOW_URL }
+  const app = o.type === "video" ? { cls: "flow", text: "Open Google Flow", url: flowUrl() }
     : o.type === "photo" ? { cls: "gpt", text: "Open ChatGPT", url: chatUrl(o.prompts[0]) } : null;
   $("#stickyMount").innerHTML = `<div class="sticky" style="${o.drawn ? "animation:none" : ""}"><div class="in">
     <div class="bigwrap ${o.copied.size ? "done-wrap" : ""}">
@@ -818,7 +822,7 @@ function drawSticky() {
       <button class="big ${justCopied ? "done" : ""}" id="bigCopy">${icon(justCopied ? "check" : "copy")} ${esc(label)}</button>
       <svg class="tap" width="26" height="26" style="color:#fff" aria-hidden="true"><use href="#i-hand"/></svg>
     </div>
-    ${o.copied.size && app ? `<a class="appbtn ${app.cls}" href="${app.url}" target="_blank" rel="noopener">${esc(app.text)} →</a>
+    ${o.copied.size && app ? `<a class="appbtn ${app.cls}" href="${app.url}"${app.url.startsWith("intent:") ? "" : ' target="_blank"'} rel="noopener">${esc(app.text)} →</a>
       <div class="hint">Upload your photo first, then paste the prompt. Not opening? Tap ⋯ and choose “Open in browser”.</div>` : ""}
   </div></div>`;
   o.drawn = true;
@@ -839,8 +843,20 @@ function stickyMarkCopied(i, fromSticky) {
   drawSticky();
   clearTimeout(o.ft); o.ft = setTimeout(() => { o.flash = false; drawSticky(); }, 1500);
 }
+function flowUrl() {
+  // Android: open the installed Google Flow app (already logged in); no app -> Flow website
+  if (/android/i.test(navigator.userAgent)) {
+    return "intent://labs.google/fx/tools/flow#Intent;scheme=https;package=com.google.android.apps.labs.whisk;S.browser_fallback_url=" + encodeURIComponent(FLOW_URL) + ";end";
+  }
+  return FLOW_URL;
+}
 function chatUrl() {
-  // open ChatGPT empty: the prompt is already copied, so people upload their photo first and then paste
+  // open ChatGPT empty: the prompt is already copied, so people upload their photo first and then paste.
+  // Android: open the installed ChatGPT app (where people are already logged in); no app -> chatgpt.com.
+  // iPhone: the chatgpt.com link opens the ChatGPT app automatically when it is installed.
+  if (/android/i.test(navigator.userAgent)) {
+    return "intent://chatgpt.com/#Intent;scheme=https;package=com.openai.chatgpt;S.browser_fallback_url=" + encodeURIComponent(CHATGPT_URL) + ";end";
+  }
   return CHATGPT_URL;
 }
 
@@ -976,13 +992,32 @@ function route() {
     postId = new URLSearchParams(location.hash.slice(1)).get("post");
     if (postId) history.replaceState({ post: postId }, "", "?post=" + encodeURIComponent(postId));
   }
-  if (p.has("admin") || location.hash === "#admin") openAdmin();
+  // old "?admin" / "#admin" links now just open the normal site for everyone
+  if (p.has("admin") || location.hash === "#admin") {
+    const u = new URL(location.href); u.searchParams.delete("admin"); if (u.hash === "#admin") u.hash = "";
+    history.replaceState(history.state, "", u.pathname + u.search + u.hash);
+    p.delete("admin");
+  }
   if (postId) { if (S.current !== postId || S.view !== "pview") openPost(postId); return; }
   S.current = null;
   if (p.get("page")) { showInfo(p.get("page")); return; }
   if (p.get("view") === "tutorials") { showView("tutorials"); renderTutChips(); renderTutorials(); loadAll(); return; }
   showView("home"); renderGrid();
 }
+
+/* ---------- secret admin ----------
+   Logged-in device (the owner's phone/laptop): tap the RRC logo or name 5 times -> admin opens.
+   Any other device: 5 taps do nothing. First login on a new device: tap 10 times -> login box. */
+const ADMIN_DEVICE = "rrcAdminDevice";
+let logoTaps = [];
+const brandEl = $("#brandLink");
+brandEl.style.touchAction = "manipulation";
+brandEl.addEventListener("pointerdown", () => {
+  const now = Date.now();
+  logoTaps = logoTaps.filter(t => now - t < 8000); logoTaps.push(now);
+  let known = false; try { known = localStorage.getItem(ADMIN_DEVICE) === "1"; } catch (e) {}
+  if ((known && logoTaps.length >= 5) || logoTaps.length >= 10) { logoTaps = []; openAdmin(); }
+});
 
 /* ---------- install app (PWA) ---------- */
 let installEvt = null;
@@ -1050,7 +1085,10 @@ async function openAdmin() {
   const m = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
   const auth = m.getAuth(app);
   AUTH = { auth, m };
-  m.onAuthStateChanged(auth, (user) => user ? adminDashboard() : adminLogin());
+  m.onAuthStateChanged(auth, (user) => {
+    try { user ? localStorage.setItem(ADMIN_DEVICE, "1") : localStorage.removeItem(ADMIN_DEVICE); } catch (e) {}
+    user ? adminDashboard() : adminLogin();
+  });
 }
 function adminLogin() {
   $("#aBody").innerHTML = `
@@ -1273,6 +1311,7 @@ async function buildCards() {
     note.textContent = `Building fast cards… ${done + fail} / ${adminPosts.length}${fail ? ` (${fail} failed)` : ""}`;
   }
   btn.disabled = false;
+  if (fail === 0 && done > 0) { try { await set(ref(db, CARDS_READY), true); } catch (e) { console.error(e); } }
   note.textContent = fail === adminPosts.length
     ? "Could not save cards. Check your internet and try again."
     : `Done ✓ ${done} cards built${fail ? `, ${fail} failed` : ""}. The home page now loads fast.`;
