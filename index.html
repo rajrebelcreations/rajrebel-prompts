@@ -31,6 +31,7 @@
   <meta name="application-name" content="RRC AI Prompts">
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://rajrebelcreations.com/#brand","name":"RajRebel Creations","alternateName":["RRC","RRC AI Prompts","RajRebel"],"url":"https://rajrebelcreations.com/","logo":"https://rajrebelcreations.com/icon-512.png","image":"https://rajrebelcreations.com/og-banner.jpg","email":"rajrebelcreations@gmail.com","founder":{"@id":"https://rajrebelcreations.com/#raj"},"sameAs":["https://www.instagram.com/rajrebel_creations/","https://youtube.com/@rajrebelcreations","https://www.tiktok.com/@rajrebel_creations","https://www.facebook.com/share/1E4gLSvPMM/","https://whatsapp.com/channel/0029VbCXBrIHVvTgrW2oBv09","https://github.com/rajrebelcreations"]},{"@type":"Person","@id":"https://rajrebelcreations.com/#raj","name":"Raj","alternateName":"Raj Rebel","image":"https://rajrebelcreations.com/about-raj.jpg","jobTitle":"Content creator","worksFor":{"@id":"https://rajrebelcreations.com/#brand"},"sameAs":["https://www.instagram.com/rajrebel_creations/","https://youtube.com/@rajrebelcreations","https://www.tiktok.com/@rajrebel_creations"]},{"@type":"WebSite","@id":"https://rajrebelcreations.com/#site","url":"https://rajrebelcreations.com/","name":"RajRebel Creations","publisher":{"@id":"https://rajrebelcreations.com/#brand"},"inLanguage":"en"}]}</script>
   <meta name="google-adsense-account" content="ca-pub-6259806536022165">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6259806536022165"
      crossorigin="anonymous"></script>
@@ -61,7 +62,7 @@ img{display:block;max-width:100%}
 .top{position:sticky;top:0;z-index:30;background:rgba(7,9,14,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo{width:36px;height:36px;border-radius:50%;padding:2px;background:linear-gradient(135deg,#2563eb,#db2777,#eab308);flex:none}
+.logo{width:38px;height:38px;border-radius:11px;flex:none;display:block}
 .logo span{display:flex;width:100%;height:100%;border-radius:50%;background:#0b0f17;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--yellow)}
 .brand b{font-size:17px;font-weight:800;letter-spacing:.2px}
 .icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);display:flex;align-items:center;justify-content:center}
@@ -149,7 +150,27 @@ footer p{margin:12px 0 0;color:var(--dim);font-size:12px}
 .install-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:14px;min-height:46px;border:0;border-radius:12px;background:var(--yellow);color:var(--yellow-ink);font:inherit;font-weight:800;font-size:14px;cursor:pointer}
 .install-btn img{width:24px;height:24px;border-radius:6px}
 .appbar{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:10px 10px 10px 12px;border-radius:14px;background:linear-gradient(135deg,#1b1f33,#241a33);border:1px solid #3a2f55;animation:popIn .45s cubic-bezier(.2,.8,.2,1) both}
-.appbar[hidden]{display:none}
+.appbar[hidden],.apptip[hidden]{display:none}
+.appwrap .appbar{margin:10px 0 0}
+.apptip{margin:8px 2px 0;font-size:12.5px;line-height:1.45;color:var(--muted);background:#121726;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.apptip b{color:var(--yellow)}
+.welcome{position:fixed;inset:0;z-index:200;background:radial-gradient(120% 80% at 50% 0%,#2a1f5c 0%,#0b0f17 60%);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(28px + env(safe-area-inset-top)) 22px calc(26px + env(safe-area-inset-bottom));text-align:center;animation:fadeIn .35s ease both}
+.welcome .skip{align-self:flex-end;border:0;background:transparent;color:var(--muted);font:inherit;font-size:14px;padding:6px 4px;cursor:pointer}
+.welcome .slide{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;max-width:360px}
+.welcome .slide .art{width:150px;height:150px;border-radius:36px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2563ff,#6d3df5 55%,#b03cd6);box-shadow:0 18px 50px rgba(109,61,245,.45);animation:popIn .45s cubic-bezier(.2,.8,.2,1) both}
+.welcome .slide .art img{width:150px;height:150px;border-radius:36px}
+.welcome .slide .art svg{width:70px;height:70px;color:#fff}
+.welcome h2{margin:6px 0 0;font-size:24px;line-height:1.25}
+.welcome p{margin:0;color:var(--muted);font-size:15px;line-height:1.55}
+.welcome .dots{display:flex;gap:7px;justify-content:center;margin:0 0 18px}
+.welcome .dots i{width:8px;height:8px;border-radius:8px;background:#3a3f55;transition:all .25s}
+.welcome .dots i.on{width:22px;background:var(--yellow)}
+.welcome .next{width:100%;max-width:360px;min-height:52px;border:0;border-radius:14px;background:var(--yellow);color:var(--yellow-ink);font:inherit;font-weight:800;font-size:16px;cursor:pointer}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.aboutme{display:flex;align-items:center;gap:16px;margin-bottom:6px}
+.aboutme img{width:110px;height:110px;border-radius:50%;flex:none;object-fit:cover;box-shadow:0 0 0 3px #f5c518}
+.aboutme h1{margin:0 0 6px}
+@media (max-width:420px){.aboutme{flex-direction:column;text-align:center}}
 .appbar img{width:40px;height:40px;border-radius:10px;flex:none}
 .appbar .t{flex:1;min-width:0;line-height:1.25}
 .appbar .t b{display:block;font-size:13.5px}
@@ -271,17 +292,16 @@ footer p{margin:12px 0 0;color:var(--dim);font-size:12px}
 <header class="top">
   <div class="wrap">
     <a href="./" class="brand" id="brandLink" aria-label="RajRebel Creations home">
-      <span class="logo"><span>RRC</span></span>
+      <img class="logo" src="/logo-96.png" alt="" width="36" height="36">
       <b class="grad">RajRebel Creations</b>
     </a>
-    <button class="icon-btn" id="topSearch" aria-label="Search prompts"><svg class="ico"><use href="#i-search"/></svg></button>
   </div>
 </header>
+<div class="wrap appwrap"><div class="appbar" id="appBar" hidden><img src="/icon-192.png" alt=""><div class="t"><b>Get the RRC AI Prompts app</b><span>Free · opens in one tap from your home screen</span></div><button class="go" id="appBarGo">Install</button><button class="x" id="appBarX" aria-label="Close">✕</button></div><p class="apptip" id="appTip" hidden></p></div>
 
 <!-- HOME -->
 <main id="home">
   <section class="hero wrap">
-    <div class="appbar" id="appBar" hidden><img src="/icon-192.png" alt=""><div class="t"><b>Get the RRC AI Prompts app</b><span>Free · opens in one tap from your home screen</span></div><button class="go" id="appBarGo">Install</button><button class="x" id="appBarX" aria-label="Close">✕</button></div>
     <div class="banner"><img src="./1000261330.png" alt="RajRebel Creations banner" fetchpriority="high" decoding="async"></div>
     <h1>Free AI <span class="grad">Photo &amp; Video</span> Prompts</h1>
     <p>Copy a prompt with one tap and create with your own photo.</p>
@@ -399,6 +419,29 @@ import { getDatabase, ref, get, set, update, remove, query, orderByKey, limitToL
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+/* ---------- public reads over REST ----------
+   Visitors read posts with short REST requests instead of a live connection,
+   so the free plan's 100 simultaneous-connection limit is never reached.
+   If a REST request fails, it falls back to the normal Firebase connection. */
+const pref = (path) => ({ path, mods: [] });
+const pquery = (r, ...mods) => ({ path: r.path, mods });
+const pOrderKey = () => ["orderBy", "$key"];
+const pLimit = (n) => ["limitToLast", n];
+const pEndAt = (k) => ["endAt", k];
+async function pget(q) {
+  try {
+    const qs = q.mods.map(([k, v]) => k + "=" + encodeURIComponent(JSON.stringify(v))).join("&");
+    const res = await fetch(firebaseConfig.databaseURL.replace(/\/$/, "") + "/" + q.path + ".json" + (qs ? "?" + qs : ""), { cache: "no-store" });
+    if (!res.ok) throw new Error("rest " + res.status);
+    const data = await res.json();
+    return { val: () => data };
+  } catch (e) {
+    let r = ref(db, q.path);
+    const sdk = q.mods.map(([k, v]) => k === "orderBy" ? orderByKey() : k === "limitToLast" ? limitToLast(v) : endAt(v));
+    return get(sdk.length ? query(r, ...sdk) : r);
+  }
+}
+
 /* ---------- helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
 const esc = (t) => String(t ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
@@ -410,7 +453,9 @@ function catOf(name) {
   const n = String(name || "").trim();
   return CATS.find(c => c.label === n || c.old.includes(n)) || { label: n || "Prompts", type: /video/i.test(n) ? "video" : "photo", old: [] };
 }
-const postLink = (id) => BASE + "?post=" + encodeURIComponent(id);
+// share links use the prompt's own page (/p/ID/): Google search + WhatsApp preview with the prompt photo.
+// A brand-new post that has no page yet is sent to /?post=ID by 404.html, so the link always works.
+const postLink = (id) => location.origin + "/p/" + encodeURIComponent(id) + "/";
 function ytId(url) {
   const m = String(url || "").match(/(?:youtu\.be\/|v=|shorts\/|embed\/|live\/)([A-Za-z0-9_-]{11})/);
   return m ? m[1] : "";
@@ -482,9 +527,9 @@ async function loadFirstPage() {
   S.loading = true;
   try {
     // use the light cards only when they were built for ALL posts; otherwise read posts (never show a half list)
-    const ready = await get(ref(db, CARDS_READY));
+    const ready = await pget(pref(CARDS_READY));
     if (ready.val() !== true) throw new Error("cards-not-ready");
-    const snap = await get(query(ref(db, CARDS), orderByKey(), limitToLast(PAGE_SIZE)));
+    const snap = await pget(pquery(pref(CARDS), pOrderKey(), pLimit(PAGE_SIZE)));
     const data = snap.val();
     if (!data) throw new Error("no-cards");
     S.mode = "cards";
@@ -502,7 +547,7 @@ async function loadFirstPage() {
     S.mode = "posts";
     S.cards.clear();
     try {
-      const snap = await get(query(ref(db, "posts"), orderByKey(), limitToLast(PAGE_SIZE)));
+      const snap = await pget(pquery(pref("posts"), pOrderKey(), pLimit(PAGE_SIZE)));
       const data = snap.val() || {};
       Object.keys(data).forEach(k => { if (k.startsWith("__")) delete data[k]; });
       Object.entries(data).forEach(([k, v]) => v && S.cards.set(k, cardFromPost(v.id || k, v)));
@@ -519,11 +564,11 @@ async function loadFirstPage() {
 async function loadPinned() {
   // pinned cards older than the first page still show on top
   try {
-    const snap = await get(ref(db, PINNED));
+    const snap = await pget(pref(PINNED));
     const ids = Object.keys(snap.val() || {});
     const missing = ids.filter(id => !S.cards.has(id));
     await Promise.all(missing.map(async id => {
-      const s = await get(ref(db, CARDS + "/" + id)); const v = s.val(); if (v) S.cards.set(id, { ...v, id });
+      const s = await pget(pref(CARDS + "/" + id)); const v = s.val(); if (v) S.cards.set(id, { ...v, id });
     }));
     if (missing.length && S.view === "home") renderGrid();
   } catch (e) {}
@@ -533,7 +578,7 @@ async function loadMore() {
   S.loading = true; $("#moreStatus").textContent = "Loading more…";
   const path = S.mode === "cards" ? CARDS : "posts";
   try {
-    const snap = await get(query(ref(db, path), orderByKey(), endAt(S.oldestKey), limitToLast(PAGE_SIZE + 1)));
+    const snap = await pget(pquery(pref(path), pOrderKey(), pEndAt(S.oldestKey), pLimit(PAGE_SIZE + 1)));
     const data = snap.val() || {};
     const entries = Object.entries(data).filter(([k]) => k < S.oldestKey && !k.startsWith("__")).sort((a, b) => a[0].localeCompare(b[0]));
     entries.forEach(([k, v]) => v && S.cards.set(k, S.mode === "cards" ? { ...v, id: k } : cardFromPost(v.id || k, v)));
@@ -550,7 +595,7 @@ async function loadAll() {
   if (S.allLoaded || S.mode !== "cards") return;
   S.allLoaded = true;
   try {
-    const snap = await get(ref(db, CARDS));
+    const snap = await pget(pref(CARDS));
     Object.entries(snap.val() || {}).forEach(([k, v]) => v && S.cards.set(k, { ...v, id: k }));
     S.hasMore = false;
     if (S.view === "home") renderGrid(true);
@@ -691,7 +736,7 @@ async function openPost(id) {
     <div class="skel" style="height:150px;margin-top:14px"></div>`;
   renderSticky({ loading: true });
   try {
-    const snap = id.startsWith("__") ? { val: () => null } : await get(ref(db, "posts/" + id));
+    const snap = id.startsWith("__") ? { val: () => null } : await pget(pref("posts/" + id));
     const post = snap.val();
     if (S.current !== id) return;
     if (!post) { $("#pmain").innerHTML = `<div class="empty">This prompt was not found. It may have been removed.<br><br><a class="btn y" href="./">Explore all prompts</a></div>`; renderSticky(null); return; }
@@ -865,8 +910,8 @@ function chatUrl(prompt) {
 
 /* ---------- about / contact / privacy / terms ---------- */
 const INFO = {
-  about: { title: "About", html: () => `<h1>About RajRebel Creations</h1>
-<p style="color:var(--muted)">Free AI photo prompts, AI video prompts and mobile tutorials.</p>
+  about: { title: "About", html: () => `<div class="aboutme"><img src="/about-raj.jpg" alt="Raj, creator of RajRebel Creations" width="120" height="120" loading="lazy"><div><h1>About RajRebel Creations</h1>
+<p style="color:var(--muted);margin:0">Free AI photo prompts, AI video prompts and mobile tutorials by Raj.</p></div></div>
 <p>RajRebel Creations is a content creator hub run by Raj. I make videos about AI tools, photo editing, video editing and mobile tricks on Instagram, YouTube and Facebook.</p>
 <p>This website is where I share the prompts used in my videos, so you can create the same results with your own photos. Every prompt can be copied with one tap and used in tools like ChatGPT, Gemini and Google Flow.</p>
 <h2>What you will find here</h2>
@@ -966,7 +1011,6 @@ function focusSearch() {
   const box = $("#searchInput"); box.scrollIntoView({ block: "center", behavior: "smooth" }); setTimeout(() => box.focus(), 300);
 }
 $("#nSearch").addEventListener("click", focusSearch);
-$("#topSearch").addEventListener("click", focusSearch);
 $("#nTut").addEventListener("click", () => {
   history.pushState({}, "", "?view=tutorials"); showView("tutorials"); renderTutChips(); renderTutorials(); loadAll(); window.scrollTo(0, 0);
 });
@@ -1026,16 +1070,34 @@ brandEl.addEventListener("pointerdown", () => {
 let installEvt = null;
 const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 const APPBAR_KEY = "rrcAppBarHidden";
-function appBarDismissed() { try { return Date.now() - Number(localStorage.getItem(APPBAR_KEY) || 0) < 7 * 864e5; } catch (e) { return false; } }
-function showAppBar() { const b = $("#appBar"); if (b && installEvt && !isStandalone() && !appBarDismissed()) b.hidden = false; }
-function hideAppBar() { const b = $("#appBar"); if (b) b.hidden = true; }
+const UA = navigator.userAgent;
+const isIOS = /iphone|ipad|ipod/i.test(UA);
+const isAndroid = /android/i.test(UA);
+const inApp = /Instagram|FBAN|FBAV|FB_IAB|Line\/|Snapchat|TikTok|musical_ly|; wv\)/i.test(UA);
+function appBarDismissed() { try { return Date.now() - Number(localStorage.getItem(APPBAR_KEY) || 0) < 3 * 864e5; } catch (e) { return false; } }
+function installTip() {
+  if (inApp && isAndroid) return "Tap <b>⋮</b> (top right) and choose <b>Open in Chrome</b> or <b>Open in browser</b>, then tap <b>Install</b> again.";
+  if (inApp && isIOS) return "Tap <b>⋯</b> and choose <b>Open in Safari</b>. Then tap <b>Share</b> → <b>Add to Home Screen</b>.";
+  if (isIOS) return "Tap the <b>Share</b> button at the bottom, then <b>Add to Home Screen</b>.";
+  return "Tap <b>⋮</b> in Chrome (top right), then <b>Install app</b> or <b>Add to Home screen</b>.";
+}
+function showAppBar() {
+  const b = $("#appBar");
+  if (!b || isStandalone() || appBarDismissed()) return;
+  if (!(isIOS || isAndroid)) return;   // phones only
+  b.hidden = false;
+}
+function hideAppBar() { const b = $("#appBar"); if (b) b.hidden = true; const t = $("#appTip"); if (t) t.hidden = true; }
 window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installEvt = e; showAppBar(); });
 window.addEventListener("appinstalled", () => { installEvt = null; hideAppBar(); toast("App installed ✓"); });
+setTimeout(showAppBar, 1200);
 $("#appBarGo").addEventListener("click", async () => {
-  if (!installEvt) { hideAppBar(); return; }
-  installEvt.prompt();
-  try { await installEvt.userChoice; } catch (err) {}
-  installEvt = null; hideAppBar();
+  if (installEvt) {
+    installEvt.prompt();
+    try { await installEvt.userChoice; } catch (err) {}
+    installEvt = null; hideAppBar(); return;
+  }
+  const t = $("#appTip"); t.innerHTML = installTip(); t.hidden = !t.hidden;
 });
 $("#appBarX").addEventListener("click", () => { try { localStorage.setItem(APPBAR_KEY, String(Date.now())); } catch (e) {} hideAppBar(); });
 function installHtml() {
@@ -1045,6 +1107,32 @@ function installHtml() {
                   : "Tap ⋮ in your browser menu, then “Install app” or “Add to Home screen”. In Instagram, first choose “Open in browser”.";
   return `<button class="install-btn" id="installBtn"><img src="/icon-192.png" alt="">Install RRC AI Prompts app</button><p class="install-tip"${installEvt ? " hidden" : ""}>${tip}</p>`;
 }
+
+/* ---------- app welcome (first launch of the installed app only) ---------- */
+const WELCOME_KEY = "rrcWelcomed";
+function showWelcome() {
+  try { if (localStorage.getItem(WELCOME_KEY)) return; } catch (e) { return; }
+  const slides = [
+    { art: `<img src="/icon-512.png" alt="">`, h: "Welcome to RRC AI Prompts", p: "Free AI photo and video prompts by RajRebel Creations. New prompts every week." },
+    { art: `<svg><use href="#i-copy"/></svg>`, h: "Copy any prompt in one tap", p: "Pick a prompt you like and tap Copy. For photos it opens ChatGPT, for videos it opens Google Flow." },
+    { art: `<svg><use href="#i-hand"/></svg>`, h: "Add your photo and create", p: "Upload one clear photo of yourself, paste the prompt and send. Your face stays the same." }
+  ];
+  let i = 0;
+  const w = document.createElement("div");
+  w.className = "welcome"; w.setAttribute("role", "dialog"); w.setAttribute("aria-label", "Welcome");
+  const draw = () => {
+    const sl = slides[i];
+    w.innerHTML = `<button class="skip" id="wSkip">Skip</button>
+      <div class="slide"><div class="art">${sl.art}</div><h2>${sl.h}</h2><p>${sl.p}</p></div>
+      <div style="width:100%;display:flex;flex-direction:column;align-items:center"><div class="dots">${slides.map((_, k) => `<i class="${k === i ? "on" : ""}"></i>`).join("")}</div>
+      <button class="next" id="wNext">${i < slides.length - 1 ? "Next" : "Get started"}</button></div>`;
+    $("#wSkip", w).onclick = done;
+    $("#wNext", w).onclick = () => { if (i < slides.length - 1) { i++; draw(); } else done(); };
+  };
+  const done = () => { try { localStorage.setItem(WELCOME_KEY, "1"); } catch (e) {} w.remove(); };
+  draw(); document.body.appendChild(w);
+}
+if (isStandalone() || /[?&]source=app\b/.test(location.search)) showWelcome();
 if ("serviceWorker" in navigator && location.protocol === "https:") {
   window.addEventListener("load", () => { navigator.serviceWorker.register("/sw.js").catch(() => {}); });
 }
@@ -1138,7 +1226,7 @@ function renderAdminList() {
   $("#aCount").textContent = `(${adminPosts.length})`;
   $("#aList").innerHTML = list.map(p => `
     <div class="it" data-aid="${esc(p._key)}">
-      <img src="${esc(p.thumb || p.image || "")}" alt="" loading="lazy">
+      <img src="${esc(p.thumb || p.image || (ytId(p.videoUrl) ? `https://i.ytimg.com/vi/${ytId(p.videoUrl)}/hqdefault.jpg` : ""))}" alt="" loading="lazy">
       <div class="mid"><b>${esc(p.title)}</b>
         <select data-cat-change="${esc(p._key)}" aria-label="Category">${catOptions(p.category)}</select>
       </div>
