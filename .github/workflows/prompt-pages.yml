@@ -1,0 +1,50 @@
+# RajRebel Creations - makes one page per prompt (for Google search and WhatsApp previews).
+# Runs every 30 minutes, and any time from the Actions tab ("Run workflow").
+# It only READS posts from Firebase. It never changes or deletes posts.
+name: Build prompt pages
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: prompt-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install image tool
+        run: pip install --quiet pillow
+
+      - name: Build pages
+        run: python build-pages.py
+
+      - name: Save pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "rrc-pages-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A p sitemap.xml
+          if git diff --cached --quiet; then
+            echo "No new or changed posts."
+            exit 0
+          fi
+          git commit -m "Update prompt pages"
+          git pull --rebase --quiet
+          git push
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "Pages will update on its own."
