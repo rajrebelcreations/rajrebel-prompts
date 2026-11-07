@@ -39,11 +39,17 @@ h1{font-size:26px;line-height:1.25;margin:6px 0 10px}h2{font-size:18px;margin:26
 .yt{position:relative;display:block}.yt span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}.yt span i{width:72px;height:72px;border-radius:50%;background:#d71920;display:flex;align-items:center;justify-content:center}
 .yt span i:after{content:"";border-left:24px solid #fff;border-top:15px solid transparent;border-bottom:15px solid transparent;margin-left:6px}
 footer{margin:34px 0 24px;color:#8a90a2;font-size:13px;text-align:center}footer a{margin:0 8px;color:#a9aec0}
+.appbar{display:flex;align-items:center;gap:10px;margin:12px 0 0;padding:10px 10px 10px 12px;border-radius:14px;background:linear-gradient(135deg,#1b1f33,#241a33);border:1px solid #3a2f55}
+.appbar[hidden],.apptip[hidden]{display:none}.appbar img{width:40px;height:40px;border-radius:10px;flex:none}.appbar .t{flex:1;min-width:0;line-height:1.25}
+.appbar .t b{display:block;font-size:13.5px}.appbar .t span{font-size:11.5px;color:#9aa0b2}.appbar .go{border:0;border-radius:10px;background:#f5c518;color:#1a1400;font:inherit;font-weight:800;font-size:13px;padding:9px 14px;cursor:pointer;flex:none}
+.appbar .x{border:0;background:transparent;color:#7d8396;font-size:18px;line-height:1;padding:4px 6px;cursor:pointer;flex:none}
+.apptip{margin:8px 2px 0;font-size:12.5px;line-height:1.45;color:#b7bccb;background:#121726;border:1px solid #232a3d;border-radius:12px;padding:10px 12px}.apptip b{color:#f5c518}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#f5c518;color:#1a1400;font-weight:800;padding:10px 18px;border-radius:12px;opacity:0;transition:opacity .2s;pointer-events:none}.toast.on{opacity:1}</style>
 </head>
 <body>
 <header><div class="wrap"><a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none"><img src="/logo-96.png" alt=""><b>RajRebel Creations</b></a></div></header>
 <main class="wrap">
+<div class="appbar" id="appBar" hidden><img src="/icon-192.png" alt=""><div class="t"><b>Get the RRC AI Prompts app</b><span>Free · opens in one tap from your home screen</span></div><button class="go" id="appBarGo">Install</button><button class="x" id="appBarX" aria-label="Close">✕</button></div><p class="apptip" id="appTip" hidden></p>
 <div class="media"><img src="https://rajrebelcreations.com/p/img/post-1792889898975.jpg" alt="Emotional Black &amp; White Couple Portrait AI Prompt" loading="eager"></div>
 <div class="tags"><span class="tag y">AI PHOTO PROMPT</span><span class="tag">Couple Photo Prompts</span></div>
 <h1>Emotional Black &amp; White Couple Portrait AI Prompt</h1>
@@ -69,6 +75,22 @@ document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",a
 function appLink(web,pkg){if(!and)return web;return"intent://"+web.replace(/^https:\/\//,"")+"#Intent;scheme=https;package="+pkg+";S.browser_fallback_url="+encodeURIComponent(web)+";end"}
 const g=document.getElementById("openGpt");if(g)g.addEventListener("click",async e=>{e.preventDefault();const t=last||(document.querySelector("pre")||{}).textContent||"";if(t)await copyText(t);const enc=encodeURIComponent(t);location.href=appLink(enc&&enc.length<=6000?CHATGPT+"?prompt="+enc:CHATGPT,"com.openai.chatgpt")});
 const f=document.getElementById("openFlow");if(f)f.addEventListener("click",async e=>{e.preventDefault();const t=last||(document.querySelector("pre")||{}).textContent||"";if(t)await copyText(t);location.href=appLink(FLOW,"com.google.android.apps.labs.whisk")});
+
+let installEvt=null;
+const UA=navigator.userAgent,isIOS=/iphone|ipad|ipod/i.test(UA),isAnd=/android/i.test(UA);
+const inApp=/Instagram|FBAN|FBAV|FB_IAB|Line\/|Snapchat|TikTok|musical_ly|; wv\)/i.test(UA);
+const standalone=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+const KEY="rrcAppBarHidden";
+function dismissed(){try{return Date.now()-Number(localStorage.getItem(KEY)||0)<3*864e5}catch(e){return false}}
+function tip(){if(inApp&&isAnd)return"Tap <b>⋮</b> (top right) and choose <b>Open in Chrome</b> or <b>Open in browser</b>, then tap <b>Install</b> again.";if(inApp&&isIOS)return"Tap <b>⋯</b> and choose <b>Open in Safari</b>. Then tap <b>Share</b> → <b>Add to Home Screen</b>.";if(isIOS)return"Tap the <b>Share</b> button at the bottom, then <b>Add to Home Screen</b>.";return"Tap <b>⋮</b> in Chrome (top right), then <b>Install app</b> or <b>Add to Home screen</b>."}
+function showBar(){const b=document.getElementById("appBar");if(!b||standalone()||dismissed()||!(isIOS||isAnd))return;b.hidden=false}
+function hideBar(){document.getElementById("appBar").hidden=true;document.getElementById("appTip").hidden=true}
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEvt=e;showBar()});
+addEventListener("appinstalled",()=>{installEvt=null;hideBar()});
+showBar();
+document.getElementById("appBarGo").addEventListener("click",async()=>{if(installEvt){installEvt.prompt();try{await installEvt.userChoice}catch(e){}installEvt=null;hideBar();return}const t=document.getElementById("appTip");t.innerHTML=tip();t.hidden=!t.hidden});
+document.getElementById("appBarX").addEventListener("click",()=>{try{localStorage.setItem(KEY,String(Date.now()))}catch(e){}hideBar()});
+if("serviceWorker"in navigator&&location.protocol==="https:")navigator.serviceWorker.register("/sw.js").catch(()=>{});
 </script>
 </body>
 </html>
