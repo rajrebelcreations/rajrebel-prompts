@@ -112,7 +112,7 @@ AUDIO: Crackling sparklers, whoosh of fountains, distant firecrackers. No dialog
 AVOID: jump or skipped frames during the twirl, sudden pose change, teleporting, new or different face, face change after cuts, face morphing, beautified or plastic face, flowers appearing in hair, hairstyle change, face hidden by hair or sparks, blurred face, distorted teeth, slow motion, skipping or merging shots, extra shots, exposed waist or midriff, outfit change between shots, extra fingers, deformed hands, more than two sparklers, dark underexposed face, daylight, Western clothes, text, subtitles, watermark, logos.</pre></div>
 <div class="cta"><a class="btn alt" href="https://rajrebelcreations.com/?post=post-1794073330126">Open in RRC AI Prompts</a><a class="btn alt" href="https://rajrebelcreations.com/">More free prompts</a></div>
 </main>
-<footer class="wrap"><a href="/">Home</a><a href="/?page=about">About</a><a href="/?page=contact">Contact</a><a href="/?page=privacy">Privacy Policy</a><a href="/?page=terms">Terms</a><br><br>© RajRebel Creations</footer>
+<footer class="wrap"><a href="/">Home</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy Policy</a><a href="/terms/">Terms</a><br><br>© RajRebel Creations</footer>
 <div class="bar"><div class="wrap"><a class="btn big" id="openFlow" href="https://labs.google/fx/tools/flow">Copy &amp; Open Google Flow</a></div></div>
 <div class="toast" id="toast"></div>
 <script>
@@ -121,10 +121,13 @@ const and=/android/i.test(navigator.userAgent);
 function toast(t){const e=document.getElementById("toast");e.textContent=t;e.classList.add("on");clearTimeout(window._t);window._t=setTimeout(()=>e.classList.remove("on"),1800)}
 async function copyText(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove()}}
 let last="";
-document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",async()=>{const t=document.getElementById(b.dataset.copy).textContent;last=t;await copyText(t);toast("Prompt copied ✓");b.textContent="Copied"}));
+const PID="post-1794073330126";
+function bump(m,id){try{if(localStorage.getItem("rrcAdminDevice")==="1")return;const day=new Date(Date.now()+108e5).toISOString().slice(0,10).replace(/-/g,""),k="rrcS"+day+m+(id||"");if(localStorage.getItem(k))return;localStorage.setItem(k,"1");const b="https://rajrebel-prompts-default-rtdb.firebaseio.com/stats",put=p=>fetch(b+p+".json",{method:"PUT",body:'{".sv":{"increment":1}}',keepalive:true}).catch(()=>{});put("/d/"+day+"/"+m);if(id&&/^post-\d+$/.test(id))put("/p/"+id+"/"+m)}catch(e){}}
+bump("u");bump("v",PID);
+document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",async()=>{const t=document.getElementById(b.dataset.copy).textContent;last=t;await copyText(t);toast("Prompt copied ✓");b.textContent="Copied";bump("c",PID)}));
 function appLink(web,pkg){if(!and)return web;return"intent://"+web.replace(/^https:\/\//,"")+"#Intent;scheme=https;package="+pkg+";S.browser_fallback_url="+encodeURIComponent(web)+";end"}
-const g=document.getElementById("openGpt");if(g)g.addEventListener("click",async e=>{e.preventDefault();const t=last||(document.querySelector("pre")||{}).textContent||"";if(t)await copyText(t);const enc=encodeURIComponent(t);location.href=appLink(enc&&enc.length<=6000?CHATGPT+"?prompt="+enc:CHATGPT,"com.openai.chatgpt")});
-const f=document.getElementById("openFlow");if(f)f.addEventListener("click",async e=>{e.preventDefault();const t=last||(document.querySelector("pre")||{}).textContent||"";if(t)await copyText(t);location.href=appLink(FLOW,"com.google.android.apps.labs.whisk")});
+const g=document.getElementById("openGpt");if(g)g.addEventListener("click",async e=>{e.preventDefault();bump("c",PID);bump("o",PID);const t=last||(document.querySelector("pre")||{}).textContent||"";if(t)await copyText(t);const enc=encodeURIComponent(t);location.href=appLink(enc&&enc.length<=6000?CHATGPT+"?prompt="+enc:CHATGPT,"com.openai.chatgpt")});
+const f=document.getElementById("openFlow");if(f)f.addEventListener("click",async e=>{e.preventDefault();bump("c",PID);bump("o",PID);const t=last||(document.querySelector("pre")||{}).textContent||"";if(t)await copyText(t);location.href=appLink(FLOW,"com.google.android.apps.labs.whisk")});
 
 let installEvt=null;
 const UA=navigator.userAgent,isIOS=/iphone|ipad|ipod/i.test(UA),isAnd=/android/i.test(UA);
