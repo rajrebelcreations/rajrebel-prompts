@@ -109,6 +109,11 @@ img{display:block;max-width:100%}
 .badge.new{background:var(--pink);color:#3a0d22;animation:shine 1.6s ease-in-out infinite}
 .badge.tut{background:#8b7cf6;color:#15103a}
 .badge.pin{background:#fff;color:#111}
+.badge.hot{background:rgba(0,0,0,.62);color:#ffd166;backdrop-filter:blur(4px)}
+.stl{color:var(--muted);font-size:12px;font-weight:700;margin:14px 0 0}.stwrap{overflow-x:auto}
+.stgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}.stgrid div{background:#0b0f17;border:1px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center}.stgrid b{display:block;font-size:20px;color:var(--yellow)}.stgrid small{color:var(--muted);font-size:11px;line-height:1.2;display:block}
+.sttab{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}.sttab th,.sttab td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:right}.sttab th:first-child,.sttab td:first-child{text-align:left}.sttab th{color:var(--muted);font-weight:600}.sttab td:first-child{max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stbars{display:flex;align-items:flex-end;gap:3px;height:70px;margin-top:8px}.stbars i{flex:1;background:var(--yellow);border-radius:3px 3px 0 0;min-height:2px;opacity:.85}
 .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .play span{width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
 .share-mini{position:absolute;top:6px;right:6px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center}
@@ -345,10 +350,10 @@ footer p{margin:12px 0 0;color:var(--dim);font-size:12px}
 
 <footer id="footer">
   <nav aria-label="Site links">
-    <a href="?page=about" data-page="about">About</a>
-    <a href="?page=contact" data-page="contact">Contact</a>
-    <a href="?page=privacy" data-page="privacy">Privacy Policy</a>
-    <a href="?page=terms" data-page="terms">Terms &amp; Disclaimer</a>
+    <a href="/about/" data-page="about">About</a>
+    <a href="/contact/" data-page="contact">Contact</a>
+    <a href="/privacy/" data-page="privacy">Privacy Policy</a>
+    <a href="/terms/" data-page="terms">Terms &amp; Disclaimer</a>
   </nav>
   <p>&copy; <span id="yr"></span> RajRebel Creations. All rights reserved.</p>
 </footer>
@@ -485,6 +490,29 @@ async function sharePost(id, title) {
     try { await navigator.share({ title: title || "RajRebel Creations", text: "Try this AI prompt from RajRebel Creations:", url }); return; } catch (e) { if (e && e.name === "AbortError") return; }
   }
   (await copyText(url)) ? toast("Link copied ✓") : window.prompt("Copy this link:", url);
+}
+
+/* ---------- anonymous usage counts (numbers only, no personal data) ----------
+   u = visitor (once per device per day), v = prompt view, c = prompt copied, o = ChatGPT/Flow opened.
+   Each device adds at most 1 per prompt per day. The owner's own device is never counted. */
+const STATS = "stats";
+const dayKey = (t = Date.now()) => new Date(t + 3 * 36e5).toISOString().slice(0, 10).replace(/-/g, "");  // Kuwait date
+function bump(m, id) {
+  try {
+    if (localStorage.getItem("rrcAdminDevice") === "1") return;
+    const day = dayKey(), k = "rrcS" + day + m + (id || "");
+    if (localStorage.getItem(k)) return;
+    localStorage.setItem(k, "1");
+    const base = firebaseConfig.databaseURL.replace(/\/$/, "") + "/" + STATS;
+    const put = (p) => fetch(base + p + ".json", { method: "PUT", body: '{".sv":{"increment":1}}', keepalive: true }).catch(() => {});
+    put("/d/" + day + "/" + m);
+    if (id && /^post-\d+$/.test(id)) put("/p/" + id + "/" + m);
+  } catch (e) {}
+}
+try { const t = dayKey(); for (let i = localStorage.length - 1; i >= 0; i--) { const k = localStorage.key(i); if (k && /^rrcS\d{8}/.test(k) && k.slice(4, 12) !== t) localStorage.removeItem(k); } } catch (e) {}
+const fmtN = (n) => n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, "") + "K" : String(n);
+async function loadCounts() {
+  try { const snap = await pget(pref(STATS + "/p")); S.counts = snap.val() || {}; if (S.view === "home") renderGrid(true); } catch (e) {}
 }
 
 /* ---------- state ---------- */
@@ -642,6 +670,10 @@ function filteredCards() {
     return true;
   });
 }
+function hotOf(id) {
+  const n = Number(((S.counts || {})[id] || {}).c || 0);
+  return n >= 10 ? `<span class="badge hot">🔥 ${fmtN(n)} copies</span>` : "";
+}
 function cardHTML(c, i, animate) {
   const cat = catOf(c.category);
   const badge = cat.type === "video" ? "VIDEO PROMPT" : cat.type === "tutorial" ? "TUTORIAL" : "PHOTO PROMPT";
@@ -649,7 +681,7 @@ function cardHTML(c, i, animate) {
   return `<div class="card ${animate ? "anim" : ""}" style="${animate ? `animation-delay:${Math.min(i, 10) * 0.07}s` : ""}" data-id="${esc(c.id)}" tabindex="0" role="link" aria-label="${esc(c.title)}">
     <div class="thumb">
       ${thumb ? `<img src="${esc(thumb)}" alt="${esc(c.title)}" loading="${i < 4 ? "eager" : "lazy"}" decoding="async" onload="this.classList.add('ok')" onerror="this.classList.add('ok')">` : `<div class="skel" style="height:180px;border-radius:0"></div>`}
-      <div class="badges"><span class="badge ${cat.type === "tutorial" ? "tut" : ""}">${badge}</span>${c.pinned ? `<span class="badge pin">TOP</span>` : ""}${isNew(c.id) ? `<span class="badge new">NEW</span>` : ""}</div>
+      <div class="badges"><span class="badge ${cat.type === "tutorial" ? "tut" : ""}">${badge}</span>${c.pinned ? `<span class="badge pin">TOP</span>` : ""}${isNew(c.id) ? `<span class="badge new">NEW</span>` : ""}${hotOf(c.id)}</div>
       ${cat.type === "video" ? `<div class="play"><span>${icon("play")}</span></div>` : ""}
       <button class="share-mini" data-share="${esc(c.id)}" aria-label="Share ${esc(c.title)}">${icon("share")}</button>
     </div>
@@ -791,6 +823,7 @@ function renderPost(id, post) {
     <div class="blk"><a class="btn y" href="./" data-act="home">Explore all prompts</a></div>
     <p class="follow-note">Follow <a href="${SOCIAL.instagram}" target="_blank" rel="noopener" style="color:var(--yellow)">@rajrebel_creations</a> for new prompts every week</p>`;
   const img = $("#pmain .pmedia img"); if (img) img.style.filter = "";
+  bump("v", id);
   renderMoreLike(id, post.category);
   mountAds($("#pmain"));
 
@@ -815,7 +848,7 @@ $("#pmain").addEventListener("click", async (e) => {
   if (c) {
     const i = Number(c.dataset.copy);
     const txt = $("#pt" + i).textContent;
-    if (await copyText(txt)) { c.classList.add("done"); c.innerHTML = `${icon("check")} Copied`; toast(`Prompt ${i + 1} copied ✓`); stickyMarkCopied(i); }
+    if (await copyText(txt)) { c.classList.add("done"); c.innerHTML = `${icon("check")} Copied`; toast(`Prompt ${i + 1} copied ✓`); stickyMarkCopied(i); bump("c", S.current); }
     return;
   }
   const m = e.target.closest("[data-more]");
@@ -875,7 +908,9 @@ function drawSticky() {
     const i = allDone ? 0 : o.next;
     if (!(await copyText(o.prompts[i]))) { toast("Copy failed. Long-press the prompt to copy."); return; }
     stickyMarkCopied(i, true);
+    bump("c", o.id);
   };
+  const ab = $("#stickyMount .appbtn"); if (ab) ab.addEventListener("click", () => bump("o", o.id));
 }
 function stickyMarkCopied(i, fromSticky) {
   const o = ST; if (!o || !o.prompts) return;
@@ -932,13 +967,15 @@ __SOCIAL__` },
 __SOCIAL__
 <p style="color:var(--muted)">Please do not send passwords, bank details or other private information by email or message.</p>` },
   privacy: { title: "Privacy Policy", html: () => `<h1>Privacy Policy</h1>
-<p style="color:var(--muted)">Last updated: 6 November 2026</p>
+<p style="color:var(--muted)">Last updated: 14 November 2026</p>
 <p>This Privacy Policy explains how RajRebel Creations ("we", "us") at <a href="https://rajrebelcreations.com/">rajrebelcreations.com</a> handles information when you visit this website.</p>
 <h2>Information we collect</h2>
 <p>We do not ask you to create an account and we do not collect your name, phone number or photos on this website. The photos you use with our prompts are uploaded by you to third-party tools (such as ChatGPT, Gemini or Google Flow), not to this website.</p>
 <p>Like most websites, our hosting and service providers may automatically log basic technical information such as your IP address, browser type, device type and the pages you visit. This helps keep the site secure and working.</p>
+<h2>Anonymous usage counts</h2>
+<p>To know which prompts are useful, the website counts how many times prompts are viewed, copied and opened in ChatGPT or Google Flow, and how many devices visit each day. Only these numbers are saved. No name, email, phone number, IP address or photo is stored with them.</p>
 <h2>Cookies and local storage</h2>
-<p>We use your browser's local storage to remember the list of prompts, so the website opens faster on your next visit. You can clear it any time in your browser settings.</p>
+<p>We use your browser's local storage to remember the list of prompts, so the website opens faster on your next visit, and to make sure each device is counted only once a day. You can clear it any time in your browser settings.</p>
 <h2>Advertising (Google AdSense)</h2>
 <p>We use or may use Google AdSense to show ads. Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this website or other websites.</p>
 <p>Google's use of advertising cookies enables it and its partners to serve ads to you based on your visits to this and/or other sites on the Internet.</p>
@@ -1017,7 +1054,7 @@ $("#nTut").addEventListener("click", () => {
 $("#nFollow").addEventListener("click", () => {
   const bg = document.createElement("div");
   bg.className = "sheet-bg";
-  bg.innerHTML = `<div class="sheet" role="dialog" aria-label="Follow"><h3>Follow RajRebel Creations</h3><nav class="socials"></nav>${installHtml()}<div class="sheet-links"><a href="?page=about" data-page="about">About</a><a href="?page=contact" data-page="contact">Contact</a><a href="?page=privacy" data-page="privacy">Privacy Policy</a><a href="?page=terms" data-page="terms">Terms &amp; Disclaimer</a></div></div>`;
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-label="Follow"><h3>Follow RajRebel Creations</h3><nav class="socials"></nav>${installHtml()}<div class="sheet-links"><a href="/about/" data-page="about">About</a><a href="/contact/" data-page="contact">Contact</a><a href="/privacy/" data-page="privacy">Privacy Policy</a><a href="/terms/" data-page="terms">Terms &amp; Disclaimer</a></div></div>`;
   renderSocials($("nav", bg));
   bg.addEventListener("click", async (e) => {
     const a = e.target.closest("[data-page]");
@@ -1162,6 +1199,8 @@ route();
 // A shared link (?post=) opens the prompt first; openPost() loads the home list quietly afterwards.
 if (!S.current) loadFirstPage();
 mountAds();
+bump("u");
+loadCounts();
 
 /* ====================== ADMIN (open with ?admin) ====================== */
 let AUTH = null, adminPosts = [], editing = null, newImage = null, newThumb = null;
@@ -1199,9 +1238,10 @@ async function adminDashboard() {
   $("#aBody").innerHTML = `
     <div class="bar" style="margin-top:8px">
       <button class="abtn y" id="aNew">+ New post</button>
-      <div style="display:flex;gap:8px"><button class="abtn" id="aCards">Build fast cards</button><button class="abtn red" id="aOut">Log out</button></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="abtn" id="aStatsBtn">📊 Stats</button><button class="abtn" id="aCards">Build fast cards</button><button class="abtn red" id="aOut">Log out</button></div>
     </div>
     <div class="note" id="aCardsNote">Tap "Build fast cards" once: it makes small preview photos for all posts so the home page opens fast. New posts get one automatically.</div>
+    <div id="aStats"></div>
     <div id="aForm"></div>
     <h3>All posts <span id="aCount" style="color:var(--muted);font-weight:400"></span></h3>
     <label class="search" style="height:42px"><svg class="ico" style="color:var(--dim)"><use href="#i-search"/></svg><input id="aFind" type="search" placeholder="Find a post"></label>
@@ -1209,6 +1249,7 @@ async function adminDashboard() {
   $("#aOut").onclick = () => AUTH.m.signOut(AUTH.auth);
   $("#aNew").onclick = () => showForm(null);
   $("#aCards").onclick = buildCards;
+  $("#aStatsBtn").onclick = showStats;
   $("#aFind").oninput = renderAdminList;
   await loadAdminPosts();
 }
@@ -1386,6 +1427,38 @@ async function savePost() {
     if (S.view === "home") renderGrid();
   } catch (e) { toast(e.message || "Save failed"); }
   finally { const b = $("#fSave"); if (b) { b.disabled = false; b.textContent = "Publish post"; } }
+}
+/* ---------- admin stats (only the logged-in owner can read the daily numbers) ---------- */
+async function showStats() {
+  const box = $("#aStats");
+  if (box.dataset.open === "1") { box.innerHTML = ""; box.dataset.open = ""; return; }
+  box.dataset.open = "1";
+  box.innerHTML = `<h3>📊 Stats</h3><p style="color:var(--muted)">Loading…</p>`;
+  try {
+    const [ds, ps] = await Promise.all([get(ref(db, STATS + "/d")), get(ref(db, STATS + "/p"))]);
+    const days = ds.val() || {}, per = ps.val() || {};
+    if (!adminPosts.length) await loadAdminPosts();
+    const today = dayKey();
+    const keyAgo = (n) => dayKey(Date.now() - n * 864e5);
+    const sum = (n) => { const t = { u: 0, v: 0, c: 0, o: 0 }; const from = n ? keyAgo(n - 1) : "0"; Object.entries(days).forEach(([d, x]) => { if (d >= from && d <= today) for (const m in t) t[m] += Number((x || {})[m] || 0); }); return t; };
+    const cell = (t) => `<div><b>${fmtN(t.u)}</b><small>Visitors</small></div><div><b>${fmtN(t.v)}</b><small>Prompt views</small></div><div><b>${fmtN(t.c)}</b><small>Copies</small></div><div><b>${fmtN(t.o)}</b><small>App opens</small></div>`;
+    const first = Object.keys(days).sort()[0];
+    const bars = Array.from({ length: 14 }, (_, i) => Number((days[keyAgo(13 - i)] || {}).u || 0));
+    const mx = Math.max(1, ...bars);
+    const rows = adminPosts.map(p => { const x = per[p._key] || {}; return { t: p.title || p._key, v: Number(x.v || 0), c: Number(x.c || 0), o: Number(x.o || 0) }; });
+    const top = rows.filter(r => r.v || r.c).sort((a, b) => b.c - a.c || b.v - a.v).slice(0, 10);
+    const weak = rows.filter(r => r.v >= 20 && r.c / r.v < 0.2).sort((a, b) => b.v - a.v).slice(0, 5);
+    const tr = (r) => `<tr><td title="${esc(r.t)}">${esc(r.t)}</td><td>${fmtN(r.v)}</td><td>${fmtN(r.c)}</td><td>${fmtN(r.o)}</td><td>${r.v ? Math.round(r.c / r.v * 100) + "%" : "–"}</td></tr>`;
+    const head = `<tr><th>Prompt</th><th>Views</th><th>Copies</th><th>Opens</th><th>Copy %</th></tr>`;
+    box.innerHTML = `<h3>📊 Stats <span style="color:var(--muted);font-weight:400">${first ? "(counting since " + first.slice(6, 8) + "/" + first.slice(4, 6) + "/" + first.slice(0, 4) + ")" : ""}</span></h3>
+      <div class="stl">Today</div><div class="stgrid">${cell(sum(1))}</div>
+      <div class="stl">Last 7 days</div><div class="stgrid">${cell(sum(7))}</div>
+      <div class="stl">All time</div><div class="stgrid">${cell(sum(0))}</div>
+      <div class="stl">Visitors, last 14 days</div><div class="stbars">${bars.map(b => `<i style="height:${Math.round(b / mx * 100)}%" title="${b}"></i>`).join("")}</div>
+      <h3>Top prompts</h3>${top.length ? `<div class="stwrap"><table class="sttab">${head}${top.map(tr).join("")}</table></div>` : `<p style="color:var(--muted)">No data yet. Numbers appear as people use the site.</p>`}
+      ${weak.length ? `<h3>Many views, few copies</h3><div class="stl" style="margin-top:0">Try a better photo or title for these.</div><div class="stwrap"><table class="sttab">${head}${weak.map(tr).join("")}</table></div>` : ""}
+      <div class="stl">Each device is counted once per day per prompt. Your own device is not counted.</div>`;
+  } catch (e) { box.innerHTML = `<h3>📊 Stats</h3><p style="color:#fca5a5">Could not load stats: ${esc(e.message)}</p>`; }
 }
 async function buildCards() {
   const note = $("#aCardsNote"), btn = $("#aCards");

@@ -166,10 +166,13 @@ const and=/android/i.test(navigator.userAgent);
 function toast(t){const e=document.getElementById("toast");e.textContent=t;e.classList.add("on");clearTimeout(window._t);window._t=setTimeout(()=>e.classList.remove("on"),1800)}
 async function copyText(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove()}}
 let last="";
-document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",async()=>{const t=document.getElementById(b.dataset.copy).textContent;last=t;await copyText(t);toast("Prompt copied ✓");b.textContent="Copied"}));
+const PID="%PID%";
+function bump(m,id){try{if(localStorage.getItem("rrcAdminDevice")==="1")return;const day=new Date(Date.now()+108e5).toISOString().slice(0,10).replace(/-/g,""),k="rrcS"+day+m+(id||"");if(localStorage.getItem(k))return;localStorage.setItem(k,"1");const b="https://rajrebel-prompts-default-rtdb.firebaseio.com/stats",put=p=>fetch(b+p+".json",{method:"PUT",body:'{".sv":{"increment":1}}',keepalive:true}).catch(()=>{});put("/d/"+day+"/"+m);if(id&&/^post-\d+$/.test(id))put("/p/"+id+"/"+m)}catch(e){}}
+bump("u");bump("v",PID);
+document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",async()=>{const t=document.getElementById(b.dataset.copy).textContent;last=t;await copyText(t);toast("Prompt copied ✓");b.textContent="Copied";bump("c",PID)}));
 function appLink(web,pkg){if(!and)return web;return"intent://"+web.replace(/^https:\/\//,"")+"#Intent;scheme=https;package="+pkg+";S.browser_fallback_url="+encodeURIComponent(web)+";end"}
-const g=document.getElementById("openGpt");if(g)g.addEventListener("click",async e=>{e.preventDefault();const t=last||(document.querySelector("pre")||{}).textContent||"";if(t)await copyText(t);const enc=encodeURIComponent(t);location.href=appLink(enc&&enc.length<=6000?CHATGPT+"?prompt="+enc:CHATGPT,"com.openai.chatgpt")});
-const f=document.getElementById("openFlow");if(f)f.addEventListener("click",async e=>{e.preventDefault();const t=last||(document.querySelector("pre")||{}).textContent||"";if(t)await copyText(t);location.href=appLink(FLOW,"com.google.android.apps.labs.whisk")});
+const g=document.getElementById("openGpt");if(g)g.addEventListener("click",async e=>{e.preventDefault();bump("c",PID);bump("o",PID);const t=last||(document.querySelector("pre")||{}).textContent||"";if(t)await copyText(t);const enc=encodeURIComponent(t);location.href=appLink(enc&&enc.length<=6000?CHATGPT+"?prompt="+enc:CHATGPT,"com.openai.chatgpt")});
+const f=document.getElementById("openFlow");if(f)f.addEventListener("click",async e=>{e.preventDefault();bump("c",PID);bump("o",PID);const t=last||(document.querySelector("pre")||{}).textContent||"";if(t)await copyText(t);location.href=appLink(FLOW,"com.google.android.apps.labs.whisk")});
 
 let installEvt=null;
 const UA=navigator.userAgent,isIOS=/iphone|ipad|ipod/i.test(UA),isAnd=/android/i.test(UA);
@@ -286,16 +289,39 @@ def build_page(k, p, img_url):
 {('<h2>' + ('Prompts' if len(prompts) > 1 else 'Prompt') + '</h2>' + pr_html) if prompts else ''}
 <div class="cta">{cta}</div>
 </main>
-<footer class="wrap"><a href="/">Home</a><a href="/?page=about">About</a><a href="/?page=contact">Contact</a><a href="/?page=privacy">Privacy Policy</a><a href="/?page=terms">Terms</a><br><br>© RajRebel Creations</footer>
+<footer class="wrap"><a href="/">Home</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy Policy</a><a href="/terms/">Terms</a><br><br>© RajRebel Creations</footer>
 {bar}
 <div class="toast" id="toast"></div>
-<script>{PAGE_JS}</script>
+<script>{PAGE_JS.replace("%PID%", re.sub(r"[^A-Za-z0-9_-]", "", k))}</script>
 </body>
 </html>
 """
 
 
+def quick_skip():
+    """Save Firebase downloads: the full download (all posts with photos) runs once a day,
+    when a post is added or deleted, or when the workflow is started by hand.
+    Other runs only read the tiny list of post ids."""
+    if LOCAL_JSON or os.environ.get("RRC_FULL") == "1" or os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch":
+        return False
+    pdir = os.path.join(OUT, "p")
+    mark = os.path.join(pdir, "last-full.txt")
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    if not os.path.exists(mark) or open(mark, encoding="utf-8").read().strip() != today:
+        return False
+    try:
+        shallow = json.loads(urllib.request.urlopen(f"{DB}/posts.json?shallow=true", timeout=60).read().decode("utf-8")) or {}
+    except Exception:
+        return True
+    wanted = {safe_id(k) for k in shallow if not k.startswith("__")}
+    have = {n for n in os.listdir(pdir) if n != "img" and os.path.isdir(os.path.join(pdir, n))}
+    return wanted == have
+
+
 def main():
+    if quick_skip():
+        print("No new or deleted posts - skipped the full download (full refresh runs once a day).")
+        return 0
     posts = load_posts()
     if not posts:
         print("No posts found - nothing changed.")
@@ -328,13 +354,15 @@ def main():
         if name.endswith(".jpg") and name[:-4] not in keep:
             os.remove(os.path.join(img_dir, name))
     # sitemap
-    urls = [f"  <url><loc>{SITE}/</loc></url>"]
+    urls = [f"  <url><loc>{SITE}/</loc></url>"] + [f"  <url><loc>{SITE}/{x}/</loc></url>" for x in ("about", "contact", "privacy", "terms")]
     for loc, lm in sorted(entries, key=lambda e: e[1] or "", reverse=True):
         urls.append(f"  <url><loc>{loc}</loc>{f'<lastmod>{lm}</lastmod>' if lm else ''}</url>")
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(urls) + "\n</urlset>\n"
     smf = os.path.join(OUT, "sitemap.xml")
     if not os.path.exists(smf) or open(smf, encoding="utf-8").read() != sm:
         open(smf, "w", encoding="utf-8").write(sm)
+    if not LOCAL_JSON:
+        open(os.path.join(pdir, "last-full.txt"), "w", encoding="utf-8").write(datetime.now(timezone.utc).strftime("%Y-%m-%d"))
     print(f"Built {len(entries)} prompt pages.")
     return 0
 
