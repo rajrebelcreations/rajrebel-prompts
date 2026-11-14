@@ -678,9 +678,11 @@ function cardHTML(c, i, animate) {
   const cat = catOf(c.category);
   const badge = cat.type === "video" ? "VIDEO PROMPT" : cat.type === "tutorial" ? "TUTORIAL" : "PHOTO PROMPT";
   const thumb = c.thumb || (c.yt ? `https://i.ytimg.com/vi/${c.yt}/hqdefault.jpg` : "");
+  // sharp photo from the prompt pages (served by GitHub, no Firebase download); small thumb only as a fallback
+  const big = /^post-\d+$/.test(c.id) && (c.thumb || c.yt) ? `/p/img/${c.id}.jpg` : "";
   return `<div class="card ${animate ? "anim" : ""}" style="${animate ? `animation-delay:${Math.min(i, 10) * 0.07}s` : ""}" data-id="${esc(c.id)}" tabindex="0" role="link" aria-label="${esc(c.title)}">
     <div class="thumb">
-      ${thumb ? `<img src="${esc(thumb)}" alt="${esc(c.title)}" loading="${i < 4 ? "eager" : "lazy"}" decoding="async" onload="this.classList.add('ok')" onerror="this.classList.add('ok')">` : `<div class="skel" style="height:180px;border-radius:0"></div>`}
+      ${big || thumb ? `<img src="${esc(big || thumb)}" ${big && thumb ? `data-fb="${esc(thumb)}"` : ""} alt="${esc(c.title)}" loading="${i < 4 ? "eager" : "lazy"}" decoding="async" onload="this.classList.add('ok')" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb')}else{this.classList.add('ok')}">` : `<div class="skel" style="height:180px;border-radius:0"></div>`}
       <div class="badges"><span class="badge ${cat.type === "tutorial" ? "tut" : ""}">${badge}</span>${c.pinned ? `<span class="badge pin">TOP</span>` : ""}${isNew(c.id) ? `<span class="badge new">NEW</span>` : ""}${hotOf(c.id)}</div>
       ${cat.type === "video" ? `<div class="play"><span>${icon("play")}</span></div>` : ""}
       <button class="share-mini" data-share="${esc(c.id)}" aria-label="Share ${esc(c.title)}">${icon("share")}</button>
