@@ -350,10 +350,10 @@ footer p{margin:12px 0 0;color:var(--dim);font-size:12px}
 
 <footer id="footer">
   <nav aria-label="Site links">
-    <a href="/about/" data-page="about">About</a>
-    <a href="/contact/" data-page="contact">Contact</a>
-    <a href="/privacy/" data-page="privacy">Privacy Policy</a>
-    <a href="/terms/" data-page="terms">Terms &amp; Disclaimer</a>
+    <a href="/about.html" data-page="about">About</a>
+    <a href="/contact.html" data-page="contact">Contact</a>
+    <a href="/privacy.html" data-page="privacy">Privacy Policy</a>
+    <a href="/terms.html" data-page="terms">Terms &amp; Disclaimer</a>
   </nav>
   <p>&copy; <span id="yr"></span> RajRebel Creations. All rights reserved.</p>
 </footer>
@@ -1054,7 +1054,7 @@ $("#nTut").addEventListener("click", () => {
 $("#nFollow").addEventListener("click", () => {
   const bg = document.createElement("div");
   bg.className = "sheet-bg";
-  bg.innerHTML = `<div class="sheet" role="dialog" aria-label="Follow"><h3>Follow RajRebel Creations</h3><nav class="socials"></nav>${installHtml()}<div class="sheet-links"><a href="/about/" data-page="about">About</a><a href="/contact/" data-page="contact">Contact</a><a href="/privacy/" data-page="privacy">Privacy Policy</a><a href="/terms/" data-page="terms">Terms &amp; Disclaimer</a></div></div>`;
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-label="Follow"><h3>Follow RajRebel Creations</h3><nav class="socials"></nav>${installHtml()}<div class="sheet-links"><a href="/about.html" data-page="about">About</a><a href="/contact.html" data-page="contact">Contact</a><a href="/privacy.html" data-page="privacy">Privacy Policy</a><a href="/terms.html" data-page="terms">Terms &amp; Disclaimer</a></div></div>`;
   renderSocials($("nav", bg));
   bg.addEventListener("click", async (e) => {
     const a = e.target.closest("[data-page]");

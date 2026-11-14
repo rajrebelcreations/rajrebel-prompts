@@ -289,7 +289,7 @@ def build_page(k, p, img_url):
 {('<h2>' + ('Prompts' if len(prompts) > 1 else 'Prompt') + '</h2>' + pr_html) if prompts else ''}
 <div class="cta">{cta}</div>
 </main>
-<footer class="wrap"><a href="/">Home</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy Policy</a><a href="/terms/">Terms</a><br><br>© RajRebel Creations</footer>
+<footer class="wrap"><a href="/">Home</a><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy Policy</a><a href="/terms.html">Terms</a><br><br>© RajRebel Creations</footer>
 {bar}
 <div class="toast" id="toast"></div>
 <script>{PAGE_JS.replace("%PID%", re.sub(r"[^A-Za-z0-9_-]", "", k))}</script>
@@ -354,7 +354,7 @@ def main():
         if name.endswith(".jpg") and name[:-4] not in keep:
             os.remove(os.path.join(img_dir, name))
     # sitemap
-    urls = [f"  <url><loc>{SITE}/</loc></url>"] + [f"  <url><loc>{SITE}/{x}/</loc></url>" for x in ("about", "contact", "privacy", "terms")]
+    urls = [f"  <url><loc>{SITE}/</loc></url>"] + [f"  <url><loc>{SITE}/{x}.html</loc></url>" for x in ("about", "contact", "privacy", "terms")]
     for loc, lm in sorted(entries, key=lambda e: e[1] or "", reverse=True):
         urls.append(f"  <url><loc>{loc}</loc>{f'<lastmod>{lm}</lastmod>' if lm else ''}</url>")
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(urls) + "\n</urlset>\n"
