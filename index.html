@@ -33,8 +33,6 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://rajrebelcreations.com/#brand","name":"RajRebel Creations","alternateName":["RRC","RRC AI Prompts","RajRebel"],"url":"https://rajrebelcreations.com/","logo":"https://rajrebelcreations.com/icon-512.png","image":"https://rajrebelcreations.com/og-banner.jpg","email":"rajrebelcreations@gmail.com","founder":{"@id":"https://rajrebelcreations.com/#raj"},"sameAs":["https://www.instagram.com/rajrebel_creations/","https://youtube.com/@rajrebelcreations","https://www.tiktok.com/@rajrebel_creations","https://www.facebook.com/share/1E4gLSvPMM/","https://whatsapp.com/channel/0029VbCXBrIHVvTgrW2oBv09","https://github.com/rajrebelcreations"]},{"@type":"Person","@id":"https://rajrebelcreations.com/#raj","name":"Raj","alternateName":"Raj Rebel","image":"https://rajrebelcreations.com/about-raj.jpg","jobTitle":"Content creator","worksFor":{"@id":"https://rajrebelcreations.com/#brand"},"sameAs":["https://www.instagram.com/rajrebel_creations/","https://youtube.com/@rajrebelcreations","https://www.tiktok.com/@rajrebel_creations"]},{"@type":"WebSite","@id":"https://rajrebelcreations.com/#site","url":"https://rajrebelcreations.com/","name":"RajRebel Creations","publisher":{"@id":"https://rajrebelcreations.com/#brand"},"inLanguage":"en"}]}</script>
   <meta name="google-adsense-account" content="ca-pub-6259806536022165">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6259806536022165"
-     crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://rajrebel-prompts-default-rtdb.firebaseio.com">
   <link rel="preconnect" href="https://www.gstatic.com">
 
@@ -123,7 +121,8 @@ img{display:block;max-width:100%}
 .empty{margin:10px 14px;padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r);font-size:14px}
 .more-status{text-align:center;color:var(--dim);font-size:12px;padding:16px}
 .ad-slot{margin:14px;min-height:90px;display:none}
-.ads-on .ad-slot{display:block}
+.ad-slot[data-done]{display:block}
+.sitenote{margin:26px 14px 10px;padding:18px;border:1px solid var(--line);border-radius:16px;color:var(--muted);font-size:14px;line-height:1.6}.sitenote h2{color:#fff;font-size:17px;margin:0 0 8px}.sitenote h3{color:#fff;font-size:15px;margin:14px 0 6px}.sitenote ol{padding-left:20px;margin:0}.sitenote a{color:var(--yellow)}
 
 /* tutorials list */
 .tlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;padding:0 14px}
@@ -321,6 +320,19 @@ footer p{margin:12px 0 0;color:var(--dim);font-size:12px}
     <div class="empty hidden" id="gridEmpty">No prompts here yet. Check back soon!</div>
     <div class="ad-slot" data-ad="home"></div>
     <div class="more-status" id="moreStatus"></div>
+    <section class="sitenote">
+      <h2>About RajRebel Creations prompts</h2>
+      <p>RajRebel Creations is a free library of AI photo prompts and AI video prompts made by Raj, a Telugu content creator. Every prompt on this site is tested by Raj before it is shared, so it works with your own photos in tools like ChatGPT, Gemini and Google Flow. Most prompts include a face lock, which keeps your real face, hairstyle and skin tone instead of creating a different person.</p>
+      <h3>How to use a prompt</h3>
+      <ol>
+        <li>Open any prompt and read the description and steps.</li>
+        <li>Tap <b>Copy</b> to copy the prompt text.</li>
+        <li>Open ChatGPT or Gemini for photos, or Google Flow for videos, and upload a clear photo of yourself.</li>
+        <li>Paste the prompt, generate, and download your result.</li>
+      </ol>
+      <h3>What you will find here</h3>
+      <p>Couple photo and video prompts, festival wishes for Diwali and other occasions, devotional and temple scenes, stylish portraits for boys and girls, plus step-by-step tutorials on mobile tricks, photo editing and AI tools. New prompts are added every week. <a href="/p/">Browse the full list of prompts</a>.</p>
+    </section>
   </div>
 </main>
 
@@ -670,6 +682,20 @@ function filteredCards() {
     return true;
   });
 }
+/* A brand-new post has no sharp GitHub photo until the next page build.
+   Show the small thumb at once, then swap in the full photo from the post itself. */
+const sharpCache = new Map();
+window.rrcSharp = async (img, id) => {
+  try {
+    if (!/^post-\d+$/.test(id)) return;
+    if (!sharpCache.has(id)) {
+      sharpCache.set(id, fetch(firebaseConfig.databaseURL.replace(/\/$/, "") + "/posts/" + id + "/image.json", { cache: "no-store" })
+        .then(r => r.ok ? r.json() : "").catch(() => ""));
+    }
+    const src = await sharpCache.get(id);
+    if (typeof src === "string" && /^(data:image|https:)/.test(src) && img.isConnected) img.src = src;
+  } catch (e) {}
+};
 function hotOf(id) {
   const n = Number(((S.counts || {})[id] || {}).c || 0);
   return n >= 10 ? `<span class="badge hot">🔥 ${fmtN(n)} copies</span>` : "";
@@ -682,7 +708,7 @@ function cardHTML(c, i, animate) {
   const big = /^post-\d+$/.test(c.id) && (c.thumb || c.yt) ? `/p/img/${c.id}.jpg` : "";
   return `<div class="card ${animate ? "anim" : ""}" style="${animate ? `animation-delay:${Math.min(i, 10) * 0.07}s` : ""}" data-id="${esc(c.id)}" tabindex="0" role="link" aria-label="${esc(c.title)}">
     <div class="thumb">
-      ${big || thumb ? `<img src="${esc(big || thumb)}" ${big && thumb ? `data-fb="${esc(thumb)}"` : ""} alt="${esc(c.title)}" loading="${i < 4 ? "eager" : "lazy"}" decoding="async" onload="this.classList.add('ok')" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb')}else{this.classList.add('ok')}">` : `<div class="skel" style="height:180px;border-radius:0"></div>`}
+      ${big || thumb ? `<img src="${esc(big || thumb)}" ${big && thumb ? `data-fb="${esc(thumb)}"` : ""} alt="${esc(c.title)}" loading="${i < 4 ? "eager" : "lazy"}" decoding="async" onload="this.classList.add('ok')" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb');window.rrcSharp&&rrcSharp(this,'${esc(c.id)}')}else{this.classList.add('ok')}">` : `<div class="skel" style="height:180px;border-radius:0"></div>`}
       <div class="badges"><span class="badge ${cat.type === "tutorial" ? "tut" : ""}">${badge}</span>${c.pinned ? `<span class="badge pin">TOP</span>` : ""}${isNew(c.id) ? `<span class="badge new">NEW</span>` : ""}${hotOf(c.id)}</div>
       ${cat.type === "video" ? `<div class="play"><span>${icon("play")}</span></div>` : ""}
       <button class="share-mini" data-share="${esc(c.id)}" aria-label="Share ${esc(c.title)}">${icon("share")}</button>
@@ -711,6 +737,7 @@ function renderGrid(append = false) {
     S.seen.add(c.id);
   });
   grid.innerHTML = `<div class="col">${cols[0].join("")}</div><div class="col">${cols[1].join("")}</div>`;
+  mountAds();
 }
 function skeletonCols() {
   const h = [220, 170, 190, 240, 160, 200];
@@ -743,6 +770,7 @@ function renderTutorials() {
       <div class="tt">${th ? `<img src="${esc(th)}" alt="" loading="lazy">` : ""}${c.yt ? `<div class="play"><span>${icon("play")}</span></div>` : ""}</div>
       <div class="tx"><b>${esc(c.title)}</b><small>${esc(c.tp || "Tutorial")}${isNew(c.id) ? " · NEW" : ""}</small></div></div>`;
   }).join("");
+  mountAds();
 }
 $("#tutList").addEventListener("click", (e) => { const c = e.target.closest("[data-id]"); if (c) openFromList(c.dataset.id); });
 
@@ -1036,6 +1064,7 @@ function showView(v) {
   $("#nHome").classList.toggle("on", v === "home");
   $("#nTut").classList.toggle("on", v === "tutorials");
   if (v !== "pview") { renderSticky(null); if (v !== "info") setMeta(); }
+  setTimeout(mountAds, 0);
 }
 function goHome() {
   if (S.cameFromHome && history.state && history.state.post) { history.back(); return; }
@@ -1177,8 +1206,22 @@ if ("serviceWorker" in navigator && location.protocol === "https:") {
 }
 
 /* ---------- ads ---------- */
+/* AdSense policy: ads only on screens that show real content.
+   Never on empty, loading, "not found", info or admin screens. */
+function adReady(slot) {
+  const main = slot.closest("main");
+  if (!main || main.classList.contains("hidden")) return false;
+  const k = slot.dataset.ad;
+  if (k === "home") return document.querySelectorAll("#grid .card").length >= 6;
+  if (k === "tutorials") return document.querySelectorAll("#tutList [data-id]").length >= 3;
+  if (k === "post") return !document.querySelector("#pmain .empty") && ($("#pmain").textContent || "").trim().length > 200;
+  return false;
+}
 function mountAds(scope = document) {
   if (!ADSENSE_CLIENT) return;
+  if (document.querySelector(".admin")) return;
+  const ready = [...scope.querySelectorAll(".ad-slot:not([data-done])")].filter(adReady);
+  if (!ready.length) return;
   document.body.classList.add("ads-on");
   if (!document.getElementById("adsjs") && !document.querySelector('script[src*="adsbygoogle.js"]')) {
     const s = document.createElement("script");
@@ -1186,7 +1229,7 @@ function mountAds(scope = document) {
     s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + ADSENSE_CLIENT;
     document.head.appendChild(s);
   }
-  scope.querySelectorAll(".ad-slot:not([data-done])").forEach(slot => {
+  ready.forEach(slot => {
     slot.dataset.done = "1";
     slot.innerHTML = `<ins class="adsbygoogle" style="display:block" data-ad-client="${ADSENSE_CLIENT}" ${ADSENSE_SLOT ? `data-ad-slot="${ADSENSE_SLOT}"` : ""} data-ad-format="auto" data-full-width-responsive="true"></ins>`;
     try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}

@@ -298,6 +298,44 @@ def build_page(k, p, img_url):
 """
 
 
+def build_listing(items):
+    esc = lambda x: html.escape(x, quote=True)
+    cards = []
+    for _, sid, title, cat, desc, img in items:
+        short = re.sub(r"\s+", " ", desc).strip()
+        if len(short) > 170:
+            short = short[:167].rsplit(" ", 1)[0] + "…"
+        im = f'<img src="/p/img/{sid}.jpg" alt="{esc(title)}" loading="lazy">' if img else ""
+        cards.append(f'<a class="li" href="/p/{sid}/">{im}<div><small>{esc(cat)}</small><b>{esc(title)}</b><span>{esc(short)}</span></div></a>')
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>All AI Photo &amp; Video Prompts | RajRebel Creations</title>
+<meta name="description" content="Browse all free AI photo prompts, AI video prompts and tutorials by RajRebel Creations. Copy a prompt and create with your own photo in ChatGPT, Gemini or Google Flow.">
+<link rel="canonical" href="{SITE}/p/">
+<meta name="theme-color" content="#07090e">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="google-adsense-account" content="{ADSENSE}">
+<style>{PAGE_CSS}
+.li{{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #1f2533;color:inherit;text-decoration:none}}.li img{{width:84px;height:110px;object-fit:cover;border-radius:10px;flex:none}}.li small{{color:#f5c518;font-size:12px}}.li b{{display:block;margin:2px 0 4px}}.li span{{color:#9aa3b2;font-size:13px}}</style>
+</head>
+<body style="padding-bottom:0">
+<header><div class="wrap"><a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none"><img src="/logo-96.png" alt=""><b>RajRebel Creations</b></a></div></header>
+<main class="wrap">
+<h1>All AI Photo &amp; Video Prompts</h1>
+<p style="color:#9aa3b2">{len(items)} free prompts and tutorials, newest first. Tap any prompt to see the full prompt, steps and example.</p>
+{"".join(cards)}
+<div class="cta"><a class="btn big" href="/">Open the RRC AI Prompts app</a></div>
+</main>
+<footer class="wrap"><a href="/">Home</a><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy Policy</a><a href="/terms.html">Terms</a><br><br>© RajRebel Creations</footer>
+</body>
+</html>
+"""
+
+
 def quick_skip():
     """Save Firebase downloads: the full download (all posts with photos) runs once a day,
     when a post is added or deleted, or when the workflow is started by hand.
@@ -331,6 +369,7 @@ def main():
     os.makedirs(img_dir, exist_ok=True)
     keep = set()
     entries = []
+    listing = []
     for k, p in sorted(posts.items()):
         sid = safe_id(k)
         keep.add(sid)
@@ -344,6 +383,7 @@ def main():
             open(f, "w", encoding="utf-8").write(page)
         t = post_time(k, p)
         entries.append((f"{SITE}/p/{sid}/", t.strftime("%Y-%m-%d") if t else None))
+        listing.append((t.timestamp() if t else 0, sid, str(p.get("title") or "Prompt"), str(p.get("category") or "Prompts"), str(p.get("description") or ""), img_url))
     # remove pages of deleted posts
     for name in os.listdir(pdir):
         if name == "img":
@@ -353,8 +393,13 @@ def main():
     for name in os.listdir(img_dir):
         if name.endswith(".jpg") and name[:-4] not in keep:
             os.remove(os.path.join(img_dir, name))
+    # static list of all prompts (/p/) - real content for search engines and reviewers
+    lst = build_listing(sorted(listing, reverse=True))
+    lf = os.path.join(pdir, "index.html")
+    if not os.path.exists(lf) or open(lf, encoding="utf-8").read() != lst:
+        open(lf, "w", encoding="utf-8").write(lst)
     # sitemap
-    urls = [f"  <url><loc>{SITE}/</loc></url>"] + [f"  <url><loc>{SITE}/{x}.html</loc></url>" for x in ("about", "contact", "privacy", "terms")]
+    urls = [f"  <url><loc>{SITE}/</loc></url>", f"  <url><loc>{SITE}/p/</loc></url>"] + [f"  <url><loc>{SITE}/{x}.html</loc></url>" for x in ("about", "contact", "privacy", "terms")]
     for loc, lm in sorted(entries, key=lambda e: e[1] or "", reverse=True):
         urls.append(f"  <url><loc>{loc}</loc>{f'<lastmod>{lm}</lastmod>' if lm else ''}</url>")
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(urls) + "\n</urlset>\n"
